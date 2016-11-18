@@ -7,8 +7,11 @@
     "start": "node_modules\\.bin\\electron .",
     "build": "webpack --colors --progress"
   },
-  "author": "perillaroc",
-  "license": "MIT",
+  "author": {
+    "name": "perillaroc",
+    "url": "https://github.com/perillaroc"
+  },
+  "license": "GPL-3.0",
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
