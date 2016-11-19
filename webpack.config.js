@@ -40,6 +40,10 @@ var loaders= {
             loader: "style!css!sass"
         },
         {
+            test: /\.css/,
+            loader: "style!css"
+        },
+        {
             test: path.join(nodeModulesPath, '/jquery/dist/jquery.min.js'),
             loader: 'expose?jQuery'
         },

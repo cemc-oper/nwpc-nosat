@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {ipcRenderer} from 'electron'
 // const electron = require('electron');
 
-import HpcAuth from '../components/HpcAuth'
+import HpcAuth from '../components/HpcAuth/index'
 import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
 import AnalyticsChart from '../components/AnalyticsChart'
 
@@ -34,7 +34,7 @@ class OperataionSystemAnalyticsApp extends Component{
         const { analytics_chart } = this.props;
         const { analytics_result } = analytics_chart;
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <div className="row">
                     <div className="col-sm-12">
                         <HpcAuth ref="hpc_auth"
