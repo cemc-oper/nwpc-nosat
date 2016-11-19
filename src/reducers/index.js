@@ -31,9 +31,9 @@ function error_reducer(state={
 }
 
 
-const submitAnalyticsAppReducer = combineReducers({
+const operationSystemAnalyticsAppReducer = combineReducers({
     error_log: error_reducer,
     routing
 });
 
-export default submitAnalyticsAppReducer;
+export default operationSystemAnalyticsAppReducer;

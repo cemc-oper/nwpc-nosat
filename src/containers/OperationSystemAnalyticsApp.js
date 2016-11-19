@@ -10,7 +10,7 @@ import AnalyticsChart from '../components/AnalyticsChart'
 
 import {receiveAnalyticsResult} from '../actions/index'
 
-class SubmitAnalyticsApp extends Component{
+class OperataionSystemAnalyticsApp extends Component{
     constructor(props) {
         super(props);
     }
@@ -83,7 +83,7 @@ class SubmitAnalyticsApp extends Component{
     }
 }
 
-SubmitAnalyticsApp.propTypes = {
+OperataionSystemAnalyticsApp.propTypes = {
     analytics_chart: PropTypes.shape({
         analytics_result: PropTypes.object
     }),
@@ -96,4 +96,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(SubmitAnalyticsApp)
+export default connect(mapStateToProps)(OperataionSystemAnalyticsApp)

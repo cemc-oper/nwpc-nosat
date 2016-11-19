@@ -11,11 +11,11 @@ import { hashHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 
 
-import SubmitAnalyticsAppReducer from './reducers/index'
+import operationSystemAnalyticsAppReducer from './reducers/index'
 
 import Root from './containers/Root'
 
-let store = createStore(SubmitAnalyticsAppReducer,
+let store = createStore(operationSystemAnalyticsAppReducer,
     applyMiddleware(
         thunkMiddleware
     )
