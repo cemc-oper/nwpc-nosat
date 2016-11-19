@@ -298,21 +298,24 @@ export default  class AnalyticsChart extends Component{
             const {data} = analytics_result;
             const { begin_date, end_date, count_type, count_result } = data;
 
-            if(count_type == "day") {
-                return this.countDayChart(analytics_result);
-            } else if(count_type == "weekday") {
-                return this.countWeekdayChart(analytics_result);
-            } else if(count_type == "system") {
-                return this.countSystemChart(analytics_result);
-            } else if(count_type == "date-hour") {
-                return this.countDateHourChart(analytics_result);
-            } else if(count_type == "hour") {
-                return this.countHourChart(analytics_result);
-            } else {
+            switch(count_type){
+                case "day":
+                    return this.countDayChart(analytics_result);
+                case "weekday":
+                    return this.countWeekdayChart(analytics_result);
+                    break;
+                case "system":
+                    return this.countSystemChart(analytics_result);
+                    break;
+                case "date-hour":
+                    return this.countDateHourChart(analytics_result);
+                    break;
+                case "hour":
+                    return this.countHourChart(analytics_result);
+                    break;
+                default:
                     return (
-                        <div>
-
-                        </div>
+                        <div></div>
                     )
             }
         } else {
