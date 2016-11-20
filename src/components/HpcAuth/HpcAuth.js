@@ -1,16 +1,30 @@
 import React, { Component, PropTypes } from 'react';
+import { dispatch } from 'redux'
+
 require("./style.css");
 
 import LoadSessionDropMenu from "./LoadSessionDropMenu"
 import SessionBarEditor from "./SessionBarEditor"
+
+import { ipcRenderer } from 'electron'
 
 export default class HpcAuth extends Component{
     constructor(props) {
         super(props);
     }
 
-    getAuth() {
-        return this.refs.session_bar_editor.getAuth();
+    componentDidMount(){
+
+    }
+
+    getSession() {
+        return this.refs.session_bar_editor.getSession();
+    }
+
+    handleTestClick() {
+        let session = this.getSession();
+        const { test_click_handler } = this.props.handler;
+        test_click_handler(session);
     }
 
     render() {
@@ -29,7 +43,7 @@ export default class HpcAuth extends Component{
                     </div>
                     <div className="col-xs-3">
                         <div className="btn-group pull-right">
-                            <button className="btn btn-default">测试</button>
+                            <button className="btn btn-default" onClick={this.handleTestClick.bind(this)}>测试</button>
                             <button className="btn btn-default">保存</button>
                             <div className="btn-group">
                                 <LoadSessionDropMenu
@@ -54,7 +68,10 @@ HpcAuth.propTypes = {
     }),
     session_list: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string
-    }))
+    })),
+    handler: PropTypes.shape({
+        test_click_handler: PropTypes.function
+    })
 };
 
 HpcAuth.defaultProps={

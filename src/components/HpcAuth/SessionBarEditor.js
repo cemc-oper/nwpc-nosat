@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 export default class SessionBarEditor extends Component{
 
-    getAuth() {
+    getSession() {
         let auth = Object();
         let host_node = this.refs.host;
         auth.host = host_node.value;

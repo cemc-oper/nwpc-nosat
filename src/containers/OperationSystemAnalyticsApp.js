@@ -10,6 +10,8 @@ import AnalyticsChart from '../components/AnalyticsChart'
 
 import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
 
+import {requestTestSession,receiveTestSessionResponse} from '../actions/session_action'
+
 class OperationSystemAnalyticsApp extends Component{
     constructor(props) {
         super(props);
@@ -20,14 +22,26 @@ class OperationSystemAnalyticsApp extends Component{
         ipcRenderer.on('llsubmit4-error-analytics-reply', function (event, result) {
             let analytics_result = JSON.parse(result);
             dispatch(receiveAnalyticsResult(analytics_result));
+        });
+
+        ipcRenderer.on('session-system-test-session-reply', function (event, result) {
+            let test_result = result;
+            console.log(test_result);
+            dispatch(receiveTestSessionResponse(test_result));
         })
     }
 
     handleRunClick() {
-        let auth = this.refs.hpc_auth.getAuth();
+        let auth = this.refs.hpc_auth.getSession();
         let config = this.refs.error_analyzer_config.getConfig();
 
         ipcRenderer.send('llsubmit4-error-analytics-message', auth, config);
+    }
+
+    handleSessionTestClick(session) {
+        const { dispatch } = this.props;
+        dispatch(requestTestSession(session));
+        ipcRenderer.send('session-system-test-session-message', session);
     }
 
     render() {
@@ -37,13 +51,17 @@ class OperationSystemAnalyticsApp extends Component{
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-sm-12">
-                        <HpcAuth ref="hpc_auth"
-                                 current_session={{
-                                     host: "uranus-bk.hpc.nmic.cn",
-                                     port: 22,
-                                     user: "nwp",
-                                     password: "nwpop"
-                                 }}
+                        <HpcAuth
+                            ref="hpc_auth"
+                            current_session={{
+                                host: "uranus-bk.hpc.nmic.cn",
+                                port: 22,
+                                user: "nwp",
+                                password: "nwpop"
+                            }}
+                            handler={{
+                                test_click_handler: this.handleSessionTestClick.bind(this)
+                            }}
                         />
                         </div>
                     </div>

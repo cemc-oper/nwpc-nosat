@@ -93,3 +93,39 @@ ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
         password: auth.password
     });
 });
+
+ipc.on('session-system-test-session-message', function(event, session){
+    let ssh_auth_config = {
+        host: session.host,
+        port: session.port,
+        username: session.user,
+        password: session.password
+    };
+
+    let Client = ssh2.Client;
+    let conn = new Client();
+    conn.on('ready', function() {
+        conn.end();
+        event.sender.send('session-system-test-session-reply', {
+            'app': 'operation-system-analytics-tool',
+            'type': 'session-test',
+            'timestamp': Date.now(),
+            'data':{
+                'status': 'success',
+                'session': session
+            }
+        });
+    }).on('error', function(err){
+        conn.end();
+        event.sender.send('session-system-test-session-reply', {
+            'app': 'operation-system-analytics-tool',
+            'type': 'session-test',
+            'timestamp': Date.now(),
+            'data':{
+                'status': 'fail',
+                'session': session,
+            }
+        });
+    }).connect(ssh_auth_config);
+
+});
