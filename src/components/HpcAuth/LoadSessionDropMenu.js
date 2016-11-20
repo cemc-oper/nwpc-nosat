@@ -29,12 +29,3 @@ LoadSessionDropMenu.propTypes = {
         name: PropTypes.string
     }))
 };
-
-LoadSessionDropMenu.defaultProps={
-    session_list: [
-        { name: 'nwp' },
-        { name: 'nwp_qu' },
-        { name: 'nwp_pd' },
-        { name: 'nwp_sp' },
-    ]
-};

@@ -14,7 +14,8 @@ export default class HpcAuth extends Component{
     }
 
     render() {
-        const {host, port, user, password} = this.props;
+        const { current_session, session_list } = this.props;
+        const { host, port, user, password} = current_session;
         return (
             <div className="hpc-auth-box">
                 <div className="row">
@@ -27,13 +28,14 @@ export default class HpcAuth extends Component{
                         />
                     </div>
                     <div className="col-xs-3">
-                        <div className="row">
-                            <div className="btn-group pull-right">
-                                <button className="btn btn-default">测试</button>
-                                <button className="btn btn-default">保存</button>
-                                <div className="btn-group">
-                                    <LoadSessionDropMenu />
-                                </div>
+                        <div className="btn-group pull-right">
+                            <button className="btn btn-default">测试</button>
+                            <button className="btn btn-default">保存</button>
+                            <div className="btn-group">
+                                <LoadSessionDropMenu
+                                    rel="load_session_drop_menu"
+                                    session_list={session_list}
+                                />
                             </div>
                         </div>
                     </div>
@@ -44,8 +46,22 @@ export default class HpcAuth extends Component{
 }
 
 HpcAuth.propTypes = {
-    host: PropTypes.string,
-    port: PropTypes.number,
-    user: PropTypes.string,
-    password: PropTypes.string
+    current_session: PropTypes.shape({
+        host: PropTypes.string,
+        port: PropTypes.number,
+        user: PropTypes.string,
+        password: PropTypes.string,
+    }),
+    session_list: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string
+    }))
+};
+
+HpcAuth.defaultProps={
+    session_list: [
+        { name: 'nwp' },
+        { name: 'nwp_qu' },
+        { name: 'nwp_pd' },
+        { name: 'nwp_sp' },
+    ]
 };

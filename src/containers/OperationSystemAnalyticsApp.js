@@ -8,9 +8,9 @@ import HpcAuth from '../components/HpcAuth/index'
 import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
 import AnalyticsChart from '../components/AnalyticsChart'
 
-import {receiveAnalyticsResult} from '../actions/index'
+import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
 
-class OperataionSystemAnalyticsApp extends Component{
+class OperationSystemAnalyticsApp extends Component{
     constructor(props) {
         super(props);
     }
@@ -38,10 +38,13 @@ class OperataionSystemAnalyticsApp extends Component{
                 <div className="row">
                     <div className="col-sm-12">
                         <HpcAuth ref="hpc_auth"
-                          host="uranus-bk.hpc.nmic.cn"
-                          port={22}
-                          user="nwp"
-                          password="nwpop"/>
+                                 current_session={{
+                                     host: "uranus-bk.hpc.nmic.cn",
+                                     port: 22,
+                                     user: "nwp",
+                                     password: "nwpop"
+                                 }}
+                        />
                         </div>
                     </div>
                 <div className="row">
@@ -83,17 +86,23 @@ class OperataionSystemAnalyticsApp extends Component{
     }
 }
 
-OperataionSystemAnalyticsApp.propTypes = {
+OperationSystemAnalyticsApp.propTypes = {
     analytics_chart: PropTypes.shape({
         analytics_result: PropTypes.object
     }),
+    session_system: PropTypes.shape({
+        session_list: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string
+        }))
+    })
 };
 
 
 function mapStateToProps(state){
     return {
-        analytics_chart: state.error_log.analytics_chart,
+        analytics_chart: state.llsubmit4_error_log.analytics_chart,
+        session_system: state.session_system
     }
 }
 
-export default connect(mapStateToProps)(OperataionSystemAnalyticsApp)
+export default connect(mapStateToProps)(OperationSystemAnalyticsApp)
