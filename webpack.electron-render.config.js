@@ -100,7 +100,7 @@ module.exports = {
     devtool: "source-map",
     entry: entry,
     output: {
-        path: path.join(__dirname, './app/dist'),
+        path: path.join(__dirname, './dist/app/scripts'),
         filename: "[name].entry.js",
         sourceMapFilename: '[file].map'
     },

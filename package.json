@@ -2,10 +2,11 @@
   "name": "operation-system-analytics-tool",
   "version": "0.1.0",
   "description": "A desktop app for operation system running in NWPC.",
-  "main": "app/main.js",
+  "main": "dist/app/main.js",
   "scripts": {
-    "start": "node_modules\\.bin\\electron .",
-    "build": "webpack --colors --progress"
+    "start": "node_modules\\.bin\\electron .\\dist\\app",
+    "build-render": "webpack --colors --progress --config=./webpack.electron-render.config.js",
+    "build-main": "webpack --colors --progress --config=./webpack.electron-main.config.js"
   },
   "author": {
     "name": "perillaroc",
@@ -18,6 +19,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "bootstrap": "^3.3.7",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.25.0",
     "d3-array": "^1.0.1",
     "d3-format": "^1.0.2",
@@ -31,6 +33,7 @@
     "font-awesome": "^4.7.0",
     "imports-loader": "^0.6.5",
     "jquery": "^3.1.1",
+    "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "node-sass": "^3.13.0",

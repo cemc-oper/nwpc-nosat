@@ -1,0 +1,16 @@
+{
+  "name": "operation-system-analytics-tool",
+  "productName": "operation-system-analytics-tool",
+  "version": "0.1.0",
+  "description": "An analytics tool for operation systems in NWPC",
+  "main": "./main.js",
+  "author": {
+    "name": "perillaroc",
+    "email": "perillaroc@gmail.com",
+    "url": "https://github.com/perillaroc"
+  },
+  "license": "GPL-3.0",
+  "dependencies": {
+    "ssh2": "^0.5.4"
+  }
+}
