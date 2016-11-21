@@ -7,6 +7,16 @@ export function saveSession(session){
     }
 }
 
+export const LOAD_SESSION = "LOAD_SESSION";
+
+export function loadSession(session){
+    return {
+        type: LOAD_SESSION,
+        session
+    }
+}
+
+
 export const REQUEST_TEST_SESSION = "REQUEST_TEST_SESSION";
 export function requestTestSession(session){
     return {

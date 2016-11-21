@@ -76,11 +76,15 @@ export default class HpcAuth extends Component{
             <div className="hpc-auth-box">
                 <div className="row">
                     <div className="col-xs-9">
-                        <SessionBarEditor ref="session_bar_editor"
+                        <SessionBarEditor
+                            ref="session_bar_editor"
                             host={host}
                             port={port}
                             user={user}
                             password={password}
+                            handler={{
+                                change_handler: this.props.handler.bar_editor_change_handler.bind(this)
+                            }}
                         />
                     </div>
                     <div className="col-xs-3">
@@ -91,6 +95,9 @@ export default class HpcAuth extends Component{
                                 <LoadSessionDropMenu
                                     rel="load_session_drop_menu"
                                     session_list={session_list}
+                                    handler={{
+                                        load_session_handler: this.props.handler.load_session_handler.bind(this)
+                                    }}
                                 />
                             </div>
                         </div>
@@ -128,6 +135,8 @@ HpcAuth.propTypes = {
     })),
     handler: PropTypes.shape({
         test_click_handler: PropTypes.func,
-        save_click_handler: PropTypes.func
+        save_click_handler: PropTypes.func,
+        load_session_handler: PropTypes.func,
+        bar_editor_change_handler: PropTypes.func
     })
 };

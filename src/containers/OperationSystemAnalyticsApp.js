@@ -10,7 +10,7 @@ import AnalyticsChart from '../components/AnalyticsChart'
 
 import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
 
-import { saveSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
+import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
 
 class OperationSystemAnalyticsApp extends Component{
     constructor(props) {
@@ -49,25 +49,27 @@ class OperationSystemAnalyticsApp extends Component{
         dispatch(saveSession(session));
     }
 
+    loadSession(session) {
+        const { dispatch } = this.props;
+        dispatch(loadSession(session));
+    }
+
     render() {
         const { analytics_chart, session_system } = this.props;
         const { analytics_result } = analytics_chart;
-        const { session_list } = session_system;
+        const { session_list, current_session } = session_system;
         return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-sm-12">
                         <HpcAuth
                             ref="hpc_auth"
-                            current_session={{
-                                host: "uranus-bk.hpc.nmic.cn",
-                                port: 22,
-                                user: "nwp",
-                                password: "nwpop"
-                            }}
+                            current_session={current_session}
                             handler={{
                                 test_click_handler: this.testSession.bind(this),
-                                save_click_handler: this.saveSession.bind(this)
+                                save_click_handler: this.saveSession.bind(this),
+                                load_session_handler: this.loadSession.bind(this),
+                                bar_editor_change_handler: this.loadSession.bind(this)
                             }}
                             session_list={session_list}
                         />
@@ -104,7 +106,6 @@ class OperationSystemAnalyticsApp extends Component{
                                 />
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -119,7 +120,8 @@ OperationSystemAnalyticsApp.propTypes = {
     session_system: PropTypes.shape({
         session_list: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string
-        }))
+        })),
+        current_session: PropTypes.object
     })
 };
 
