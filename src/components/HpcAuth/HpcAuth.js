@@ -6,6 +6,7 @@ require("./style.css");
 import LoadSessionDropMenu from "./LoadSessionDropMenu"
 import SessionBarEditor from "./SessionBarEditor"
 import SaveSessionDialog from "./components/SaveSessionDialog"
+import TestSessionDialog from "./components/TestSessionDialog"
 
 import { ipcRenderer } from 'electron'
 
@@ -20,7 +21,8 @@ export default class HpcAuth extends Component{
                 user: null,
                 password: null,
                 name: null
-            }
+            },
+            is_test_dialog_open: false
         }
     }
 
@@ -33,9 +35,15 @@ export default class HpcAuth extends Component{
     }
 
     handleTestClick() {
+        this.setState({is_test_dialog_open: true});
+
         let session = this.getSession();
         const { test_click_handler } = this.props.handler;
         test_click_handler(session);
+    }
+
+    closeTestSessionDialog() {
+        this.setState({is_test_dialog_open: false});
     }
 
     handleSaveClick() {
@@ -57,10 +65,12 @@ export default class HpcAuth extends Component{
         this.setState({is_save_dialog_open: false});
     }
 
+
+
     render() {
         const { current_session, session_list } = this.props;
         const { host, port, user, password} = current_session;
-        let { is_save_dialog_open, working_session } = this.state;
+        let { is_save_dialog_open, working_session, is_test_dialog_open } = this.state;
 
         return (
             <div className="hpc-auth-box">
@@ -92,6 +102,13 @@ export default class HpcAuth extends Component{
                     handler={{
                         close_handler: this.closeSaveSessionDialog.bind(this),
                         save_handler: this.acceptSaveSessionDialog.bind(this)
+                    }}
+                />
+                <TestSessionDialog
+                    is_open={is_test_dialog_open}
+                    session={working_session}
+                    handler={{
+                        close_handler: this.closeTestSessionDialog.bind(this)
                     }}
                 />
             </div>
