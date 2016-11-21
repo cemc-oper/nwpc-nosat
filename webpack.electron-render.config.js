@@ -8,6 +8,7 @@ var entry= {
     common: [
         'react',
         'react-dom',
+        'react-modal',
         'react-router',
         'react-router-redux',
         'react-redux',
@@ -58,6 +59,7 @@ var resolve = {
     alias: {
         'react': path.join(nodeModulesPath, '/react/dist/react'),
         'react-dom': path.join(nodeModulesPath, '/react-dom/dist/react-dom'),
+        'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
         'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
         'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
         'react-router-redux': path.join(nodeModulesPath, '/react-router-redux/dist/ReactRouterRedux'),
