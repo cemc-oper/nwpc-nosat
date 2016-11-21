@@ -10,7 +10,7 @@ import AnalyticsChart from '../components/AnalyticsChart'
 
 import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
 
-import {requestTestSession,receiveTestSessionResponse} from '../actions/session_action'
+import { saveSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
 
 class OperationSystemAnalyticsApp extends Component{
     constructor(props) {
@@ -38,15 +38,21 @@ class OperationSystemAnalyticsApp extends Component{
         ipcRenderer.send('llsubmit4-error-analytics-message', auth, config);
     }
 
-    handleSessionTestClick(session) {
+    testSession(session) {
         const { dispatch } = this.props;
         dispatch(requestTestSession(session));
         ipcRenderer.send('session-system-test-session-message', session);
     }
 
+    saveSession(session) {
+        const { dispatch } = this.props;
+        dispatch(saveSession(session));
+    }
+
     render() {
-        const { analytics_chart } = this.props;
+        const { analytics_chart, session_system } = this.props;
         const { analytics_result } = analytics_chart;
+        const { session_list } = session_system;
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -60,8 +66,10 @@ class OperationSystemAnalyticsApp extends Component{
                                 password: "nwpop"
                             }}
                             handler={{
-                                test_click_handler: this.handleSessionTestClick.bind(this)
+                                test_click_handler: this.testSession.bind(this),
+                                save_click_handler: this.saveSession.bind(this)
                             }}
+                            session_list={session_list}
                         />
                         </div>
                     </div>

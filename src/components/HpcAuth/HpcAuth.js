@@ -5,12 +5,23 @@ require("./style.css");
 
 import LoadSessionDropMenu from "./LoadSessionDropMenu"
 import SessionBarEditor from "./SessionBarEditor"
+import SaveSessionDialog from "./components/SaveSessionDialog"
 
 import { ipcRenderer } from 'electron'
 
 export default class HpcAuth extends Component{
     constructor(props) {
         super(props);
+        this.state = {
+            is_save_dialog_open: false,
+            working_session: {
+                host: null,
+                port: null,
+                user: null,
+                password: null,
+                name: null
+            }
+        }
     }
 
     componentDidMount(){
@@ -27,9 +38,30 @@ export default class HpcAuth extends Component{
         test_click_handler(session);
     }
 
+    handleSaveClick() {
+        let session = this.getSession();
+        session.name = null;
+        this.setState({
+            is_save_dialog_open: true,
+            working_session: session
+        });
+    }
+
+    closeSaveSessionDialog() {
+        this.setState({is_save_dialog_open: false});
+    }
+
+    acceptSaveSessionDialog(session) {
+        const {save_click_handler} = this.props.handler;
+        save_click_handler(session);
+        this.setState({is_save_dialog_open: false});
+    }
+
     render() {
         const { current_session, session_list } = this.props;
         const { host, port, user, password} = current_session;
+        let { is_save_dialog_open, working_session } = this.state;
+
         return (
             <div className="hpc-auth-box">
                 <div className="row">
@@ -44,7 +76,7 @@ export default class HpcAuth extends Component{
                     <div className="col-xs-3">
                         <div className="btn-group pull-right">
                             <button className="btn btn-default" onClick={this.handleTestClick.bind(this)}>测试</button>
-                            <button className="btn btn-default">保存</button>
+                            <button className="btn btn-default" onClick={this.handleSaveClick.bind(this)}>保存</button>
                             <div className="btn-group">
                                 <LoadSessionDropMenu
                                     rel="load_session_drop_menu"
@@ -54,6 +86,14 @@ export default class HpcAuth extends Component{
                         </div>
                     </div>
                 </div>
+                <SaveSessionDialog
+                    is_open={is_save_dialog_open}
+                    session={working_session}
+                    handler={{
+                        close_handler: this.closeSaveSessionDialog.bind(this),
+                        save_handler: this.acceptSaveSessionDialog.bind(this)
+                    }}
+                />
             </div>
         );
     }
@@ -70,15 +110,7 @@ HpcAuth.propTypes = {
         name: PropTypes.string
     })),
     handler: PropTypes.shape({
-        test_click_handler: PropTypes.function
+        test_click_handler: PropTypes.func,
+        save_click_handler: PropTypes.func
     })
-};
-
-HpcAuth.defaultProps={
-    session_list: [
-        { name: 'nwp' },
-        { name: 'nwp_qu' },
-        { name: 'nwp_pd' },
-        { name: 'nwp_sp' },
-    ]
 };

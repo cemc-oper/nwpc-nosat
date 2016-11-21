@@ -36,7 +36,12 @@ function session_reducer(state={
         is_fetching: false,
         last_updated: null
     },
-    session_list: []
+    session_list: [
+        { name: 'nwp' },
+        { name: 'nwp_qu' },
+        { name: 'nwp_pd' },
+        { name: 'nwp_sp' },
+    ]
 }, action) {
     switch(action.type){
         case SAVE_SESSION:
