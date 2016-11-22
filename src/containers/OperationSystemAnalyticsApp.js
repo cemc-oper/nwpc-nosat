@@ -7,6 +7,7 @@ import {ipcRenderer} from 'electron'
 import HpcAuth from '../components/HpcAuth/index'
 import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
 import AnalyticsChart from '../components/AnalyticsChart'
+import ErrorAnalyticsDataConfig from '../components/llsubmit4/ErrorAnalyticsDataConfig'
 
 import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
 
@@ -74,8 +75,15 @@ class OperationSystemAnalyticsApp extends Component{
                             session_list={session_list}
                             test_session={test_session}
                         />
-                        </div>
                     </div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-12">
+                        <ErrorAnalyticsDataConfig
+                            error_log_path="/cma/g1/nwp/sublog/llsubmit4.error.log"
+                        />
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-sm-4">
                         <ErrorAnalyzerConfig ref="error_analyzer_config"
