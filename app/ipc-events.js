@@ -2,12 +2,20 @@ const electron = require('electron');
 const ipc = electron.ipcMain;
 const ssh2 = require('ssh2');
 
+
+var analytics_program = {
+    interpreter_path: "/cma/g3/wangdp/usr/local/bin/python3",
+    script_path: "/cma/g3/wangdp/work/2016/nwpc-operation-system-tool/submit_analytics/llsubmit4_error_analyzer.py"
+};
+
+
 ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
     console.log(auth, config);
-    let command = "/cma/g3/wangdp/usr/local/bin/python3 "
-        + "/cma/g3/wangdp/work/2016/nwpc-operation-system-tool/submit_analytics/llsubmit4_error_analyzer.py "
+    let command = analytics_program.interpreter_path + " "
+        + analytics_program.script_path + " "
         + "count -f " + config.error_log_path + " "
-        + "--type="+ config.analytics_type +" --begin-date=" + config.begin_date + " --end-date=" + config.end_date;
+        + "--type="+ config.analytics_type
+        + " --begin-date=" + config.begin_date + " --end-date=" + config.end_date;
     let Client = ssh2.Client;
     let conn = new Client();
     conn.on('ready', function() {
@@ -34,6 +42,14 @@ ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
     });
 });
 
+/**
+ *  test session
+ *      1. ssh login
+ *      2. interpreter
+ *      3. script
+ *      4. analytics version
+ */
+
 ipc.on('session-system-test-session-message', function(event, session){
     let ssh_auth_config = {
         host: session.host,
@@ -45,6 +61,21 @@ ipc.on('session-system-test-session-message', function(event, session){
     let Client = ssh2.Client;
     let conn = new Client();
     conn.on('ready', function() {
+
+        // let command = "if [ -x \""+ analytics_program.interpreter_path +"\" ]; then echo OK; else echo ERROR; fi" + ;
+        // conn.exec(command, function(err, stream) {
+        //     let std_out = '';
+        //     if (err) throw err;
+        //     stream.on('close', function(code, signal) {
+        //
+        //         event.sender.send('session-system-test-session-reply', std_out);
+        //     }).on('data', function(data) {
+        //         std_out += data;
+        //     }).stderr.on('data', function(data) {
+        //
+        //     });
+        // });
+
         conn.end();
         event.sender.send('session-system-test-session-reply', {
             'app': 'operation-system-analytics-tool',

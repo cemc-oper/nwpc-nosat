@@ -68,7 +68,7 @@ export default class HpcAuth extends Component{
 
 
     render() {
-        const { current_session, session_list } = this.props;
+        const { current_session, session_list, test_session } = this.props;
         const { host, port, user, password} = current_session;
         let { is_save_dialog_open, working_session, is_test_dialog_open } = this.state;
 
@@ -117,6 +117,7 @@ export default class HpcAuth extends Component{
                     handler={{
                         close_handler: this.closeTestSessionDialog.bind(this)
                     }}
+                    status={test_session.status}
                 />
             </div>
         );
@@ -138,5 +139,6 @@ HpcAuth.propTypes = {
         save_click_handler: PropTypes.func,
         load_session_handler: PropTypes.func,
         bar_editor_change_handler: PropTypes.func
-    })
+    }),
+    test_session: PropTypes.object
 };

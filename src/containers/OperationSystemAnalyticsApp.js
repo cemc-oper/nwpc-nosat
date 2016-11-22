@@ -57,7 +57,7 @@ class OperationSystemAnalyticsApp extends Component{
     render() {
         const { analytics_chart, session_system } = this.props;
         const { analytics_result } = analytics_chart;
-        const { session_list, current_session } = session_system;
+        const { session_list, current_session, test_session } = session_system;
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -72,6 +72,7 @@ class OperationSystemAnalyticsApp extends Component{
                                 bar_editor_change_handler: this.loadSession.bind(this)
                             }}
                             session_list={session_list}
+                            test_session={test_session}
                         />
                         </div>
                     </div>
@@ -121,8 +122,9 @@ OperationSystemAnalyticsApp.propTypes = {
         session_list: PropTypes.arrayOf(PropTypes.shape({
             name: PropTypes.string
         })),
-        current_session: PropTypes.object
-    })
+        current_session: PropTypes.object,
+        test_session: PropTypes.object
+    }),
 };
 
 
