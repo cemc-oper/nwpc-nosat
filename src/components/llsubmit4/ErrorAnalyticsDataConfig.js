@@ -18,7 +18,8 @@ export default  class ErrorAnalyticsDataConfig extends Component{
     }
 
     handleRequestErrorLogInfoClick(event) {
-
+        const { request_error_log_info_handler } = this.props.handler;
+        request_error_log_info_handler();
     }
 
     render(){
@@ -30,7 +31,7 @@ export default  class ErrorAnalyticsDataConfig extends Component{
             log_info_node = (
                 <div className="row config-row">
                     <div className="col-xs-12">
-                        <p type="text-info"> 日志记录时间：{start_date_time} - {end_date_time} </p>
+                        <p className="bg-info"> 日志记录时间：{start_date_time} - {end_date_time} </p>
                     </div>
                 </div>
             )
@@ -49,7 +50,7 @@ export default  class ErrorAnalyticsDataConfig extends Component{
                     </div>
                     <div className="col-xs-3">
                         <button className="btn btn-default"
-                                onChange={this.handleRequestErrorLogInfoClick.bind(this)}>
+                                onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
                             获取信息
                         </button>
                         <button className="btn btn-default">

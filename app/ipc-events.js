@@ -100,3 +100,31 @@ ipc.on('session-system-test-session-message', function(event, session){
     }).connect(ssh_auth_config);
 
 });
+
+
+ipc.on('llsubmit4.error-log.info.get', function (event, session, error_log_path) {
+    let command = analytics_program.interpreter_path + " "
+        + analytics_program.script_path + " "
+        + "info -f " + error_log_path;
+
+    let Client = ssh2.Client;
+    let conn = new Client();
+    conn.on('ready', function() {
+        conn.exec(command, function(err, stream) {
+            let std_out = '';
+            if (err) throw err;
+            stream.on('close', function(code, signal) {conn.end();
+                console.log(std_out);
+                event.sender.send('llsubmit4.error-log.info.get.reply', std_out);
+            }).on('data', function(data) {
+                std_out += data;
+            }).stderr.on('data', function(data) {
+            });
+        });
+    }).connect({
+        host: session.host,
+        port: session.port,
+        username: session.user,
+        password: session.password
+    });
+});

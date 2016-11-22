@@ -9,7 +9,12 @@ import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
 import AnalyticsChart from '../components/AnalyticsChart'
 import ErrorAnalyticsDataConfig from '../components/llsubmit4/ErrorAnalyticsDataConfig'
 
-import {receiveAnalyticsResult} from '../actions/llsubmit4_error_log_action'
+import {
+    receiveAnalyticsResult,
+    changeErrorLogPath,
+    requestErrorLogInfo,
+    receiveErrorLogInfo
+} from '../actions/llsubmit4_error_log_action'
 
 import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
 
@@ -26,9 +31,12 @@ class OperationSystemAnalyticsApp extends Component{
         });
 
         ipcRenderer.on('session-system-test-session-reply', function (event, result) {
-            let test_result = result;
-            console.log(test_result);
-            dispatch(receiveTestSessionResponse(test_result));
+            dispatch(receiveTestSessionResponse(result));
+        });
+
+        ipcRenderer.on('llsubmit4.error-log.info.get.reply', function (event, result) {
+            let log_info_response = JSON.parse(result);
+            dispatch(receiveErrorLogInfo(log_info_response));
         })
     }
 
@@ -55,10 +63,27 @@ class OperationSystemAnalyticsApp extends Component{
         dispatch(loadSession(session));
     }
 
+    requestErrorLogInfo(){
+        const { current_session } = this.props.session_system;
+        const { error_log_data_config } = this.props;
+
+        const { dispatch } = this.props;
+        console.log("requestErrorLogInfo");
+        ipcRenderer.send('llsubmit4.error-log.info.get',
+            current_session, error_log_data_config.error_log_path);
+        dispatch(requestErrorLogInfo(current_session));
+    }
+
+    changeErrorLogPath(error_log_path){
+        const { dispatch } = this.props;
+        dispatch(changeErrorLogPath(error_log_path));
+    }
+
     render() {
-        const { analytics_chart, session_system } = this.props;
+        const { analytics_chart, session_system, error_log_data_config } = this.props;
         const { analytics_result } = analytics_chart;
         const { session_list, current_session, test_session } = session_system;
+        const { error_log_path, info } = error_log_data_config;
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -80,7 +105,13 @@ class OperationSystemAnalyticsApp extends Component{
                 <div className="row">
                     <div className="col-sm-12">
                         <ErrorAnalyticsDataConfig
-                            error_log_path="/cma/g1/nwp/sublog/llsubmit4.error.log"
+                            ref="error_analytics_data_config"
+                            error_log_path={error_log_path}
+                            error_log_info={info}
+                            handler={{
+                                request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
+                                change_error_log_path_handler: this.changeErrorLogPath.bind(this),
+                            }}
                         />
                     </div>
                 </div>
@@ -133,13 +164,21 @@ OperationSystemAnalyticsApp.propTypes = {
         current_session: PropTypes.object,
         test_session: PropTypes.object
     }),
+    error_log_data_config: PropTypes.shape({
+        error_log_path: PropTypes.oneOfType([
+            PropTypes.object,
+            PropTypes.string
+        ]),
+        info: PropTypes.object
+    })
 };
 
 
 function mapStateToProps(state){
     return {
         analytics_chart: state.llsubmit4_error_log.analytics_chart,
-        session_system: state.session_system
+        session_system: state.session_system,
+        error_log_data_config: state.llsubmit4_error_log.error_log_data_config
     }
 }
 
