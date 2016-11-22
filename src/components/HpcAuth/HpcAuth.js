@@ -3,8 +3,8 @@ import { dispatch } from 'redux'
 
 require("./style.css");
 
-import LoadSessionDropMenu from "./LoadSessionDropMenu"
-import SessionBarEditor from "./SessionBarEditor"
+import LoadSessionDropMenu from "./components/LoadSessionDropMenu"
+import SessionBarEditor from "./components/SessionBarEditor"
 import SaveSessionDialog from "./components/SaveSessionDialog"
 import TestSessionDialog from "./components/TestSessionDialog"
 

@@ -23,7 +23,6 @@ export default class SessionBarEditor extends Component{
 
     render(){
         const {host, port, user, password} = this.props;
-        console.log(this.props);
         return (
             <div className="row">
                 <div className="col-xs-4">
