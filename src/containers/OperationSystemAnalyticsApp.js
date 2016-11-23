@@ -39,7 +39,9 @@ class OperationSystemAnalyticsApp extends Component{
         ipcRenderer.on('llsubmit4.error-log.info.get.reply', function (event, result) {
             let log_info_response = JSON.parse(result);
             dispatch(receiveErrorLogInfo(log_info_response));
-        })
+        });
+
+        this.runAnalyzer();
     }
 
     runAnalyzer() {

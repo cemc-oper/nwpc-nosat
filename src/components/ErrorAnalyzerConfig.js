@@ -14,13 +14,23 @@ export default  class ErrorAnalyzerConfig extends Component{
         return config;
     }
 
+    checkDate(){
+        let first_date = moment(this.refs.first_date_node.value);
+        let last_date = moment(this.refs.last_date_node.value);
+        return first_date<=last_date;
+    }
+
     handleChange() {
         let config = this.getConfig();
         const {change_handler} = this.props.handler;
         change_handler(config);
     }
 
-    handleRunClick() {
+    handleRunClick(event) {
+        if(!this.checkDate()){
+            alert("请选择有效的日期范围，结束日期无法早于起始日期。");
+            return;
+        }
         let {run_handler } = this.props.handler;
         run_handler();
     }
