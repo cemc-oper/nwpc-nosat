@@ -7,7 +7,6 @@ export default  class ErrorAnalyzerConfig extends Component{
 
     getConfig() {
         let config = Object();
-        config.error_log_path = this.refs.error_log_path_node.value;
         config.analytics_type = this.refs.analytics_type_node.value;
         config.begin_date = this.refs.begin_date_node.value;
         config.end_date = this.refs.end_date_node.value;
@@ -26,10 +25,6 @@ export default  class ErrorAnalyzerConfig extends Component{
                             </div>
                             <div className="panel-body">
                                 <form>
-                                    <div className="form-group">
-                                        <label className="">错误日志路径</label>
-                                        <input type="text" className="form-control" ref="error_log_path_node" defaultValue={error_log_path} />
-                                    </div>
                                     <div className="form-group">
                                         <label>统计类型</label>
                                         <select className="form-control" ref="analytics_type_node" defaultValue={analytics_type}>

@@ -1,9 +1,16 @@
 import React, { Component, PropTypes } from 'react';
+import mement from 'moment'
 require("./style.css");
 
 export default  class ErrorAnalyticsDataConfig extends Component{
     constructor(props) {
         super(props);
+    }
+
+    getConfig(){
+        let error_log_data_config = Object();
+        error_log_data_config.error_log_path = this.getErrorLogPath();
+        return error_log_data_config;
     }
 
     getErrorLogPath(){
@@ -29,9 +36,14 @@ export default  class ErrorAnalyticsDataConfig extends Component{
             const { range } = error_log_info;
             const { start_date_time, end_date_time } = range;
             log_info_node = (
-                <div className="row config-row">
+                <div className="row">
                     <div className="col-xs-12">
-                        <p className="bg-info"> 日志记录时间：{start_date_time} - {end_date_time} </p>
+                        <div className="alert alert-info" role="alert">
+                            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+                        </div>
                     </div>
                 </div>
             )

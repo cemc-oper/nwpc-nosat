@@ -4,6 +4,7 @@ import {
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
 } from '../actions/llsubmit4_error_log_action'
+import moment from 'moment'
 
 export default function llsubmit4_error_log_reducer(state={
     status: {
@@ -43,6 +44,10 @@ export default function llsubmit4_error_log_reducer(state={
             });
         case RECEIVE_ERROR_LOG_INFO:
             let info = action.error_log_info_response.data;
+            let info_range = info.range;
+            info_range.start_date_time = moment(info_range.start_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
+            info_range.end_date_time = moment(info_range.end_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
+
             return Object.assign({}, state, {
                 error_log_data_config: {
                     error_log_path: state.error_log_data_config.error_log_path,

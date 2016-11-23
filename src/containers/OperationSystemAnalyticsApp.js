@@ -42,9 +42,10 @@ class OperationSystemAnalyticsApp extends Component{
 
     handleRunClick() {
         let session = this.refs.hpc_auth.getSession();
-        let config = this.refs.error_analyzer_config.getConfig();
+        let data_config = this.refs.data_config.getConfig();
+        let analyzer_config = this.refs.analyzer_config.getConfig();
 
-        ipcRenderer.send('llsubmit4.error-log.analytics.get', session, config);
+        ipcRenderer.send('llsubmit4.error-log.analytics.get', session, data_config, analyzer_config);
     }
 
     testSession(session) {
@@ -104,7 +105,7 @@ class OperationSystemAnalyticsApp extends Component{
                 <div className="row">
                     <div className="col-sm-12">
                         <ErrorAnalyticsDataConfig
-                            ref="error_analytics_data_config"
+                            ref="data_config"
                             error_log_path={error_log_path}
                             error_log_info={info}
                             handler={{
@@ -116,8 +117,7 @@ class OperationSystemAnalyticsApp extends Component{
                 </div>
                 <div className="row">
                     <div className="col-sm-4">
-                        <ErrorAnalyzerConfig ref="error_analyzer_config"
-                          error_log_path="/cma/g1/nwp/sublog/llsubmit4.error.log"
+                        <ErrorAnalyzerConfig ref="analyzer_config"
                           analytics_type="day"
                           begin_date="2016-11-07"
                           end_date="2016-11-14"/>

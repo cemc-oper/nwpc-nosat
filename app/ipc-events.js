@@ -9,13 +9,13 @@ var analytics_program = {
 };
 
 
-ipc.on('llsubmit4.error-log.analytics.get', function (event, auth, config) {
-    console.log(auth, config);
+ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, data_config, analyzer_config) {
+    console.log(session_config, data_config, analyzer_config);
     let command = analytics_program.interpreter_path + " "
         + analytics_program.script_path + " "
-        + "count -f " + config.error_log_path + " "
-        + "--type="+ config.analytics_type
-        + " --begin-date=" + config.begin_date + " --end-date=" + config.end_date;
+        + "count -f " + data_config.error_log_path + " "
+        + "--type="+ analyzer_config.analytics_type
+        + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
     let Client = ssh2.Client;
     let conn = new Client();
     conn.on('ready', function() {
@@ -35,10 +35,10 @@ ipc.on('llsubmit4.error-log.analytics.get', function (event, auth, config) {
             });
         });
     }).connect({
-        host: auth.host,
-        port: auth.port,
-        username: auth.user,
-        password: auth.password
+        host: session_config.host,
+        port: session_config.port,
+        username: session_config.user,
+        password: session_config.password
     });
 });
 
