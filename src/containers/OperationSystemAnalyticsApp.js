@@ -7,11 +7,12 @@ import moment from 'moment'
 
 import HpcAuth from '../components/HpcAuth/index'
 import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
-import AnalyticsChart from '../components/AnalyticsChart'
 import ErrorAnalyticsDataConfig from '../components/llsubmit4/ErrorAnalyticsDataConfig'
+import AnalyzerResult from '../components/llsubmit4/AnalyzerResult/index'
 
 import {
-    receiveAnalyticsResult,
+    requestErrorLogAnalytics,
+    receiveErrorLogAnalytics,
     changeErrorLogPath,
     requestErrorLogInfo,
     receiveErrorLogInfo,
@@ -29,7 +30,7 @@ class OperationSystemAnalyticsApp extends Component{
         const { dispatch } = this.props;
         ipcRenderer.on('llsubmit4.error-log.analytics.get.reply', function (event, result) {
             let analytics_result = JSON.parse(result);
-            dispatch(receiveAnalyticsResult(analytics_result));
+            dispatch(receiveErrorLogAnalytics(analytics_result));
         });
 
         ipcRenderer.on('session-system.session.test.get.reply', function (event, result) {
@@ -56,6 +57,8 @@ class OperationSystemAnalyticsApp extends Component{
             end_date: end_date.format("YYYY-MM-DD")
         };
 
+        const {dispatch} = this.props;
+        dispatch(requestErrorLogAnalytics());
         ipcRenderer.send('llsubmit4.error-log.analytics.get', session, data_config, send_analyzer_config);
     }
 
@@ -96,8 +99,7 @@ class OperationSystemAnalyticsApp extends Component{
     }
 
     render() {
-        const { analytics_chart, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
-        const { analytics_result } = analytics_chart;
+        const { error_log_analyzer, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
         const { session_list, current_session, test_session } = session_system;
         const { error_log_path, info } = error_log_data_config;
         return (
@@ -142,16 +144,7 @@ class OperationSystemAnalyticsApp extends Component{
                         />
                     </div>
                     <div className="col-sm-9">
-                        <div className="panel panel-default">
-                            <div className="panel-heading">
-                                <h3 className="panel-title">统计结果</h3>
-                            </div>
-                            <div className="panel-body">
-                                <AnalyticsChart
-                                    analytics_result={analytics_result}
-                                />
-                            </div>
-                        </div>
+                        <AnalyzerResult error_log_analyzer={error_log_analyzer}/>
                     </div>
                 </div>
             </div>
@@ -160,7 +153,10 @@ class OperationSystemAnalyticsApp extends Component{
 }
 
 OperationSystemAnalyticsApp.propTypes = {
-    analytics_chart: PropTypes.shape({
+    error_log_analyzer: PropTypes.shape({
+        status: PropTypes.shape({
+            is_fetching: PropTypes.bool
+        }),
         analytics_result: PropTypes.object
     }),
     session_system: PropTypes.shape({
@@ -189,7 +185,7 @@ OperationSystemAnalyticsApp.propTypes = {
 
 function mapStateToProps(state){
     return {
-        analytics_chart: state.llsubmit4_error_log.analytics_chart,
+        error_log_analyzer: state.llsubmit4_error_log.error_log_analyzer,
         session_system: state.session_system,
         error_log_data_config: state.llsubmit4_error_log.error_log_data_config,
         error_log_analyzer_config: state.llsubmit4_error_log.error_log_analyzer_config

@@ -1,5 +1,6 @@
 import {
-    RESPONSE_ANALYTICS_RESULT,
+    REQUEST_ERROR_LOG_ANALYTICS,
+    RESPONSE_ERROR_LOG_ANALYTICS,
     CHANGE_ERROR_LOG_PATH,
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
@@ -15,10 +16,13 @@ export default function llsubmit4_error_log_reducer(state={
     auth:{},
     error_log_analyzer_config:{
         analytics_type: 'day',
-        first_date: moment().subtract(1, 'days').subtract(1, 'weeks'),
+        first_date: moment().subtract(1, 'weeks'),
         last_date: moment().subtract(1, 'days')
     },
-    analytics_chart:{
+    error_log_analyzer:{
+        status: {
+            is_fetching: false
+        },
         analytics_result:null
     },
     error_log_data_config:{
@@ -27,12 +31,26 @@ export default function llsubmit4_error_log_reducer(state={
     }
 }, action) {
     switch(action.type){
-        case RESPONSE_ANALYTICS_RESULT:
+        case REQUEST_ERROR_LOG_ANALYTICS:
             return Object.assign({}, state, {
-                analytics_chart: {
-                    analytics_result: action.analytics_result
+                error_log_analyzer: {
+                    status: {
+                        is_fetching: true
+                    },
+                    analytics_result: state.error_log_analyzer.analytics_result
                 }
             });
+            break;
+        case RESPONSE_ERROR_LOG_ANALYTICS:
+            return Object.assign({}, state, {
+                error_log_analyzer: {
+                    status: {
+                        is_fetching: false
+                    },
+                    analytics_result: action.analytics_result,
+                }
+            });
+            break;
         case CHANGE_ERROR_LOG_PATH:
             return Object.assign({}, state, {
                 error_log_data_config: {
@@ -40,6 +58,7 @@ export default function llsubmit4_error_log_reducer(state={
                     info: null
                 }
             });
+            break;
         case REQUEST_ERROR_LOG_INFO:
             return Object.assign({}, state, {
                 error_log_data_config: {
@@ -47,6 +66,7 @@ export default function llsubmit4_error_log_reducer(state={
                     info: null
                 }
             });
+            break;
         case RECEIVE_ERROR_LOG_INFO:
             let info = action.error_log_info_response.data;
             let info_range = info.range;

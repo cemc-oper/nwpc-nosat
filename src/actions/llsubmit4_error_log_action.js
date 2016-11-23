@@ -1,8 +1,17 @@
-export const RESPONSE_ANALYTICS_RESULT = "RESPONSE_ANALYTICS_RESULT";
+export const REQUEST_ERROR_LOG_ANALYTICS = "REQUEST_ERROR_LOG_ANALYTICS";
 
-export function receiveAnalyticsResult(analytics_result) {
+export function requestErrorLogAnalytics() {
     return {
-        type: RESPONSE_ANALYTICS_RESULT,
+        type: REQUEST_ERROR_LOG_ANALYTICS
+    }
+}
+
+
+export const RESPONSE_ERROR_LOG_ANALYTICS = "RESPONSE_ERROR_LOG_ANALYTICS";
+
+export function receiveErrorLogAnalytics(analytics_result) {
+    return {
+        type: RESPONSE_ERROR_LOG_ANALYTICS,
         analytics_result
     }
 }

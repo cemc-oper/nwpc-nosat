@@ -3,7 +3,7 @@ import * as d3time from 'd3-time'
 import * as d3_time_format from 'd3-time-format'
 import * as d3_format from 'd3-format'
 import * as d3_array from 'd3-array'
-import ErrorAnalyzerBarChart from "../components/ErrorAnalyzerBarChart"
+import ErrorAnalyzerBarChart from "./ErrorAnalyzerBarChart"
 
 export default  class AnalyticsChart extends Component{
     constructor(props) {
@@ -286,12 +286,9 @@ export default  class AnalyticsChart extends Component{
 
     render() {
         const {analytics_result} = this.props;
-        // console.log('AnalyticsChart', analytics_result);
         if(analytics_result === null){
             return (
-                <div>
-
-                </div>
+                <div />
             )
         }
         if(analytics_result.type == "count"){
@@ -315,7 +312,7 @@ export default  class AnalyticsChart extends Component{
                     break;
                 default:
                     return (
-                        <div></div>
+                        <div />
                     )
             }
         } else {
