@@ -13,15 +13,20 @@ export default  class ErrorAnalyzerConfig extends Component{
         return config;
     }
 
+    handleRunClick() {
+        let {run_handler } = this.props.handler;
+        run_handler();
+    }
+
     render() {
         const { error_log_path, analytics_type, begin_date, end_date } = this.props;
         return (
             <div>
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="panel panel-primary">
+                        <div className="panel panel-default">
                             <div className="panel-heading">
-                                <h3 className="panel-title">配置</h3>
+                                <h3 className="panel-title">统计设置</h3>
                             </div>
                             <div className="panel-body">
                                 <form>
@@ -43,12 +48,13 @@ export default  class ErrorAnalyzerConfig extends Component{
                                         <label>结束日期</label>
                                         <input type="date" className="form-control" ref="end_date_node" defaultValue={end_date} />
                                     </div>
+                                    <button type="button" className="btn btn-primary"
+                                            onClick={this.handleRunClick.bind(this)}>
+                                        运行
+                                    </button>
                                 </form>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -58,7 +64,11 @@ export default  class ErrorAnalyzerConfig extends Component{
 
 ErrorAnalyzerConfig.propTypes = {
     error_log_path: PropTypes.string,
-    analytis_type: PropTypes.string,
+    analytics_type: PropTypes.string,
     begin_date: PropTypes.string,
-    end_date: PropTypes.string
-}
+    end_date: PropTypes.string,
+    handler: PropTypes.shape({
+        run_handler: PropTypes.func
+    })
+};
+

@@ -40,7 +40,7 @@ class OperationSystemAnalyticsApp extends Component{
         })
     }
 
-    handleRunClick() {
+    runAnalyzer() {
         let session = this.refs.hpc_auth.getSession();
         let data_config = this.refs.data_config.getConfig();
         let analyzer_config = this.refs.analyzer_config.getConfig();
@@ -116,26 +116,18 @@ class OperationSystemAnalyticsApp extends Component{
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-sm-4">
+                    <div className="col-sm-3">
                         <ErrorAnalyzerConfig ref="analyzer_config"
                           analytics_type="day"
                           begin_date="2016-11-07"
-                          end_date="2016-11-14"/>
-                        <div className="row">
-                            <div className="col-sm-12">
-                            <form>
-                                <div className="form-group">
-                                    <button type="button" className="btn btn-primary"
-                                        onClick={this.handleRunClick.bind(this)}>
-                                        运行
-                                        </button>
-                                </div>
-                            </form>
-                            </div>
-                        </div>
+                          end_date="2016-11-14"
+                          handler={{
+                              run_handler: this.runAnalyzer.bind(this)
+                          }}
+                        />
                     </div>
-                    <div className="col-sm-8">
-                        <div className="panel panel-success">
+                    <div className="col-sm-9">
+                        <div className="panel panel-default">
                             <div className="panel-heading">
                                 <h3 className="panel-title">统计结果</h3>
                             </div>
