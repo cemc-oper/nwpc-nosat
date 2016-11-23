@@ -6,8 +6,8 @@ import moment from 'moment'
 // const electron = require('electron');
 
 import HpcAuth from '../components/HpcAuth/index'
-import ErrorAnalyzerConfig from '../components/ErrorAnalyzerConfig'
-import ErrorAnalyticsDataConfig from '../components/llsubmit4/ErrorAnalyticsDataConfig'
+import ErrorAnalyzerConfig from '../components/llsubmit4/ErrorAnalyzerConfig'
+import ErrorAnalyzerDataConfig from '../components/llsubmit4/ErrorAnalyzerDataConfig'
 import AnalyzerResult from '../components/llsubmit4/AnalyzerResult/index'
 
 import {
@@ -122,7 +122,7 @@ class OperationSystemAnalyticsApp extends Component{
                 </div>
                 <div className="row">
                     <div className="col-sm-12">
-                        <ErrorAnalyticsDataConfig
+                        <ErrorAnalyzerDataConfig
                             ref="data_config"
                             error_log_path={error_log_path}
                             error_log_info={info}

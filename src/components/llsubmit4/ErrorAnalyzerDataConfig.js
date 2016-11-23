@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import mement from 'moment'
 require("./style.css");
 
-export default  class ErrorAnalyticsDataConfig extends Component{
+export default  class ErrorAnalyerDataConfig extends Component{
     constructor(props) {
         super(props);
     }
@@ -79,7 +79,7 @@ export default  class ErrorAnalyticsDataConfig extends Component{
     }
 }
 
-ErrorAnalyticsDataConfig.propTypes = {
+ErrorAnalyerDataConfig.propTypes = {
     error_log_path: PropTypes.string,
     error_log_info: PropTypes.oneOfType([
             PropTypes.object,
