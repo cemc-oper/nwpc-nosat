@@ -30,3 +30,11 @@ export function receiveErrorLogInfo(error_log_info_response){
         error_log_info_response
     };
 }
+
+export const CHANGE_ANALYZER_CONFIG="CHANGE_ANALYZER_CONFIG";
+export function changeAnalyzerConfig(config){
+    return {
+        type: CHANGE_ANALYZER_CONFIG,
+        config
+    }
+}

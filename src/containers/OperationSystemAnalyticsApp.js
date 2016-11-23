@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {ipcRenderer} from 'electron'
+import moment from 'moment'
 // const electron = require('electron');
 
 import HpcAuth from '../components/HpcAuth/index'
@@ -13,7 +14,8 @@ import {
     receiveAnalyticsResult,
     changeErrorLogPath,
     requestErrorLogInfo,
-    receiveErrorLogInfo
+    receiveErrorLogInfo,
+    changeAnalyzerConfig
 } from '../actions/llsubmit4_error_log_action'
 
 import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
@@ -43,9 +45,16 @@ class OperationSystemAnalyticsApp extends Component{
     runAnalyzer() {
         let session = this.refs.hpc_auth.getSession();
         let data_config = this.refs.data_config.getConfig();
-        let analyzer_config = this.refs.analyzer_config.getConfig();
 
-        ipcRenderer.send('llsubmit4.error-log.analytics.get', session, data_config, analyzer_config);
+        let {error_log_analyzer_config} = this.props;
+        let end_date = moment(error_log_analyzer_config.last_date).add(1, "days");
+        let send_analyzer_config = {
+            analytics_type: error_log_analyzer_config.analytics_type,
+            begin_date: error_log_analyzer_config.first_date.format("YYYY-MM-DD"),
+            end_date: end_date.format("YYYY-MM-DD")
+        };
+
+        ipcRenderer.send('llsubmit4.error-log.analytics.get', session, data_config, send_analyzer_config);
     }
 
     testSession(session) {
@@ -79,8 +88,13 @@ class OperationSystemAnalyticsApp extends Component{
         dispatch(changeErrorLogPath(error_log_path));
     }
 
+    changeAnalyzerConfig(config){
+        const { dispatch } = this.props;
+        dispatch(changeAnalyzerConfig(config));
+    }
+
     render() {
-        const { analytics_chart, session_system, error_log_data_config } = this.props;
+        const { analytics_chart, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
         const { analytics_result } = analytics_chart;
         const { session_list, current_session, test_session } = session_system;
         const { error_log_path, info } = error_log_data_config;
@@ -118,11 +132,10 @@ class OperationSystemAnalyticsApp extends Component{
                 <div className="row">
                     <div className="col-sm-3">
                         <ErrorAnalyzerConfig ref="analyzer_config"
-                          analytics_type="day"
-                          begin_date="2016-11-07"
-                          end_date="2016-11-14"
+                          analyzer_config={error_log_analyzer_config}
                           handler={{
-                              run_handler: this.runAnalyzer.bind(this)
+                              run_handler: this.runAnalyzer.bind(this),
+                              change_handler: this.changeAnalyzerConfig.bind(this)
                           }}
                         />
                     </div>
@@ -161,7 +174,14 @@ OperationSystemAnalyticsApp.propTypes = {
             PropTypes.string
         ]),
         info: PropTypes.object
-    })
+    }),
+    error_log_analyzer_config: PropTypes.shape({
+        analytics_type: PropTypes.oneOf([
+            'day', 'weekday', 'system', 'date-hour', 'hour'
+        ]),
+        first_date: PropTypes.object,
+        last_date: PropTypes.object
+    }),
 };
 
 
@@ -169,7 +189,8 @@ function mapStateToProps(state){
     return {
         analytics_chart: state.llsubmit4_error_log.analytics_chart,
         session_system: state.session_system,
-        error_log_data_config: state.llsubmit4_error_log.error_log_data_config
+        error_log_data_config: state.llsubmit4_error_log.error_log_data_config,
+        error_log_analyzer_config: state.llsubmit4_error_log.error_log_analyzer_config
     }
 }
 

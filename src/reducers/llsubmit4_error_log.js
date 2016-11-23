@@ -3,6 +3,7 @@ import {
     CHANGE_ERROR_LOG_PATH,
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
+    CHANGE_ANALYZER_CONFIG
 } from '../actions/llsubmit4_error_log_action'
 import moment from 'moment'
 
@@ -12,7 +13,11 @@ export default function llsubmit4_error_log_reducer(state={
         last_updated: null
     },
     auth:{},
-    config:{},
+    error_log_analyzer_config:{
+        analytics_type: 'day',
+        first_date: moment().subtract(1, 'days').subtract(1, 'weeks'),
+        last_date: moment().subtract(1, 'days')
+    },
     analytics_chart:{
         analytics_result:null
     },
@@ -53,6 +58,11 @@ export default function llsubmit4_error_log_reducer(state={
                     error_log_path: state.error_log_data_config.error_log_path,
                     info: info
                 }
+            });
+            break;
+        case CHANGE_ANALYZER_CONFIG:
+            return Object.assign({}, state, {
+                error_log_analyzer_config: action.config
             });
             break;
         default:

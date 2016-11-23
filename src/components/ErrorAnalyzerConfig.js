@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import moment from 'moment'
 
 export default  class ErrorAnalyzerConfig extends Component{
     constructor(props) {
@@ -8,9 +9,15 @@ export default  class ErrorAnalyzerConfig extends Component{
     getConfig() {
         let config = Object();
         config.analytics_type = this.refs.analytics_type_node.value;
-        config.begin_date = this.refs.begin_date_node.value;
-        config.end_date = this.refs.end_date_node.value;
+        config.first_date = moment(this.refs.first_date_node.value);
+        config.last_date = moment(this.refs.last_date_node.value);
         return config;
+    }
+
+    handleChange() {
+        let config = this.getConfig();
+        const {change_handler} = this.props.handler;
+        change_handler(config);
     }
 
     handleRunClick() {
@@ -19,7 +26,7 @@ export default  class ErrorAnalyzerConfig extends Component{
     }
 
     render() {
-        const { error_log_path, analytics_type, begin_date, end_date } = this.props;
+        const { analytics_type, first_date, last_date } = this.props.analyzer_config;
         return (
             <div>
                 <div className="row">
@@ -32,7 +39,8 @@ export default  class ErrorAnalyzerConfig extends Component{
                                 <form>
                                     <div className="form-group">
                                         <label>统计类型</label>
-                                        <select className="form-control" ref="analytics_type_node" defaultValue={analytics_type}>
+                                        <select className="form-control" ref="analytics_type_node"
+                                                value={analytics_type} onChange={this.handleChange.bind(this)}>
                                             <option value="day">Day</option>
                                             <option value="weekday">Weekday</option>
                                             <option value="system">System</option>
@@ -42,11 +50,13 @@ export default  class ErrorAnalyzerConfig extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label>起始日期</label>
-                                        <input type="date" className="form-control" ref="begin_date_node" defaultValue={begin_date} />
+                                        <input type="date" className="form-control" ref="first_date_node"
+                                               value={first_date.format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
                                     </div>
                                     <div className="form-group">
                                         <label>结束日期</label>
-                                        <input type="date" className="form-control" ref="end_date_node" defaultValue={end_date} />
+                                        <input type="date" className="form-control" ref="last_date_node"
+                                               value={last_date.format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
                                     </div>
                                     <button type="button" className="btn btn-primary"
                                             onClick={this.handleRunClick.bind(this)}>
@@ -63,12 +73,14 @@ export default  class ErrorAnalyzerConfig extends Component{
 }
 
 ErrorAnalyzerConfig.propTypes = {
-    error_log_path: PropTypes.string,
-    analytics_type: PropTypes.string,
-    begin_date: PropTypes.string,
-    end_date: PropTypes.string,
+    analyzer_config: PropTypes.shape({
+        analytics_type: PropTypes.string,
+        first_date: PropTypes.object,
+        last_date: PropTypes.object,
+    }),
     handler: PropTypes.shape({
-        run_handler: PropTypes.func
+        run_handler: PropTypes.func,
+        change_handler: PropTypes.func
     })
 };
 
