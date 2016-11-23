@@ -9,7 +9,7 @@ var analytics_program = {
 };
 
 
-ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
+ipc.on('llsubmit4.error-log.analytics.get', function (event, auth, config) {
     console.log(auth, config);
     let command = analytics_program.interpreter_path + " "
         + analytics_program.script_path + " "
@@ -27,7 +27,7 @@ ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
                 console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
                 conn.end();
                 console.log(std_out);
-                event.sender.send('llsubmit4-error-analytics-reply', std_out);
+                event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
             }).on('data', function(data) {
                 std_out += data;
             }).stderr.on('data', function(data) {
@@ -50,7 +50,7 @@ ipc.on('llsubmit4-error-analytics-message', function (event, auth, config) {
  *      4. analytics version
  */
 
-ipc.on('session-system-test-session-message', function(event, session){
+ipc.on('session-system.session.test.get', function(event, session){
     let ssh_auth_config = {
         host: session.host,
         port: session.port,
@@ -77,7 +77,7 @@ ipc.on('session-system-test-session-message', function(event, session){
         // });
 
         conn.end();
-        event.sender.send('session-system-test-session-reply', {
+        event.sender.send('session-system.session.test.get.reply', {
             'app': 'operation-system-analytics-tool',
             'type': 'session-test',
             'timestamp': Date.now(),
@@ -88,7 +88,7 @@ ipc.on('session-system-test-session-message', function(event, session){
         });
     }).on('error', function(err){
         conn.end();
-        event.sender.send('session-system-test-session-reply', {
+        event.sender.send('session-system.session.test.get.reply', {
             'app': 'operation-system-analytics-tool',
             'type': 'session-test',
             'timestamp': Date.now(),

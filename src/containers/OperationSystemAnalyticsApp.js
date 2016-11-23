@@ -25,12 +25,12 @@ class OperationSystemAnalyticsApp extends Component{
 
     componentDidMount() {
         const { dispatch } = this.props;
-        ipcRenderer.on('llsubmit4-error-analytics-reply', function (event, result) {
+        ipcRenderer.on('llsubmit4.error-log.analytics.get.reply', function (event, result) {
             let analytics_result = JSON.parse(result);
             dispatch(receiveAnalyticsResult(analytics_result));
         });
 
-        ipcRenderer.on('session-system-test-session-reply', function (event, result) {
+        ipcRenderer.on('session-system.session.test.get.reply', function (event, result) {
             dispatch(receiveTestSessionResponse(result));
         });
 
@@ -41,16 +41,16 @@ class OperationSystemAnalyticsApp extends Component{
     }
 
     handleRunClick() {
-        let auth = this.refs.hpc_auth.getSession();
+        let session = this.refs.hpc_auth.getSession();
         let config = this.refs.error_analyzer_config.getConfig();
 
-        ipcRenderer.send('llsubmit4-error-analytics-message', auth, config);
+        ipcRenderer.send('llsubmit4.error-log.analytics.get', session, config);
     }
 
     testSession(session) {
         const { dispatch } = this.props;
         dispatch(requestTestSession(session));
-        ipcRenderer.send('session-system-test-session-message', session);
+        ipcRenderer.send('session-system.session.test.get', session);
     }
 
     saveSession(session) {
@@ -68,7 +68,6 @@ class OperationSystemAnalyticsApp extends Component{
         const { error_log_data_config } = this.props;
 
         const { dispatch } = this.props;
-        console.log("requestErrorLogInfo");
         ipcRenderer.send('llsubmit4.error-log.info.get',
             current_session, error_log_data_config.error_log_path);
         dispatch(requestErrorLogInfo(current_session));
