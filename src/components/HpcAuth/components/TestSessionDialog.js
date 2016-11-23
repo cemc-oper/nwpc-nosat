@@ -94,7 +94,7 @@ TestSessionDialog.propTypes = {
     is_open: PropTypes.bool,
     session: PropTypes.shape({
         host: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-        port: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        port: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
         user: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         password: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
     }),

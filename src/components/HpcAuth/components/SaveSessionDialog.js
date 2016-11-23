@@ -16,7 +16,7 @@ export default class SaveSessionDialog extends Component{
         let host_node = this.refs.host;
         session.host = host_node.value;
         let port_node = this.refs.port;
-        session.port = port_node.value;
+        session.port = parseInt(port_node.value, 10);
         let user_node = this.refs.user;
         session.user = user_node.value;
         let password_node = this.refs.password;
@@ -109,7 +109,7 @@ SaveSessionDialog.propTypes = {
     is_open: PropTypes.bool,
     session: PropTypes.shape({
         host: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-        port: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        port: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
         user: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         password: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         name: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
