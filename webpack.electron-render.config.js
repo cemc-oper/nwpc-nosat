@@ -1,9 +1,9 @@
-var path = require('path');
-var webpack = require('webpack');
+let path = require('path');
+let webpack = require('webpack');
 
-var nodeModulesPath = path.resolve(__dirname, 'node_modules');
+let nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
-var entry= {
+let entry= {
     index: './src/index.js',
     common: [
         'react',
@@ -25,7 +25,7 @@ var entry= {
     ]
 };
 
-var loaders= {
+let loaders= {
     loaders: [
         {
             test: /\.js$/,
@@ -56,7 +56,7 @@ var loaders= {
     ]
 };
 
-var resolve = {
+let resolve = {
     alias: {
         'react': path.join(nodeModulesPath, '/react/dist/react'),
         'react-dom': path.join(nodeModulesPath, '/react-dom/dist/react-dom'),
@@ -75,7 +75,7 @@ var resolve = {
     }
 };
 
-var plugins = [
+let plugins = [
     new  webpack.optimize.CommonsChunkPlugin({
         name:"common",
         filename: "common.dist.js"
@@ -86,7 +86,7 @@ var plugins = [
     }),
 ];
 
-var externals= {
+let externals= {
     // 'electron': 'electron'
     // 'react': 'React',
     // 'react-dom': 'ReactDOM',

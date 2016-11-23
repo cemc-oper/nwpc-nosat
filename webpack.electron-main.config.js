@@ -1,14 +1,14 @@
-var path = require('path');
-var webpack = require('webpack');
-var CopyWebPackPlugin = require('copy-webpack-plugin');
+let path = require('path');
+let webpack = require('webpack');
+let CopyWebPackPlugin = require('copy-webpack-plugin');
 
-var nodeModulesPath = path.resolve(__dirname, 'node_modules');
+let nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
-var entry= {
+let entry= {
     // index: './app/main.js'
 };
 
-var loaders= {
+let loaders= {
     loaders: [
         {
             test: /\.json$/,
@@ -17,9 +17,9 @@ var loaders= {
     ]
 };
 
-var resolve = {};
+let resolve = {};
 
-var plugins = [
+let plugins = [
     new CopyWebPackPlugin([
         // {'from':'./app/index.html', 'to':'./index.html'},
         // {'from':'./app/package.json', 'to':'./package.json'}
@@ -27,7 +27,7 @@ var plugins = [
     ])
 ];
 
-var externals= {};
+let externals= {};
 
 module.exports = {
     devtool: "source-map",
