@@ -128,14 +128,14 @@ export default  class ErrorAnalyzerDataConfig extends Component{
                                 保存
                             </button>
                             <div className="btn-group">
-                                <button className="btn btn-default" type="button">
+                                <button className="btn btn-default" type="button" disabled="disabled">
                                     打开
                                 </button>
                                 <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                     <span className="caret"/>
                                 </button>
                                 <ul className="dropdown-menu dropdown-menu-right" role="menu">
-                                    <li><a href="#">日志路径窗口</a></li>
+                                    <li><a href="#" className="btn btn-sm btn-default disabled">日志路径窗口</a></li>
                                     <li className="divider" />
                                     { log_path_nodes }
                                 </ul>

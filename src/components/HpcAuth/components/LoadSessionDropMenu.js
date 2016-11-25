@@ -19,14 +19,14 @@ export default class LoadSessionDropMenu extends Component{
         });
         return (
             <div className="btn-group">
-                <button className="btn btn-default" type="button">
+                <button className="btn btn-default" type="button" disabled="disabled">
                     打开
                 </button>
                 <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                     <span className="caret"/>
                 </button>
                 <ul className="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="#">会话窗口</a></li>
+                    <li><a href="#" className="btn btn-sm btn-default disabled">会话窗口</a></li>
                     <li className="divider" />
                     { session_nodes }
                 </ul>
