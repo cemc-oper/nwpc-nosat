@@ -3,6 +3,7 @@ import {
     RESPONSE_ERROR_LOG_ANALYTICS,
     CHANGE_ERROR_LOG_PATH,
     LOAD_ERROR_LOG,
+    SAVE_ERROR_LOG,
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
     CHANGE_ANALYZER_CONFIG
@@ -85,6 +86,15 @@ export default function llsubmit4_error_log_reducer(state={
                     error_log_path: action.error_log.path,
                     info: null,
                     error_log_list: state.error_log_data_config.error_log_list
+                }
+            });
+            break;
+        case SAVE_ERROR_LOG:
+            return Object.assign({}, state, {
+                error_log_data_config: {
+                    error_log_path: state.error_log_data_config.error_log_path,
+                    info: state.error_log_data_config.info,
+                    error_log_list: state.error_log_data_config.error_log_list.concat([action.error_log])
                 }
             });
             break;

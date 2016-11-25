@@ -31,6 +31,14 @@ export function loadErrorLog(error_log){
     }
 }
 
+export const SAVE_ERROR_LOG = "SAVE_ERROR_LOG";
+export function saveErrorLog(error_log){
+    return {
+        type: SAVE_ERROR_LOG,
+        error_log
+    }
+}
+
 export const REQUEST_ERROR_LOG_INFO = "REQUEST_ERROR_LOG_INFO";
 export function requestErrorLogInfo(session, error_log_data_config){
     return {

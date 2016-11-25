@@ -67,6 +67,7 @@ export default class SaveSessionDialog extends Component{
                         <h4 className="modal-title">保存会话</h4>
                     </div>
                     <div className="modal-body">
+                        <div className="alert alert-danger" role="adangerlert">正在开发中，仅在本次运行中有效！</div>
                         <form>
                             <div className={session_name_group_class}>
                                 <label className="control-label">会话名称</label>

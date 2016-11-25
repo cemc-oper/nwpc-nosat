@@ -15,6 +15,7 @@ import {
     receiveErrorLogAnalytics,
     changeErrorLogPath,
     loadErrorLog,
+    saveErrorLog,
     requestErrorLogInfo,
     receiveErrorLogInfo,
     changeAnalyzerConfig
@@ -99,6 +100,11 @@ class OperationSystemAnalyticsApp extends Component{
         dispatch(loadErrorLog(error_log));
     }
 
+    handleSaveErrorLog(error_log){
+        const { dispatch } = this.props;
+        dispatch(saveErrorLog(error_log));
+    }
+
     changeAnalyzerConfig(config){
         const { dispatch } = this.props;
         dispatch(changeAnalyzerConfig(config));
@@ -136,7 +142,8 @@ class OperationSystemAnalyticsApp extends Component{
                             handler={{
                                 request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
                                 change_error_log_path_handler: this.changeErrorLogPath.bind(this),
-                                load_error_log_handler: this.handleLoadErrorLog.bind(this)
+                                load_error_log_handler: this.handleLoadErrorLog.bind(this),
+                                save_click_handler: this.handleSaveErrorLog.bind(this)
                             }}
                         />
                     </div>

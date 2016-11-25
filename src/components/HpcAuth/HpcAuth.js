@@ -65,8 +65,6 @@ export default class HpcAuth extends Component{
         this.setState({is_save_dialog_open: false});
     }
 
-
-
     render() {
         const { current_session, session_list, test_session } = this.props;
         const { host, port, user, password} = current_session;

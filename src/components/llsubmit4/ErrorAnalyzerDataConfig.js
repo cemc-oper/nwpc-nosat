@@ -1,10 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import mement from 'moment'
+
+import SaveErrorLogDialog from './SaveErrorLogDialog'
+
 require("./style.css");
 
-export default  class ErrorAnalyerDataConfig extends Component{
+export default  class ErrorAnalyzerDataConfig extends Component{
     constructor(props) {
         super(props);
+        this.state = {
+            is_save_dialog_open: false,
+            working_error_log: {
+                path: null,
+                name: null
+            }
+        }
     }
 
     getConfig(){
@@ -16,6 +26,13 @@ export default  class ErrorAnalyerDataConfig extends Component{
     getErrorLogPath(){
         let error_log_path_node = this.refs.error_log_path_node;
         return error_log_path_node.value;
+    }
+    getErrorLog(){
+        let error_log_path_node = this.refs.error_log_path_node;
+        return {
+            name: null,
+            path: error_log_path_node.value
+        };
     }
 
     handleErrorLogPathChange(event){
@@ -34,9 +51,32 @@ export default  class ErrorAnalyerDataConfig extends Component{
         load_error_log_handler(error_log);
     }
 
+    handleSaveClick() {
+        let error_log = this.getErrorLog();
+        error_log.name = null;
+        this.setState({
+            is_save_dialog_open: true,
+            working_error_log: error_log
+        });
+    }
+
+    closeSaveSessionDialog() {
+        this.setState({is_save_dialog_open: false});
+    }
+
+    acceptSaveSessionDialog(error_log) {
+        const {save_click_handler} = this.props.handler;
+        save_click_handler(error_log);
+        this.setState({is_save_dialog_open: false});
+    }
+
     render(){
         let component = this;
         const { error_log_path, error_log_info, error_log_list } = this.props;
+
+        let { is_save_dialog_open, working_error_log } = this.state;
+
+
         let log_info_node = null;
         if(error_log_info) {
             const { range } = error_log_info;
@@ -83,7 +123,8 @@ export default  class ErrorAnalyerDataConfig extends Component{
                                     onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
                                 测试
                             </button>
-                            <button className="btn btn-default">
+                            <button className="btn btn-default"
+                                    onClick={this.handleSaveClick.bind(this)}>
                                 保存
                             </button>
                             <div className="btn-group">
@@ -103,14 +144,23 @@ export default  class ErrorAnalyerDataConfig extends Component{
                     </div>
                 </div>
                 { log_info_node }
+                <SaveErrorLogDialog
+                    is_open={is_save_dialog_open}
+                    error_log={working_error_log}
+                    handler={{
+                        close_handler: this.closeSaveSessionDialog.bind(this),
+                        save_handler: this.acceptSaveSessionDialog.bind(this)
+                    }}
+                />
             </div>
         )
     }
 }
 
-ErrorAnalyerDataConfig.propTypes = {
+ErrorAnalyzerDataConfig.propTypes = {
     error_log_path: PropTypes.string,
-    error_log_info: PropTypes.oneOfType([
+    error_log_info: PropTypes.oneOfType(
+        [
             PropTypes.object,
             PropTypes.shape({
                 range: PropTypes.shape({
@@ -127,6 +177,7 @@ ErrorAnalyerDataConfig.propTypes = {
     handler: PropTypes.shape({
         change_error_log_path_handler: PropTypes.func,
         request_error_log_info_handler: PropTypes.func,
-        load_error_log_handler: PropTypes.func
+        load_error_log_handler: PropTypes.func,
+        save_click_handler: PropTypes.func
     })
 };
