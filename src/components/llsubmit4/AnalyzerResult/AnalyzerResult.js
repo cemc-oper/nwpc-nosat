@@ -15,7 +15,11 @@ export default class AnalyzerResult extends Component{
                         <h3 className="panel-title">统计结果</h3>
                     </div>
                     <div className="panel-body">
-                        <AnalyticsChart analytics_result={analytics_result} />
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <AnalyticsChart analytics_result={analytics_result} />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <WaitingAnalyzerDialog is_open={status.is_fetching} handler={{

@@ -12,7 +12,7 @@ export default  class AnalyticsChart extends Component{
 
     countDayChart(analytics_result){
         const {data} = analytics_result;
-        const { begin_date, end_date, count_type, count_result } = data;
+        const { begin_date, end_date, count_type, count_result, request } = data;
 
         let day_formatter = d3_time_format.timeFormat("%Y-%m-%d");
         let day_parser = d3_time_format.timeParse("%Y-%m-%d");
@@ -62,11 +62,7 @@ export default  class AnalyticsChart extends Component{
             series: series
         };
 
-        return (
-            <div>
-                <ErrorAnalyzerBarChart data={chart_data} />
-            </div>
-        )
+        return chart_data;
     }
 
     countWeekdayChart(analytics_result){
@@ -113,11 +109,7 @@ export default  class AnalyticsChart extends Component{
             series: series
         };
 
-        return (
-            <div>
-                <ErrorAnalyzerBarChart data={chart_data} />
-            </div>
-        )
+        return chart_data;
     }
 
     countSystemChart(analytics_result){
@@ -164,11 +156,7 @@ export default  class AnalyticsChart extends Component{
             series: series
         };
 
-        return (
-            <div>
-                <ErrorAnalyzerBarChart data={chart_data} />
-            </div>
-        )
+        return chart_data;
     }
 
     countDateHourChart(analytics_result){
@@ -220,11 +208,7 @@ export default  class AnalyticsChart extends Component{
             series: series
         };
 
-        return (
-            <div>
-                <ErrorAnalyzerBarChart data={chart_data} />
-            </div>
-        )
+        return chart_data;
     }
 
     countHourChart(analytics_result){
@@ -277,11 +261,7 @@ export default  class AnalyticsChart extends Component{
             series: series
         };
 
-        return (
-            <div>
-                <ErrorAnalyzerBarChart data={chart_data} />
-            </div>
-        )
+        return chart_data;
     }
 
     render() {
@@ -293,33 +273,51 @@ export default  class AnalyticsChart extends Component{
         }
         if(analytics_result.type == "count"){
             const {data} = analytics_result;
-            const { begin_date, end_date, count_type, count_result } = data;
-
+            const { begin_date, end_date, count_type, count_result, request } = data;
+            let chart_data = null;
             switch(count_type){
                 case "day":
-                    return this.countDayChart(analytics_result);
+                    chart_data = this.countDayChart(analytics_result);
+                    break;
                 case "weekday":
-                    return this.countWeekdayChart(analytics_result);
+                    chart_data = this.countWeekdayChart(analytics_result);
+                    break;
                     break;
                 case "system":
-                    return this.countSystemChart(analytics_result);
+                    chart_data = this.countSystemChart(analytics_result);
+                    break;
                     break;
                 case "date-hour":
-                    return this.countDateHourChart(analytics_result);
+                    chart_data = this.countDateHourChart(analytics_result);
+                    break;
                     break;
                 case "hour":
-                    return this.countHourChart(analytics_result);
+                    chart_data = this.countHourChart(analytics_result);
                     break;
                 default:
                     return (
                         <div />
-                    )
+                    );
             }
-        } else {
             return (
                 <div>
-
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <ErrorAnalyzerBarChart data={chart_data} />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-xs-10 col-xs-offset-1">
+                            <p>日志路径：{request.log_file_path}</p>
+                            <p>起始日期：{begin_date} 结束日期：{end_date}</p>
+                            <p>统计类型：count - {count_type}</p>
+                        </div>
+                    </div>
                 </div>
+            )
+        } else {
+            return (
+                <div/>
             )
         }
 
