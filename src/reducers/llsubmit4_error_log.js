@@ -2,6 +2,7 @@ import {
     REQUEST_ERROR_LOG_ANALYTICS,
     RESPONSE_ERROR_LOG_ANALYTICS,
     CHANGE_ERROR_LOG_PATH,
+    LOAD_ERROR_LOG,
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
     CHANGE_ANALYZER_CONFIG
@@ -27,7 +28,25 @@ export default function llsubmit4_error_log_reducer(state={
     },
     error_log_data_config:{
         error_log_path: '/cma/g1/nwp/sublog/llsubmit4.error.log',
-        info: null
+        info: null,
+        error_log_list: [
+            {
+                name: 'nwp',
+                path: '/cma/g1/nwp/sublog/llsubmit4.error.log'
+            },
+            {
+                name: 'nwp_qu',
+                path: '/cma/g1/nwp_qu/sublog/llsubmit4.error.log'
+            },
+            {
+                name: 'nwp_pd',
+                path: '/cma/g3/nwp_qu/sublog/llsubmit4.error.log'
+            },
+            {
+                name: 'nwp_sp',
+                path: '/cma/g1/nwp_sp/sublog/llsubmit4.error.log'
+            }
+        ]
     }
 }, action) {
     switch(action.type){
@@ -55,15 +74,27 @@ export default function llsubmit4_error_log_reducer(state={
             return Object.assign({}, state, {
                 error_log_data_config: {
                     error_log_path: action.error_log_path,
-                    info: null
+                    info: null,
+                    error_log_list: state.error_log_data_config.error_log_list
                 }
             });
+            break;
+        case LOAD_ERROR_LOG:
+            return Object.assign({}, state, {
+                error_log_data_config: {
+                    error_log_path: action.error_log.path,
+                    info: null,
+                    error_log_list: state.error_log_data_config.error_log_list
+                }
+            });
+            break;
             break;
         case REQUEST_ERROR_LOG_INFO:
             return Object.assign({}, state, {
                 error_log_data_config: {
                     error_log_path: state.error_log_data_config.error_log_path,
-                    info: null
+                    info: null,
+                    error_log_list: state.error_log_data_config.error_log_list
                 }
             });
             break;
@@ -76,7 +107,8 @@ export default function llsubmit4_error_log_reducer(state={
             return Object.assign({}, state, {
                 error_log_data_config: {
                     error_log_path: state.error_log_data_config.error_log_path,
-                    info: info
+                    info: info,
+                    error_log_list: state.error_log_data_config.error_log_list
                 }
             });
             break;

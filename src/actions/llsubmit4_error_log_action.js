@@ -6,7 +6,6 @@ export function requestErrorLogAnalytics() {
     }
 }
 
-
 export const RESPONSE_ERROR_LOG_ANALYTICS = "RESPONSE_ERROR_LOG_ANALYTICS";
 
 export function receiveErrorLogAnalytics(analytics_result) {
@@ -21,6 +20,14 @@ export function changeErrorLogPath(error_log_path){
     return {
         type: CHANGE_ERROR_LOG_PATH,
         error_log_path
+    }
+}
+
+export const LOAD_ERROR_LOG = "LOAD_ERROR_LOG";
+export function loadErrorLog(error_log){
+    return {
+        type: LOAD_ERROR_LOG,
+        error_log
     }
 }
 

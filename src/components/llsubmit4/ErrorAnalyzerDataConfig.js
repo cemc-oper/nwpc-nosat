@@ -29,8 +29,14 @@ export default  class ErrorAnalyerDataConfig extends Component{
         request_error_log_info_handler();
     }
 
+    handleLoadErrorLogClick(error_log){
+        const {load_error_log_handler } = this.props.handler;
+        load_error_log_handler(error_log);
+    }
+
     render(){
-        const { error_log_path, error_log_info } = this.props;
+        let component = this;
+        const { error_log_path, error_log_info, error_log_list } = this.props;
         let log_info_node = null;
         if(error_log_info) {
             const { range } = error_log_info;
@@ -48,6 +54,17 @@ export default  class ErrorAnalyerDataConfig extends Component{
                 </div>
             )
         }
+
+        let log_path_nodes = error_log_list.map(function(an_error_log, index){
+            return (
+                <li key={index}>
+                    <a href="#" onClick={component.handleLoadErrorLogClick.bind(component, an_error_log)}>
+                        {an_error_log.name}
+                        </a>
+                </li>
+            )
+        });
+
         return (
             <div>
                 <h4>错误日志路径</h4>
@@ -61,16 +78,28 @@ export default  class ErrorAnalyerDataConfig extends Component{
                         />
                     </div>
                     <div className="col-xs-3">
-                        <button className="btn btn-default"
-                                onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
-                            获取信息
-                        </button>
-                        <button className="btn btn-default">
-                            保存
-                        </button>
-                        <button className="btn btn-default">
-                            载入
-                        </button>
+                        <div className="btn-group pull-right">
+                            <button className="btn btn-default"
+                                    onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
+                                测试
+                            </button>
+                            <button className="btn btn-default">
+                                保存
+                            </button>
+                            <div className="btn-group">
+                                <button className="btn btn-default" type="button">
+                                    打开
+                                </button>
+                                <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span className="caret"/>
+                                </button>
+                                <ul className="dropdown-menu dropdown-menu-right" role="menu">
+                                    <li><a href="#">日志路径窗口</a></li>
+                                    <li className="divider" />
+                                    { log_path_nodes }
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 { log_info_node }
@@ -91,8 +120,13 @@ ErrorAnalyerDataConfig.propTypes = {
             })
         ]
     ),
+    error_log_list: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string,
+        path: PropTypes.string,
+    })),
     handler: PropTypes.shape({
         change_error_log_path_handler: PropTypes.func,
-        request_error_log_info_handler: PropTypes.func
+        request_error_log_info_handler: PropTypes.func,
+        load_error_log_handler: PropTypes.func
     })
 };

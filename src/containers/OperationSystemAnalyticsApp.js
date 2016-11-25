@@ -14,6 +14,7 @@ import {
     requestErrorLogAnalytics,
     receiveErrorLogAnalytics,
     changeErrorLogPath,
+    loadErrorLog,
     requestErrorLogInfo,
     receiveErrorLogInfo,
     changeAnalyzerConfig
@@ -93,6 +94,11 @@ class OperationSystemAnalyticsApp extends Component{
         dispatch(changeErrorLogPath(error_log_path));
     }
 
+    handleLoadErrorLog(error_log){
+        const { dispatch } = this.props;
+        dispatch(loadErrorLog(error_log));
+    }
+
     changeAnalyzerConfig(config){
         const { dispatch } = this.props;
         dispatch(changeAnalyzerConfig(config));
@@ -101,7 +107,7 @@ class OperationSystemAnalyticsApp extends Component{
     render() {
         const { error_log_analyzer, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
         const { session_list, current_session, test_session } = session_system;
-        const { error_log_path, info } = error_log_data_config;
+        const { error_log_path, info, error_log_list } = error_log_data_config;
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -126,9 +132,11 @@ class OperationSystemAnalyticsApp extends Component{
                             ref="data_config"
                             error_log_path={error_log_path}
                             error_log_info={info}
+                            error_log_list={error_log_list}
                             handler={{
                                 request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
                                 change_error_log_path_handler: this.changeErrorLogPath.bind(this),
+                                load_error_log_handler: this.handleLoadErrorLog.bind(this)
                             }}
                         />
                     </div>
@@ -171,7 +179,11 @@ OperationSystemAnalyticsApp.propTypes = {
             PropTypes.object,
             PropTypes.string
         ]),
-        info: PropTypes.object
+        info: PropTypes.object,
+        error_log_list: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            path: PropTypes.string,
+        }))
     }),
     error_log_analyzer_config: PropTypes.shape({
         analytics_type: PropTypes.oneOf([

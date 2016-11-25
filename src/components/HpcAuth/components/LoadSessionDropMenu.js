@@ -9,7 +9,7 @@ export default class LoadSessionDropMenu extends Component{
 
     render(){
         const { session_list } = this.props;
-        var component = this;
+        let component = this;
         let session_nodes = session_list.map(function(session, index){
             return (
                 <li key={index}>
@@ -20,7 +20,7 @@ export default class LoadSessionDropMenu extends Component{
         return (
             <div className="btn-group">
                 <button className="btn btn-default" type="button">
-                    载入
+                    打开
                 </button>
                 <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                     <span className="caret"/>
