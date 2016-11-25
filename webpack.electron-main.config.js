@@ -1,3 +1,4 @@
+'use strict';
 let path = require('path');
 let webpack = require('webpack');
 let CopyWebPackPlugin = require('copy-webpack-plugin');
