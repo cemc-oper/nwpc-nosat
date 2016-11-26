@@ -54,6 +54,10 @@ let loaders= {
             test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
             loader: 'url-loader?importLoaders=1&limit=1000&name=/fonts/[name].[ext]'
         },
+        {
+            test: /\.(png|jpeg|jpg)/,
+            loader: 'url-loader?limit=8192'
+        },
     ]
 };
 
@@ -106,7 +110,8 @@ module.exports = {
     output: {
         path: path.join(__dirname, './dist/app/scripts'),
         filename: "[name].entry.js",
-        sourceMapFilename: '[file].map'
+        sourceMapFilename: '[file].map',
+        publicPath: './scripts/'
     },
     module: loaders,
     externals: externals,

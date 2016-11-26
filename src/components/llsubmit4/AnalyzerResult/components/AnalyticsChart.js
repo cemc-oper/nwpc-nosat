@@ -4,6 +4,7 @@ import * as d3_time_format from 'd3-time-format'
 import * as d3_format from 'd3-format'
 import * as d3_array from 'd3-array'
 import ErrorAnalyzerBarChart from "./ErrorAnalyzerBarChart"
+let chart_placeholder_url = require('./chart_placeholder.png');
 
 export default  class AnalyticsChart extends Component{
     constructor(props) {
@@ -266,10 +267,18 @@ export default  class AnalyticsChart extends Component{
 
     render() {
         const {analytics_result} = this.props;
+        let empty_chart = (
+            <div className="row">
+                <div className="col-xs-4 col-xs-offset-4 text-center">
+                    <img src={chart_placeholder_url} />
+                </div>
+                <div className="col-xs-4 col-xs-offset-4 text-center">
+                    <p>欢迎您的使用</p>
+                </div>
+            </div>
+        );
         if(analytics_result === null){
-            return (
-                <div />
-            )
+            return empty_chart
         }
         if(analytics_result.type == "count"){
             const {data} = analytics_result;
@@ -295,9 +304,7 @@ export default  class AnalyticsChart extends Component{
                     chart_data = this.countHourChart(analytics_result);
                     break;
                 default:
-                    return (
-                        <div />
-                    );
+                    return empty_chart;
             }
             return (
                 <div>
@@ -316,9 +323,7 @@ export default  class AnalyticsChart extends Component{
                 </div>
             )
         } else {
-            return (
-                <div/>
-            )
+            return empty_chart;
         }
 
     }

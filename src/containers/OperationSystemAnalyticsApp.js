@@ -44,7 +44,7 @@ class OperationSystemAnalyticsApp extends Component{
             dispatch(receiveErrorLogInfo(log_info_response));
         });
 
-        this.runAnalyzer();
+        // this.runAnalyzer();
     }
 
     runAnalyzer() {
