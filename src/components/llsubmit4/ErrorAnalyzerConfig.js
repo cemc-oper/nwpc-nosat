@@ -68,7 +68,7 @@ export default  class ErrorAnalyzerConfig extends Component{
                                         <input type="date" className="form-control" ref="last_date_node"
                                                value={last_date.format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
                                     </div>
-                                    <button type="button" className="btn btn-primary"
+                                    <button type="button" className="btn btn-primary pull-right"
                                             onClick={this.handleRunClick.bind(this)}>
                                         运行
                                     </button>
