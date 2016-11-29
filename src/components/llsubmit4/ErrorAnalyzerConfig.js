@@ -51,7 +51,7 @@ export default  class ErrorAnalyzerConfig extends Component{
                                         <label>统计类型</label>
                                         <select className="form-control" ref="analytics_type_node"
                                                 value={analytics_type} onChange={this.handleChange.bind(this)}>
-                                            <option value="day">Day</option>
+                                            <option value="date">Date</option>
                                             <option value="weekday">Weekday</option>
                                             <option value="system">System</option>
                                             <option value="date-hour">Hour by day</option>

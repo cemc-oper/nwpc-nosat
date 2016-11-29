@@ -11,7 +11,7 @@ export default  class AnalyticsChart extends Component{
         super(props);
     }
 
-    countDayChart(analytics_result){
+    countDateChart(analytics_result){
         const {data} = analytics_result;
         const { begin_date, end_date, count_type, count_result, request } = data;
 
@@ -285,8 +285,8 @@ export default  class AnalyticsChart extends Component{
             const { begin_date, end_date, count_type, count_result, request } = data;
             let chart_data = null;
             switch(count_type){
-                case "day":
-                    chart_data = this.countDayChart(analytics_result);
+                case "date":
+                    chart_data = this.countDateChart(analytics_result);
                     break;
                 case "weekday":
                     chart_data = this.countWeekdayChart(analytics_result);

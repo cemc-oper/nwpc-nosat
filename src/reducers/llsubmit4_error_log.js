@@ -17,7 +17,7 @@ export default function llsubmit4_error_log_reducer(state={
     },
     auth:{},
     error_log_analyzer_config:{
-        analytics_type: 'day',
+        analytics_type: 'date',
         first_date: moment().subtract(1, 'weeks'),
         last_date: moment().subtract(1, 'days')
     },
