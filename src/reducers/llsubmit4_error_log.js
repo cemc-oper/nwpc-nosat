@@ -41,7 +41,7 @@ export default function llsubmit4_error_log_reducer(state={
             },
             {
                 name: 'nwp_pd',
-                path: '/cma/g3/nwp_qu/sublog/llsubmit4.error.log'
+                path: '/cma/g3/nwp_pd/sublog/llsubmit4.error.log'
             },
             {
                 name: 'nwp_sp',
