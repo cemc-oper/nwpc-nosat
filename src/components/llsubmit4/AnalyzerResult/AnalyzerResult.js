@@ -3,11 +3,31 @@ import React, { Component, PropTypes } from 'react'
 import AnalyticsChart from './components/AnalyticsChart'
 import WaitingAnalyzerDialog from './components/WaitingAnalyzerDialog'
 
+import OneDimensionDataGenerator from './components/OneDimensionDataGenerator'
+
 export default class AnalyzerResult extends Component{
+
+    static generateChartData(analytics_result) {
+        if(analytics_result===null){
+            return null;
+        }
+        let chart_data = {};
+        const {data, type} = analytics_result;
+        if(type == 'count') {
+            return OneDimensionDataGenerator.generateData(analytics_result);
+        } else if (type == 'grid') {
+            return null;
+        } else {
+            console.error("not supported analytics type:", type);
+            return null;
+        }
+    }
 
     render(){
         const { error_log_analyzer } = this.props;
         const { analytics_result, status } = error_log_analyzer;
+        let chart_data = AnalyzerResult.generateChartData(analytics_result);
+        console.log("[AnalyzerResult]", chart_data);
         return (
             <div>
                 <div className="panel panel-default">

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import mement from 'moment'
+import moment from 'moment'
 
 import SaveErrorLogDialog from './SaveErrorLogDialog'
 
