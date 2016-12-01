@@ -9,6 +9,7 @@ export default  class ErrorAnalyzerConfig extends Component{
     getConfig() {
         let config = Object();
         config.analytics_type = this.refs.analytics_type_node.value;
+        console.log(this.refs.analytics_type_node.analytics_type);
         config.first_date = moment(this.refs.first_date_node.value);
         config.last_date = moment(this.refs.last_date_node.value);
         return config;

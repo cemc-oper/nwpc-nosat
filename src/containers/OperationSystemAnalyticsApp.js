@@ -6,7 +6,7 @@ import moment from 'moment'
 // const electron = require('electron');
 
 import HpcAuth from '../components/HpcAuth/index'
-import ErrorAnalyzerConfig from '../components/llsubmit4/ErrorAnalyzerConfig'
+import ErrorAnalyzerConfig from '../components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
 import ErrorAnalyzerDataConfig from '../components/llsubmit4/ErrorAnalyzerDataConfig'
 import AnalyzerResult from '../components/llsubmit4/AnalyzerResult/index'
 

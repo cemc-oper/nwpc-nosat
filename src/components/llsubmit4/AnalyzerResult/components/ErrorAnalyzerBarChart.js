@@ -38,6 +38,9 @@ export default class ErrorAnalyzerBarChart extends Component {
             xAxis: x_axis,
             yAxis: y_axis,
             series: series,
+            grid: {
+                bottom: 100
+            },
             tooltip : {
                 trigger: 'axis',
                 axisPointer : {
@@ -51,7 +54,7 @@ export default class ErrorAnalyzerBarChart extends Component {
     render() {
         const { data } = this.props;
         let chart_style = {
-            height: 500
+            height: 600
         };
 
         return (

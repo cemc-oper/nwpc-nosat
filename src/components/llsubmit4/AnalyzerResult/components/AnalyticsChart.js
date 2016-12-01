@@ -32,6 +32,9 @@ export default  class AnalyticsChart extends Component{
             axisTick: {
                 alignWithLabel: true,
                 interval: 0
+            },axisLabel: {
+                interval: 0,
+                rotate: 45
             },
             splitArea: {
                 interval: 0
@@ -280,11 +283,11 @@ export default  class AnalyticsChart extends Component{
         if(analytics_result === null){
             return empty_chart
         }
+        const {data} = analytics_result;
         if(analytics_result.type == "count"){
-            const {data} = analytics_result;
-            const { begin_date, end_date, count_type, count_result, request } = data;
+            const {begin_date, end_date, count_type, count_result, request} = data;
             let chart_data = null;
-            switch(count_type){
+            switch (count_type) {
                 case "date":
                     chart_data = this.countDateChart(analytics_result);
                     break;
@@ -310,7 +313,7 @@ export default  class AnalyticsChart extends Component{
                 <div>
                     <div className="row">
                         <div className="col-xs-12">
-                            <ErrorAnalyzerBarChart data={chart_data} />
+                            <ErrorAnalyzerBarChart data={chart_data}/>
                         </div>
                     </div>
                     <div className="row">
@@ -318,6 +321,21 @@ export default  class AnalyticsChart extends Component{
                             <p>日志路径：{request.log_file_path}</p>
                             <p>起始日期：{begin_date} 结束日期：{end_date}</p>
                             <p>统计类型：count - {count_type}</p>
+                        </div>
+                    </div>
+                </div>
+            )
+        } else if (analytics_type == "grid" ){
+            const {response, request} = data;
+            const {grid_result} = response;
+            const {log_file_path, x_type, y_type, begin_date, end_date} = request;
+            return (
+                <div>
+                    <div className="row">
+                        <div className="col-xs-10 col-xs-offset-1">
+                            <p>日志路径：{log_file_path}</p>
+                            <p>起始日期：{begin_date} 结束日期：{end_date}</p>
+                            <p>统计类型：{analytics_type} / x: {x_type}, y: {y_type}</p>
                         </div>
                     </div>
                 </div>
