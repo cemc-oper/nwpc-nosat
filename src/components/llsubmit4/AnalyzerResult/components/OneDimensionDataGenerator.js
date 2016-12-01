@@ -7,29 +7,49 @@ export default class OneDimensionDataGenerator{
 
     static generateData(analytics_result){
         const {data} = analytics_result;
-        const {request} = data;
-        const {count_type} = request;
+        const {request, response} = data;
+        const { begin_date, end_date, count_type } = request;
+        const {count_result} = response;
         let chart_data = null;
+        let x = OneDimensionDataGenerator.generateXDimension(analytics_result);
+        if (x==null) {
+            return chart_data;
+        }
+        let value = OneDimensionDataGenerator.generateValue(x, count_result);
+        chart_data = {
+            type: count_type,
+            x: x,
+            value: value
+        };
+        return chart_data;
+    }
+
+    static generateXDimension(analytics_result){
+        const {data} = analytics_result;
+        const {request, response} = data;
+        const { begin_date, end_date, count_type } = request;
+        const {count_result} = response;
+        let x = null;
         switch (count_type) {
             case "date":
-                chart_data = OneDimensionDataGenerator.generateDate(analytics_result);
+                x = OneDimensionDataGenerator.getDateDimension(begin_date, end_date);
                 break;
             case "weekday":
-                chart_data = OneDimensionDataGenerator.generateWeekday(analytics_result);
+                x = OneDimensionDataGenerator.getWeekDimension();
                 break;
             case "system":
-                chart_data = OneDimensionDataGenerator.generateSystem(analytics_result);
+                x = OneDimensionDataGenerator.getSystemDimension(count_result);
                 break;
             case "date-hour":
-                chart_data = OneDimensionDataGenerator.generateDateHour(analytics_result);
+                x = OneDimensionDataGenerator.getDateHourDimension(begin_date, end_date);
                 break;
             case "hour":
-                chart_data = OneDimensionDataGenerator.generateHour(analytics_result);
+                x = OneDimensionDataGenerator.getHourDimension();
                 break;
             default:
-                chart_data = null;
+                x = null;
         }
-        return chart_data;
+        return x;
     }
 
     static getDateDimension(begin_date, end_date) {
@@ -123,88 +143,6 @@ export default class OneDimensionDataGenerator{
         });
         return {
             data: values
-        }
-    }
-
-    static generateDate(analytics_result){
-        const {data, type} = analytics_result;
-        const { response, request } = data;
-        const { begin_date, end_date, count_type } = request;
-        const {count_result} = response;
-
-        let x = OneDimensionDataGenerator.getDateDimension(begin_date, end_date);
-
-        let value = OneDimensionDataGenerator.generateValue(x, count_result);
-
-        return {
-            type: type,
-            x: x,
-            value: value
-        }
-    }
-
-    static generateWeekday(analytics_result){
-        const {data, type} = analytics_result;
-        const { response, request } = data;
-        const { begin_date, end_date, count_type } = request;
-        const {count_result} = response;
-
-        let x = OneDimensionDataGenerator.getWeekDimension();
-
-        let value = OneDimensionDataGenerator.generateValue(x, count_result);
-
-        return {
-            type: type,
-            x: x,
-            value: value
-        }
-    }
-
-    static generateSystem(analytics_result){
-        const {data, type} = analytics_result;
-        const { response, request } = data;
-        const { begin_date, end_date, count_type } = request;
-        const {count_result} = response;
-
-        let x = OneDimensionDataGenerator.getSystemDimension(count_result);
-        let value = OneDimensionDataGenerator.generateValue(x, count_result);
-
-        return {
-            type: type,
-            x: x,
-            value: value
-        }
-    }
-
-    static generateDateHour(analytics_result){
-        const {data, type} = analytics_result;
-        const { response, request } = data;
-        const { begin_date, end_date, count_type } = request;
-        const {count_result} = response;
-
-        let x = OneDimensionDataGenerator.getDateHourDimension(begin_date, end_date);
-        let value = OneDimensionDataGenerator.generateValue(x, count_result);
-
-        return {
-            type: type,
-            x: x,
-            value: value
-        }
-    }
-
-    static generateHour(analytics_result){
-        const {data, type} = analytics_result;
-        const { response, request } = data;
-        const { begin_date, end_date, count_type } = request;
-        const {count_result} = response;
-
-        let x = OneDimensionDataGenerator.getHourDimension();
-        let value = OneDimensionDataGenerator.generateValue(x, count_result);
-
-        return {
-            type: type,
-            x: x,
-            value: value
         }
     }
 };
