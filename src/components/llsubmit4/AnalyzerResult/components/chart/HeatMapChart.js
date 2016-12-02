@@ -13,6 +13,8 @@ export default class HeatMapChart extends Component {
             return [item.x, item.y, item.value || '-'];
         });
 
+        let max_value = Math.max(...value.data.map(function(item){return item.value;}))
+
         let x_axis = {
             type: 'category',
             data: x.data.map(function(item,index){
@@ -62,7 +64,7 @@ export default class HeatMapChart extends Component {
             },
             visualMap : {
                 min: 0,
-                max: 10,
+                max: max_value,
                 calculable: true,
                 orient: 'horizontal',
                 left: 'center',
