@@ -39,7 +39,7 @@ export default class AnalyzerResult extends Component{
                     <div className="panel-body">
                         <div className="row">
                             <div className="col-xs-12">
-                                <AnalyticsChart analytics_result={analytics_result} />
+                                <AnalyticsChart chart_data={chart_data} analytics_result={analytics_result}/>
                             </div>
                         </div>
                     </div>

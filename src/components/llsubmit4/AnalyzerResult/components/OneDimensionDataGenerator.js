@@ -18,7 +18,7 @@ export default class OneDimensionDataGenerator{
         }
         let value = OneDimensionDataGenerator.generateValue(x, count_result);
         chart_data = {
-            data_type: 'one_dimension',
+            data_type: 'one-dimension',
             analytics_type: {
                 command: 'count',
                 type: count_type
