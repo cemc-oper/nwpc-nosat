@@ -3,12 +3,13 @@ import * as d3_time_format from 'd3-time-format'
 import * as d3_format from 'd3-format'
 import * as d3_array from 'd3-array'
 
+
 export default class OneDimensionDataGenerator{
 
     static generateData(analytics_result){
         const {data} = analytics_result;
         const {request, response} = data;
-        const { begin_date, end_date, count_type } = request;
+        const {count_type} = request;
         const {count_result} = response;
         let chart_data = null;
         let x = OneDimensionDataGenerator.generateXDimension(analytics_result);
@@ -17,7 +18,11 @@ export default class OneDimensionDataGenerator{
         }
         let value = OneDimensionDataGenerator.generateValue(x, count_result);
         chart_data = {
-            type: count_type,
+            data_type: 'one_dimension',
+            analytics_type: {
+                command: 'count',
+                type: count_type
+            },
             x: x,
             value: value
         };
@@ -52,6 +57,12 @@ export default class OneDimensionDataGenerator{
         return x;
     }
 
+    /**
+     * [begin_date, end_date) 日期序列，格式为 YYYY-MM-DD
+     * @param begin_date: YYYY-MM-DD
+     * @param end_date: YYYY-MM-DD
+     * @returns {{type: string, data}}
+     */
     static getDateDimension(begin_date, end_date) {
         let day_formatter = d3_time_format.timeFormat("%Y-%m-%d");
         let day_parser = d3_time_format.timeParse("%Y-%m-%d");
@@ -69,6 +80,10 @@ export default class OneDimensionDataGenerator{
         }
     }
 
+    /**
+     * 星期列表，从周一到周日
+     * @returns {{type: string, data: [*,*,*,*,*,*,*]}}
+     */
     static getWeekDimension() {
         return {
             type: 'weekday',
@@ -84,6 +99,11 @@ export default class OneDimensionDataGenerator{
         }
     }
 
+    /**
+     * 系统名列表
+     * @param result 统计结果
+     * @returns {{type: string, data: Array}}
+     */
     static getSystemDimension(result){
         let data = Object.keys(result).map(function(item, index){
             return {
@@ -98,6 +118,12 @@ export default class OneDimensionDataGenerator{
         }
     }
 
+    /**
+     * 逐小时列表，[begin_date, end_date), YYYY-MM-DD HH:MM:SS
+     * @param begin_date: YYYY-MM-DD
+     * @param end_date: YYYY-MM-DD
+     * @returns {{type: string, data}}
+     */
     static getDateHourDimension(begin_date, end_date) {
         let day_hour_formatter = d3_time_format.timeFormat("%Y-%m-%d %H:%M:%S");
         let day_parser = d3_time_format.timeParse("%Y-%m-%d");
@@ -115,6 +141,10 @@ export default class OneDimensionDataGenerator{
         }
     }
 
+    /**
+     * [0,24] 小时列表
+     * @returns {{type: string, data}}
+     */
     static getHourDimension() {
         let padding_zero_formatter = d3_format.format("02");
         let hour_list = d3_array.range(0, 24);

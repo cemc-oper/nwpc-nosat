@@ -26,8 +26,10 @@ export default class AnalyzerResult extends Component{
     render(){
         const { error_log_analyzer } = this.props;
         const { analytics_result, status } = error_log_analyzer;
+
         let chart_data = AnalyzerResult.generateChartData(analytics_result);
         console.log("[AnalyzerResult]", chart_data);
+
         return (
             <div>
                 <div className="panel panel-default">
