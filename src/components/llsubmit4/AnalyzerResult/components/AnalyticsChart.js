@@ -50,7 +50,7 @@ export default  class AnalyticsChart extends Component{
                 </div>
             )
         } else if (data_type == "two-dimension" ){
-            const {response, request} = data;
+            const {response, request} = analytics_result.data;
             const {grid_result} = response;
             const {log_file_path, x_type, y_type, begin_date, end_date} = request;
             return (
@@ -59,7 +59,7 @@ export default  class AnalyticsChart extends Component{
                         <div className="col-xs-10 col-xs-offset-1">
                             <p>日志路径：{log_file_path}</p>
                             <p>起始日期：{begin_date} 结束日期：{end_date}</p>
-                            <p>统计类型：{analytics_type} / x: {x_type}, y: {y_type}</p>
+                            <p>统计类型：{analytics_result.type} / x: {x_type}, y: {y_type}</p>
                         </div>
                     </div>
                 </div>

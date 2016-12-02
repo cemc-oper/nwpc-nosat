@@ -17,7 +17,7 @@ export default class DimensionGenerator{
                 x = DimensionGenerator.getDateDimension(begin_date, end_date);
                 break;
             case "weekday":
-                x = DimensionGenerator.getWeekDimension();
+                x = DimensionGenerator.getWeekdayDimension();
                 break;
             case "system":
                 x = DimensionGenerator.getSystemDimension(count_result);
@@ -61,7 +61,7 @@ export default class DimensionGenerator{
      * 星期列表，从周一到周日
      * @returns {{type: string, data: [*,*,*,*,*,*,*]}}
      */
-    static getWeekDimension() {
+    static getWeekdayDimension() {
         return {
             type: 'weekday',
             data: [
@@ -126,7 +126,10 @@ export default class DimensionGenerator{
         let padding_zero_formatter = d3_format.format("02");
         let hour_list = d3_array.range(0, 24);
         let x_data = hour_list.map(function(element, index){
-            return String(padding_zero_formatter(index));
+            return {
+                label: String(padding_zero_formatter(index)),
+                value: String(padding_zero_formatter(index))
+            };
         });
         return {
             type: 'hour',

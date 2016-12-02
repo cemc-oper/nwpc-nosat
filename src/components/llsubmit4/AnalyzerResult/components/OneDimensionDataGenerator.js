@@ -10,7 +10,7 @@ import DimensionGenerator from './DimensionGenerator'
 export default class OneDimensionDataGenerator{
 
     static generateData(analytics_result){
-        const {data} = analytics_result;
+        const {data, type} = analytics_result;
         const {request, response} = data;
         const {count_type} = request;
         const {count_result} = response;
@@ -23,7 +23,7 @@ export default class OneDimensionDataGenerator{
         chart_data = {
             data_type: 'one-dimension',
             analytics_type: {
-                command: 'count',
+                command: type,
                 type: count_type
             },
             x: x,

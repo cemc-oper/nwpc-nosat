@@ -4,6 +4,7 @@ import AnalyticsChart from './components/AnalyticsChart'
 import WaitingAnalyzerDialog from './components/WaitingAnalyzerDialog'
 
 import OneDimensionDataGenerator from './components/OneDimensionDataGenerator'
+import TwoDimensionDataGenerator from './components/TwoDimensionDataGenerator'
 
 export default class AnalyzerResult extends Component{
 
@@ -16,7 +17,7 @@ export default class AnalyzerResult extends Component{
         if(type == 'count') {
             return OneDimensionDataGenerator.generateData(analytics_result);
         } else if (type == 'grid') {
-            return null;
+            return TwoDimensionDataGenerator.generateData(analytics_result);
         } else {
             console.error("not supported analytics type:", type);
             return null;
@@ -27,6 +28,7 @@ export default class AnalyzerResult extends Component{
         const { error_log_analyzer } = this.props;
         const { analytics_result, status } = error_log_analyzer;
 
+        console.log("[AnalyzerResult]analytics_result", analytics_result);
         let chart_data = AnalyzerResult.generateChartData(analytics_result);
         console.log("[AnalyzerResult]", chart_data);
 

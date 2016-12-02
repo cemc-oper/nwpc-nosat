@@ -194,7 +194,7 @@ OperationSystemAnalyticsApp.propTypes = {
     }),
     error_log_analyzer_config: PropTypes.shape({
         analytics_type: PropTypes.oneOf([
-            'date', 'weekday', 'system', 'date-hour', 'hour'
+            'date', 'weekday', 'system', 'date-hour', 'hour', 'grid'
         ]),
         first_date: PropTypes.object,
         last_date: PropTypes.object

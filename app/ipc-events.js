@@ -16,6 +16,16 @@ ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, dat
         + "count -f " + data_config.error_log_path + " "
         + "--type="+ analyzer_config.analytics_type
         + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
+
+    if(analyzer_config.analytics_type=="grid") {
+        command = analytics_program.interpreter_path + " "
+        + analytics_program.script_path + " "
+        + "grid -f " + data_config.error_log_path + " "
+        + "--x-type=hour --y-type=weekday "
+        + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
+
+    }
+
     let Client = ssh2.Client;
     let conn = new Client();
     conn.on('ready', function() {
