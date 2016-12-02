@@ -6,7 +6,7 @@ import * as d3_array from 'd3-array'
 
 import LineChart from './LineChart'
 
-let chart_placeholder_url = require('./chart_placeholder.png');
+let chart_placeholder_url = require('../assert/chart_placeholder.png');
 
 export default  class AnalyticsChart extends Component{
     constructor(props) {
