@@ -5,8 +5,9 @@ import * as d3_format from 'd3-format'
 import * as d3_array from 'd3-array'
 
 import LineChart from './LineChart'
+import HeatMapChart from './HeatMapChart'
 
-let chart_placeholder_url = require('../assert/chart_placeholder.png');
+let chart_placeholder_url = require('./assert/chart_placeholder.png');
 
 export default  class AnalyticsChart extends Component{
     constructor(props) {
@@ -55,6 +56,11 @@ export default  class AnalyticsChart extends Component{
             const {log_file_path, x_type, y_type, begin_date, end_date} = request;
             return (
                 <div>
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <HeatMapChart data={chart_data} chart_engine="echarts" />
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-xs-10 col-xs-offset-1">
                             <p>日志路径：{log_file_path}</p>

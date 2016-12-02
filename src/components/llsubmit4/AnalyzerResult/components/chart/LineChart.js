@@ -36,9 +36,18 @@ export default class LineChart extends Component {
         let series = [bar_data];
 
         return {
-            x_axis: x_axis,
-            y_axis: y_axis,
-            series: series
+            xAxis: x_axis,
+            yAxis: y_axis,
+            series: series,
+            grid: {
+                bottom: 100
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {
+                    type : 'shadow'
+                }
+            },
         };
     }
 

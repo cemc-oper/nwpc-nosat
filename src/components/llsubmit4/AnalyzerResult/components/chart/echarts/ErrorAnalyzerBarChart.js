@@ -31,23 +31,9 @@ export default class ErrorAnalyzerBarChart extends Component {
 
     renderChartDom(){
         const { data } = this.props;
-        let { x_axis, y_axis, series } = data;
         let echarts_instance = this.getEchartsInstance();
 
-        echarts_instance.setOption({
-            xAxis: x_axis,
-            yAxis: y_axis,
-            series: series,
-            grid: {
-                bottom: 100
-            },
-            tooltip : {
-                trigger: 'axis',
-                axisPointer : {
-                    type : 'shadow'
-                }
-            },
-        });
+        echarts_instance.setOption(data);
         return echarts_instance;
     }
 

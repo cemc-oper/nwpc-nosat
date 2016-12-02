@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-import AnalyticsChart from './components/AnalyticsChart'
+import AnalyticsChart from './components/chart/AnalyticsChart'
 import WaitingAnalyzerDialog from './components/WaitingAnalyzerDialog'
 
 import OneDimensionDataGenerator from './components/OneDimensionDataGenerator'

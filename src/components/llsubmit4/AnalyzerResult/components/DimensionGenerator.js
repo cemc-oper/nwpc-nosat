@@ -128,7 +128,7 @@ export default class DimensionGenerator{
         let x_data = hour_list.map(function(element, index){
             return {
                 label: String(padding_zero_formatter(index)),
-                value: String(padding_zero_formatter(index))
+                value: index
             };
         });
         return {
