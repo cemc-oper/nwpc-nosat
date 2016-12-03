@@ -21,7 +21,7 @@ ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, dat
         command = analytics_program.interpreter_path + " "
         + analytics_program.script_path + " "
         + "grid -f " + data_config.error_log_path + " "
-        + "--x-type=hour --y-type=weekday "
+        + "--x-type=hour --y-type=system "
         + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
 
     }
