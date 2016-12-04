@@ -47,13 +47,13 @@ export default class TwoDimensionDataGenerator{
             default:
                 x = null;
         }
-
+        let y_data = [];
         switch (y_type) {
             case "weekday":
                 y = DimensionGenerator.getWeekdayDimension();
                 break;
             case "system":
-                let y_data = [];
+                y_data = [];
                 Object.keys(grid_result).forEach(function(key){
                     let cur_y = DimensionGenerator.getSystemDimension(grid_result[key]);
                     cur_y.data.forEach(function(item){
@@ -69,7 +69,9 @@ export default class TwoDimensionDataGenerator{
                     type: 'system',
                     data: y_data
                 };
-                console.log(y);
+                break;
+            case "date":
+                y = DimensionGenerator.getDateDimension(begin_date, end_date);
                 break;
             default:
                 y = null;
