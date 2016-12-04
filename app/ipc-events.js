@@ -11,19 +11,26 @@ var analytics_program = {
 
 ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, data_config, analyzer_config) {
     console.log(session_config, data_config, analyzer_config);
-    let command = analytics_program.interpreter_path + " "
-        + analytics_program.script_path + " "
-        + "count -f " + data_config.error_log_path + " "
-        + "--type="+ analyzer_config.analytics_type
-        + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
 
-    if(analyzer_config.analytics_type=="grid") {
-        command = analytics_program.interpreter_path + " "
-        + analytics_program.script_path + " "
-        + "grid -f " + data_config.error_log_path + " "
-        + "--x-type=weekday --y-type=system "
-        + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
-
+    let command = "";
+    switch(analyzer_config.analytics_command){
+        case 'count':
+            command = analytics_program.interpreter_path + " "
+                + analytics_program.script_path + " "
+                + "count -f " + data_config.error_log_path + " "
+                + "--type="+ analyzer_config.analytics_type
+                + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
+            break;
+        case 'grid':
+            command = analytics_program.interpreter_path + " "
+                + analytics_program.script_path + " "
+                + "grid -f " + data_config.error_log_path + " "
+                + "--x-type=" + analyzer_config.x_type + " --y-type=" + analyzer_config.y_type  + " "
+                + " --begin-date=" + analyzer_config.begin_date + " --end-date=" + analyzer_config.end_date;
+            break;
+        default:
+            console.error("command not supported:", analyzer_config.analytics_command);
+            return;
     }
 
     let Client = ssh2.Client;
