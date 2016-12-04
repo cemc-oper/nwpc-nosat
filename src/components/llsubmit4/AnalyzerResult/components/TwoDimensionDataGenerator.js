@@ -44,6 +44,9 @@ export default class TwoDimensionDataGenerator{
             case "hour":
                 x = DimensionGenerator.getHourDimension();
                 break;
+            case "weekday":
+                x = DimensionGenerator.getWeekdayDimension();
+                break;
             default:
                 x = null;
         }
