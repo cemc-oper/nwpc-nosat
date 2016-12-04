@@ -18,7 +18,8 @@ import {
     saveErrorLog,
     requestErrorLogInfo,
     receiveErrorLogInfo,
-    changeAnalyzerConfig
+    changeAnalyzerConfig,
+    changeAnalyzerConfigCommand
 } from '../actions/llsubmit4_error_log_action'
 
 import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
@@ -52,12 +53,13 @@ class OperationSystemAnalyticsApp extends Component{
         let data_config = this.refs.data_config.getConfig();
 
         let {error_log_analyzer_config} = this.props;
-        let end_date = moment(error_log_analyzer_config.last_date).add(1, "days");
-        let send_analyzer_config = {
-            analytics_type: error_log_analyzer_config.analytics_type,
-            begin_date: error_log_analyzer_config.first_date.format("YYYY-MM-DD"),
-            end_date: end_date.format("YYYY-MM-DD")
-        };
+
+        let {current_command, command_map} = error_log_analyzer_config;
+        let send_analyzer_config =  Object.assign({}, command_map[current_command], {
+            command_map: command_map,
+            begin_date: command_map[current_command].first_date.format("YYYY-MM-DD"),
+            end_date: moment(command_map[current_command].last_date).add(1, "days").format("YYYY-MM-DD")
+        });
 
         const {dispatch} = this.props;
         dispatch(requestErrorLogAnalytics());
@@ -109,6 +111,11 @@ class OperationSystemAnalyticsApp extends Component{
         const { dispatch } = this.props;
         dispatch(changeAnalyzerConfig(config));
     }
+    changeAnalyzerConfigCommand(command){
+        const { dispatch } = this.props;
+        dispatch(changeAnalyzerConfigCommand(command));
+    }
+
 
     render() {
         const { error_log_analyzer, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
@@ -154,7 +161,8 @@ class OperationSystemAnalyticsApp extends Component{
                           analyzer_config={error_log_analyzer_config}
                           handler={{
                               run_handler: this.runAnalyzer.bind(this),
-                              change_handler: this.changeAnalyzerConfig.bind(this)
+                              change_handler: this.changeAnalyzerConfig.bind(this),
+                              change_command_handler: this.changeAnalyzerConfigCommand.bind(this)
                           }}
                         />
                     </div>
@@ -193,11 +201,8 @@ OperationSystemAnalyticsApp.propTypes = {
         }))
     }),
     error_log_analyzer_config: PropTypes.shape({
-        analytics_type: PropTypes.oneOf([
-            'date', 'weekday', 'system', 'date-hour', 'hour', 'grid'
-        ]),
-        first_date: PropTypes.object,
-        last_date: PropTypes.object
+        current_command: PropTypes.string,
+        command_map: PropTypes.object
     }),
 };
 

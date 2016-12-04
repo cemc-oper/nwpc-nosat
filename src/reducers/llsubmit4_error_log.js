@@ -6,9 +6,32 @@ import {
     SAVE_ERROR_LOG,
     REQUEST_ERROR_LOG_INFO,
     RECEIVE_ERROR_LOG_INFO,
-    CHANGE_ANALYZER_CONFIG
+    CHANGE_ANALYZER_CONFIG,
+    CHANGE_ANALYZER_CONFIG_COMMAND
 } from '../actions/llsubmit4_error_log_action'
 import moment from 'moment'
+
+function error_log_analyzer_config_reducer(state, action){
+    switch(action.type) {
+        case CHANGE_ANALYZER_CONFIG:
+            let t = Object();
+            t[action.config.analytics_command] = action.config;
+            let command_map = Object.assign({}, state.command_map, t);
+
+            let new_state = Object.assign({}, state, {
+                command_map: command_map
+            });
+            return new_state;
+            break;
+        case CHANGE_ANALYZER_CONFIG_COMMAND:
+           return Object.assign({}, state, {
+                current_command: action.command
+            });
+            break;
+        default:
+            return state;
+    }
+}
 
 export default function llsubmit4_error_log_reducer(state={
     status: {
@@ -17,9 +40,22 @@ export default function llsubmit4_error_log_reducer(state={
     },
     auth:{},
     error_log_analyzer_config:{
-        analytics_type: 'date',
-        first_date: moment().subtract(1, 'weeks'),
-        last_date: moment().subtract(1, 'days')
+        current_command: 'count',
+        command_map: {
+            'count': {
+                analytics_command: 'count',
+                analytics_type: 'date',
+                first_date: moment().subtract(1, 'weeks'),
+                last_date: moment().subtract(1, 'days')
+            },
+            'grid': {
+                analytics_command: 'grid',
+                x_type: 'hour',
+                y_type: 'weekday',
+                first_date: moment().subtract(1, 'weeks'),
+                last_date: moment().subtract(1, 'days')
+            }
+        }
     },
     error_log_analyzer:{
         status: {
@@ -123,8 +159,9 @@ export default function llsubmit4_error_log_reducer(state={
             });
             break;
         case CHANGE_ANALYZER_CONFIG:
+        case CHANGE_ANALYZER_CONFIG_COMMAND:
             return Object.assign({}, state, {
-                error_log_analyzer_config: action.config
+                error_log_analyzer_config: error_log_analyzer_config_reducer(state.error_log_analyzer_config, action)
             });
             break;
         default:

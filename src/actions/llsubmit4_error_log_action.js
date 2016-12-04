@@ -62,3 +62,11 @@ export function changeAnalyzerConfig(config){
         config
     }
 }
+
+export const CHANGE_ANALYZER_CONFIG_COMMAND="CHANGE_ANALYZER_CONFIG_COMMAND";
+export function changeAnalyzerConfigCommand(command){
+    return {
+        type: CHANGE_ANALYZER_CONFIG_COMMAND,
+        command
+    }
+}
