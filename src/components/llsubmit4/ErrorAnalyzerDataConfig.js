@@ -80,7 +80,7 @@ export default  class ErrorAnalyzerDataConfig extends Component{
         let log_info_node = null;
         if(error_log_info) {
             const { range } = error_log_info;
-            const { start_date_time, end_date_time } = range;
+            const { start_date_time, end_date_time, count } = range;
             log_info_node = (
                 <div className="row">
                     <div className="col-xs-12">
@@ -88,7 +88,12 @@ export default  class ErrorAnalyzerDataConfig extends Component{
                             <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+                            <p>
+                                <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+                            </p>
+                            <p>
+                                <strong>记录总数</strong>: {count}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -165,7 +170,8 @@ ErrorAnalyzerDataConfig.propTypes = {
             PropTypes.shape({
                 range: PropTypes.shape({
                     start_date_time: PropTypes.object,
-                    end_date_time: PropTypes.object
+                    end_date_time: PropTypes.object,
+                    count: PropTypes.number
                 })
             })
         ]
