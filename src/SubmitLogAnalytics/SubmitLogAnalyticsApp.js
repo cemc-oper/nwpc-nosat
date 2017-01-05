@@ -5,10 +5,10 @@ import {ipcRenderer} from 'electron'
 import moment from 'moment'
 // const electron = require('electron');
 
-import HpcAuth from '../components/HpcAuth/index'
-import ErrorAnalyzerConfig from '../components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
-import ErrorAnalyzerDataConfig from '../components/llsubmit4/ErrorAnalyzerDataConfig'
-import AnalyzerResult from '../components/llsubmit4/AnalyzerResult/index'
+import HpcAuth from './components/HpcAuth/index'
+import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
+import ErrorAnalyzerDataConfig from './components/llsubmit4/ErrorAnalyzerDataConfig'
+import AnalyzerResult from './components/llsubmit4/AnalyzerResult/index'
 
 import {
     requestErrorLogAnalytics,
@@ -20,11 +20,11 @@ import {
     receiveErrorLogInfo,
     changeAnalyzerConfig,
     changeAnalyzerConfigCommand
-} from '../actions/llsubmit4_error_log_action'
+} from './actions/llsubmit4_error_log_action'
 
-import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from '../actions/session_action'
+import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from './actions/session_action'
 
-class OperationSystemAnalyticsApp extends Component{
+class SubmitLogAnalyticsApp extends Component{
     constructor(props) {
         super(props);
     }
@@ -175,7 +175,7 @@ class OperationSystemAnalyticsApp extends Component{
     }
 }
 
-OperationSystemAnalyticsApp.propTypes = {
+SubmitLogAnalyticsApp.propTypes = {
     error_log_analyzer: PropTypes.shape({
         status: PropTypes.shape({
             is_fetching: PropTypes.bool
@@ -216,4 +216,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(OperationSystemAnalyticsApp)
+export default connect(mapStateToProps)(SubmitLogAnalyticsApp)

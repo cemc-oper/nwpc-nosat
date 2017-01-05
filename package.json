@@ -1,8 +1,8 @@
 {
-  "name": "operation-system-analytics-tool",
-  "version": "0.1.0",
-  "description": "A desktop app for operation system running in NWPC.",
-  "main": "main.js",
+  "name": "nwpc-operation-system-analytics-tool",
+  "version": "0.1.1",
+  "description": "A desktop analytics app for operation system running in NWPC.",
+  "main": "app/main.js",
   "scripts": {
     "start": "node_modules\\.bin\\electron .\\dist\\app",
     "build-render": "webpack --colors --progress --config=./webpack.electron-render.config.js",
@@ -13,6 +13,9 @@
     "url": "https://github.com/perillaroc"
   },
   "license": "GPL-3.0",
+  "dependencies": {
+    "ssh2": "^0.5.4"
+  },
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
@@ -51,8 +54,5 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.3"
-  },
-  "dependencies": {
-    "ssh2": "^0.5.4"
   }
 }

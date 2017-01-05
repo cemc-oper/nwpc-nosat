@@ -1,10 +1,10 @@
 import React from 'react'
 import { Route, IndexRedirect, IndexRoute } from 'react-router'
 
-import OperationSystemAnalyticsApp from './containers/OperationSystemAnalyticsApp'
+import SubmitLogAnalyticsApp from './SubmitLogAnalytics/SubmitLogAnalyticsApp'
 
 export default (
     <Route path="/" >
-        <IndexRoute component={OperationSystemAnalyticsApp} />
+        <IndexRoute component={SubmitLogAnalyticsApp} />
     </Route>
 )
