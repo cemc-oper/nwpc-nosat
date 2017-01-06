@@ -52,6 +52,7 @@ export default class SaveErrorLogDialog extends Component{
             <Modal
                 isOpen={is_open}
                 className="Modal__Bootstrap modal-dialog"
+                contentLabel="Save Error Log Dialog"
             >
                 <div className="modal-content">
                     <div className="modal-header">

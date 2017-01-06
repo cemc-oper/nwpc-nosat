@@ -58,6 +58,7 @@ export default class SaveSessionDialog extends Component{
             <Modal
                 isOpen={is_open}
                 className="Modal__Bootstrap modal-dialog"
+                contentLabel="Save Session Label"
             >
                 <div className="modal-content">
                     <div className="modal-header">

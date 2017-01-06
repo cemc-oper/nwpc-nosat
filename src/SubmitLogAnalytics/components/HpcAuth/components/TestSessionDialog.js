@@ -70,6 +70,7 @@ export default class TestSessionDialog extends Component{
             <Modal
                 isOpen={is_open}
                 className="Modal__Bootstrap modal-dialog"
+                contentLabel="Test Session Dialog"
             >
                 <div className="modal-content">
                     <div className="modal-header">

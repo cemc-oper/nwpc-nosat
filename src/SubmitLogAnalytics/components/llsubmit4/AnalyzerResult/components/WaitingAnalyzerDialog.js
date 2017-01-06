@@ -17,6 +17,7 @@ export default class WaitingAnalyzerDialog extends Component{
             <Modal
                 isOpen={is_open}
                 className="Modal__Bootstrap modal-dialog"
+                contentLabel="Waiting Analyzer Dialog"
             >
                 <div className="modal-content">
                     <div className="modal-header">
