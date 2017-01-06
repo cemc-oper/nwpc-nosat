@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { routerReducer as routing } from 'react-router-redux'
 
-import llsubmit4_error_log_reducer from './llsubmit4_error_log'
+import llsubmit4_error_log_reducer from '../../SubmitLogAnalytics/reducers/llsubmit4_error_log'
 import session_reducer from './session_system'
 
 const operationSystemAnalyticsAppReducer = combineReducers({
