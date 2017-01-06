@@ -3,7 +3,7 @@ import { dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {ipcRenderer} from 'electron'
 import moment from 'moment'
-// const electron = require('electron');
+import {Link} from 'react-router'
 
 import HpcAuth from './components/HpcAuth/index'
 import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
@@ -122,7 +122,14 @@ class SubmitLogAnalyticsApp extends Component{
         const { session_list, current_session, test_session } = session_system;
         const { error_log_path, info, error_log_list } = error_log_data_config;
         return (
-            <div className="container-fluid">
+            <div>
+                <nav className="navbar navbar-default" role="navigation">
+                    <div className="container-fluid">
+                        <div className="navbar-header">
+                            <Link className="navbar-brand" to="/">Main</Link>
+                        </div>
+                    </div>
+                </nav>
                 <div className="row">
                     <div className="col-sm-12">
                         <HpcAuth
