@@ -126,7 +126,7 @@ class SubmitLogAnalyticsApp extends Component{
                 <nav className="navbar navbar-default" role="navigation">
                     <div className="container-fluid">
                         <div className="navbar-header">
-                            <Link className="navbar-brand" to="/">Main</Link>
+                            <Link className="navbar-brand" to="/">NOST</Link>
                         </div>
                     </div>
                 </nav>
