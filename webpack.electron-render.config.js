@@ -26,37 +26,56 @@ let entry= {
     ]
 };
 
-let loaders= {
-    loaders: [
+let module_config= {
+    rules: [
         {
             test: /\.js$/,
-            loaders: [ 'babel' ],
+            use: [
+                "babel-loader"
+            ],
             exclude: /node_modules/,
             include: __dirname
         },
         {
             test: /\.less$/,
-            loader: "style!css!less"
+            use: [
+                "style-loader",
+                "css-loader",
+                "less-loader"
+            ]
         },
         {
             test: /\.scss/,
-            loader: "style!css!sass"
+            use: [
+                "style-loader",
+                "css-loader",
+                "sass-loader"
+            ]
         },
         {
             test: /\.css/,
-            loader: "style!css"
+            use: [
+                "style-loader",
+                "css-loader",
+            ]
         },
         {
             test: path.join(nodeModulesPath, '/jquery/dist/jquery.min.js'),
-            loader: 'expose?jQuery'
+            use: [
+                'expose?jQuery'
+            ]
         },
         {
             test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-            loader: 'url-loader?importLoaders=1&limit=1000&name=/fonts/[name].[ext]'
+            use: [
+                'url-loader?importLoaders=1&limit=1000&name=/fonts/[name].[ext]'
+            ]
         },
         {
             test: /\.(png|jpeg|jpg)/,
-            loader: 'url-loader?limit=8192'
+            use: [
+                'url-loader?limit=8192'
+            ]
         },
     ]
 };
@@ -67,7 +86,7 @@ let resolve = {
         'react-dom': path.join(nodeModulesPath, '/react-dom/dist/react-dom'),
         'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
         'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
-        'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
+        'react-router': path.join(nodeModulesPath, '/react-router/umd/react-router'),
         'react-router-redux': path.join(nodeModulesPath, '/react-router-redux/dist/ReactRouterRedux'),
         'redux': path.join(nodeModulesPath, '/redux/dist/redux'),
         'redux-thunk': path.join(nodeModulesPath, '/redux-thunk/dist/redux-thunk'),
@@ -113,7 +132,7 @@ module.exports = {
         sourceMapFilename: '[file].map',
         publicPath: './scripts/'
     },
-    module: loaders,
+    module: module_config,
     externals: externals,
     plugins: plugins,
     resolve: resolve,
