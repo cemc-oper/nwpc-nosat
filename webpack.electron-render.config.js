@@ -17,7 +17,6 @@ let entry= {
         'redux-thunk',
         'echarts',
         'jquery',
-        'bootstrap',
         'd3-array',
         'd3-format',
         'd3-time',
@@ -60,16 +59,16 @@ let module_config= {
             ]
         },
         {
-            test: path.join(nodeModulesPath, '/jquery/dist/jquery.min.js'),
-            use: [
-                'expose?jQuery'
-            ]
+            test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            use: 'url-loader?limit=10000',
         },
         {
-            test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-            use: [
-                'url-loader?importLoaders=1&limit=1000&name=/fonts/[name].[ext]'
-            ]
+            test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
+            use: 'file-loader',
+        },
+        {
+            test: /bootstrap-sass\/assets\/javascripts\//,
+            use: 'imports-loader?jQuery=jquery'
         },
         {
             test: /\.(png|jpeg|jpg)/,
@@ -86,7 +85,7 @@ let resolve = {
         'react-dom': path.join(nodeModulesPath, '/react-dom/dist/react-dom'),
         'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
         'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
-        'react-router': path.join(nodeModulesPath, '/react-router/umd/react-router'),
+        'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
         'react-router-redux': path.join(nodeModulesPath, '/react-router-redux/dist/ReactRouterRedux'),
         'redux': path.join(nodeModulesPath, '/redux/dist/redux'),
         'redux-thunk': path.join(nodeModulesPath, '/redux-thunk/dist/redux-thunk'),
@@ -103,11 +102,7 @@ let plugins = [
     new  webpack.optimize.CommonsChunkPlugin({
         name:"common",
         filename: "common.dist.js"
-    }),
-    new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
-    }),
+    })
 ];
 
 let externals= {
