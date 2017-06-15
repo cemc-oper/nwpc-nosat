@@ -6,7 +6,7 @@ let CopyWebPackPlugin = require('copy-webpack-plugin');
 let nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 let entry= {
-    index: './app/main.js'
+    index: './src/app/main.js'
 };
 
 let module_config= {
@@ -17,7 +17,7 @@ let resolve = {};
 
 let plugins = [
     new CopyWebPackPlugin([
-        {'from': './app'}
+        {'from': './src/app'}
     ])
 ];
 

@@ -1,5 +1,3 @@
-require('bootstrap/less/bootstrap.less');
-require('font-awesome/scss/font-awesome.scss');
 global.jQuery = require('jquery');
 require('bootstrap-loader');
 

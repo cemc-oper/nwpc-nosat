@@ -5,7 +5,7 @@ let webpack = require('webpack');
 let nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 let entry= {
-    index: './src/index.js',
+    index: './src/client/index.js',
     common: [
         'react',
         'react-dom',
