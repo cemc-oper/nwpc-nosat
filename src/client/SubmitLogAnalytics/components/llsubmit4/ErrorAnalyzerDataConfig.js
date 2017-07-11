@@ -103,7 +103,7 @@ export default  class ErrorAnalyzerDataConfig extends Component{
         let log_path_nodes = error_log_list.map(function(an_error_log, index){
             return (
                 <li key={index}>
-                    <a href="#" onClick={component.handleLoadErrorLogClick.bind(component, an_error_log)}>
+                    <a onClick={component.handleLoadErrorLogClick.bind(component, an_error_log)}>
                         {an_error_log.name}
                         </a>
                 </li>
