@@ -9,6 +9,8 @@ import {
   Form, Input, Button, Menu, Alert, Icon
 } from 'antd';
 
+import {ipcRenderer} from 'electron'
+
 import './index.css'
 
 
@@ -23,7 +25,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
   }
 
   handleDrawClick(){
-
+    ipcRenderer.send('system-running-time-analytics.draw.click');
   }
 
   handleSelectDataFile(){
