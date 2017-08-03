@@ -6,6 +6,9 @@ import {ipcRenderer} from 'electron'
 import moment from 'moment'
 import {Link} from 'react-router'
 
+global.jQuery = require('jquery');
+require('bootstrap-loader');
+
 import HpcAuth from './components/HpcAuth/index'
 import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
 import ErrorAnalyzerDataConfig from './components/llsubmit4/ErrorAnalyzerDataConfig'

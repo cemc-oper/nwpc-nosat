@@ -42,7 +42,9 @@ class SystemRunningTimeAnalyticsApp extends Component{
 
   render() {
     return (
-      <Layout className="layout">
+      <Layout className="layout" style={{
+        minHeight: '100vh'
+      }}>
         <Header>
           <Row className="nost-navi-bar">
             <Col span={4}>
@@ -62,7 +64,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
           </Row>
         </Header>
         <Content style={{ padding: '25px 25px 0px 25px' }}>
-          <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+          <div style={{ background: 'white', padding: 24, minHeight: "100%" }}>
             <Row>
               <Col span={24}>
                 <Form>

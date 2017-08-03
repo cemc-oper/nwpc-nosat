@@ -9,6 +9,8 @@ import {
   Form, Input, Button, Menu, Alert, Icon
 } from 'antd';
 
+import "./nost_box.scss"
+
 const { Header, Footer, Content } = Layout;
 
 
@@ -20,7 +22,7 @@ class WelcomeApp extends Component{
   render() {
     return (
 
-      <Layout className="layout">
+      <Layout className="layout" style={{ height: '100vh' }}>
         <Header>
           <Row className="nost-navi-bar">
             <Col span={4}>
@@ -31,10 +33,10 @@ class WelcomeApp extends Component{
             </Col>
           </Row>
         </Header>
-        <Content style={{ padding: '25px 25px 0px 25px' }}>
-          <Row>
+        <Content style={{padding: '25px 25px 0px 25px'}}>
+          <Row gutter={16}>
             <Col span={12}>
-              <div>
+              <div className="nost-box">
                 <h3>作业提交日志分析</h3>
                 <p>...</p>
                 <p>
@@ -43,7 +45,7 @@ class WelcomeApp extends Component{
               </div>
             </Col>
             <Col span={12}>
-              <div>
+              <div className="nost-box">
                 <h3>系统运行时间分析</h3>
                 <p>...</p>
                 <p>
