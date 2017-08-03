@@ -1,0 +1,11 @@
+@import '../../../node_modules/antd/dist/antd.css';
+
+.logo {
+    color: white;
+    font-size: 25px;
+}
+
+.nost-navi-bar a:hover{
+    text-decoration: none;
+    color: white;
+}

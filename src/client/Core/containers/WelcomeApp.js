@@ -3,8 +3,6 @@ import { dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {Link} from 'react-router'
 
-import {ipcRenderer} from 'electron'
-
 
 class WelcomeApp extends Component{
     constructor(props) {
@@ -13,7 +11,7 @@ class WelcomeApp extends Component{
 
     render() {
         return (
-            <div>
+            <div  className="container-fluid">
                 <div className="row">
                     <div className="col-md-12">
                         <h1>业务系统分析工具 NOSAT</h1>
