@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import * as d3time from 'd3-time'
 import * as d3_time_format from 'd3-time-format'
 import * as d3_format from 'd3-format'

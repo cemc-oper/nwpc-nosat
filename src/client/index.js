@@ -1,6 +1,3 @@
-global.jQuery = require('jquery');
-require('bootstrap-loader');
-
 import React from 'react'
 import { render } from 'react-dom'
 
@@ -16,15 +13,15 @@ import operationSystemAnalyticsAppReducer from './Core/reducers/index'
 import Root from './Core/Root'
 
 let store = createStore(
-    operationSystemAnalyticsAppReducer,
-    applyMiddleware(
-        thunkMiddleware
-    )
+  operationSystemAnalyticsAppReducer,
+  applyMiddleware(
+    thunkMiddleware
+  )
 );
 
 const history = syncHistoryWithStore(hashHistory, store);
 
 render(
-    <Root store={store} history={history} />,
-    document.getElementById('app')
+  <Root store={store} history={history} />,
+  document.getElementById('app')
 );
