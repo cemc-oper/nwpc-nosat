@@ -1,7 +1,6 @@
 const electron = require('electron');
 const ipc = electron.ipcMain;
 const ssh2 = require('ssh2');
-const net = require('net');
 
 
 let analytics_program = {
@@ -145,28 +144,4 @@ ipc.on('llsubmit4.error-log.info.get', function (event, session, error_log_path)
     username: session.user,
     password: session.password
   });
-});
-
-let server;
-ipc.on('system-running-time-analytics.draw.click', function () {
-  server = net.createServer();
-
-  server.on('listening', function(e){
-    let server_address = server.address();
-    console.log(server_address.port);
-  });
-
-  server.on('connection', function(sock){
-    console.log('CONNECTED: ' +
-      sock.remoteAddress +':'+ sock.remotePort);
-
-    sock.on('data', function(data){
-      console.log("receive data:");
-      console.log(data.toString());
-    });
-
-  });
-
-  server.listen(62853);
-
 });
