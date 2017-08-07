@@ -2,6 +2,7 @@
 import datetime
 import json
 import sys
+import socket
 
 import click
 from paramiko import SSHClient, AutoAddPolicy
@@ -23,13 +24,20 @@ def cli():
 @click.option('--session-config', required=True)
 @click.option('--data-config', required=True)
 @click.option('--analyzer-config', required=True)
-def get(session_config, data_config, analyzer_config):
+@click.option('--socket-config')
+def get(session_config, data_config, analyzer_config, socket_config):
     request_date_time = datetime.datetime.now()
     request_time_string = request_date_time.strftime("%Y-%m-%d %H:%M:%S")
 
     session_config_dict = json.loads(session_config)
     data_config_dict = json.loads(data_config)
     analyzer_config_dict = json.loads(analyzer_config)
+    if socket_config:
+        socket_flag = True
+        socket_server_dict = json.loads(socket_config)
+    else:
+        socket_flag = False
+        socket_server_dict = dict()
 
     host = session_config_dict['host']
     port = session_config_dict['port']
@@ -68,8 +76,30 @@ def get(session_config, data_config, analyzer_config):
 
     std_out_lines = std_out_string.split("\n")
 
-    print(std_out_string)
-    print(std_error_string)
+    if socket_flag:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((socket_server_dict['server']['host'], socket_server_dict['server']['port']))
+
+        socket_message = {
+            'app': 'submit_log_analytics_tool',
+            'timestamp': datetime.datetime.now().timestamp(),
+            'data': {
+                'response': {
+                    'std_out': std_out_string,
+                    'std_err': std_error_string
+                },
+                'request': {
+                    'session': session_config_dict,
+                    'data': data_config_dict,
+                    'analyzer': analyzer_config_dict,
+                    'socket': socket_server_dict
+                }
+            }
+        }
+        s.send(json.dumps(socket_message).encode('utf-8'))
+    else:
+        print(std_out_string)
+        print(std_error_string)
 
     client.close()
     return
