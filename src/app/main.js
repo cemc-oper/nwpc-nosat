@@ -60,5 +60,4 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 require('./ipc-events.js');
-require('./tcp_server');
-require('./server/submit_log_server');
+require('./server/tcp_server');

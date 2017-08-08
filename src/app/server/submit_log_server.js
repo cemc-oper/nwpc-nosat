@@ -2,25 +2,14 @@ const electron = require('electron');
 const ipc = electron.ipcMain;
 const { spawn } = require('child_process');
 const path = require('path');
-const net = require('net');
+
 
 let python_exe_path = path.join(__dirname, '../vendor/python/python.exe');
 let submit_log_analytics_tool_path =
   path.join(__dirname, '../vendor/submit-log-analytics-tool/submit_log_analytics_tool.py');
 
-let tcp_server = null;
 
-let tcp_port = 62861;
-
-
-ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, data_config, analyzer_config) {
-  let socket_config = {
-    "server": {
-      "host": "10.28.32.175",
-      "port": tcp_port
-    }
-  };
-
+function request_llsubmit4_error_log_analytics_get(event, session_config, data_config, analyzer_config, socket_config) {
   const analytics_tool = spawn(python_exe_path, [
     submit_log_analytics_tool_path,
     'get',
@@ -40,63 +29,26 @@ ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, dat
 
   analytics_tool.on('close', (code) => {
     console.log(`analytics_tool process exited with code ${code}`);
-    if (code > 0 || code < 0) {
+    if (code === 0) {
+      event.sender.send('llsubmit4.error-log.analytics.get.reply.success');
+    } else {
       event.sender.send('llsubmit4.error-log.analytics.get.reply.error');
     }
   });
-});
-
-
-function receive_llsubmit4_error_log_analytics_get_result(event, message) {
-  let std_out = message.data.response.std_out;
-  event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
 }
 
 
-function createTcpServer(event) {
-  tcp_server = net.createServer();
-
-  tcp_server.on('listening', function(e){
-    let server_address = tcp_server.address();
-    console.log(server_address.port);
-  });
-
-  tcp_server.on('connection', function(sock){
-    console.log('CONNECTED: ' +
-      sock.remoteAddress +':'+ sock.remotePort);
-
-    sock.on('data', function(data){
-      let received_string = data.toString();
-      console.log(received_string);
-      let message = JSON.parse(received_string);
-      console.log('============tcp_server receive data================\n', message);
-      if(message.app === 'submit_log_analytics_tool') {
-        receive_llsubmit4_error_log_analytics_get_result(event, message);
-      }
-    });
-
-  });
-
-  tcp_server.listen(tcp_port);
-}
-
-function closeTcpServer(event) {
-  tcp_server.close();
-  tcp_server = null;
-}
-
-ipc.on('llsubmit4.error-log.analytics.server.start', function (event) {
-  if(tcp_server === null) {
-    console.log('start llsubmit4 error-log analytics server');
-    createTcpServer(event)
+function receive_llsubmit4_error_log_analytics_response(event, message) {
+  if(message.type === 'message') {
+    let message_string = message.data.message;
+    event.sender.send('llsubmit4.error-log.analytics.message', message_string);
+  } else if (message.type === 'result') {
+    let std_out = message.data.response.std_out;
+    event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
   }
+}
 
-});
-
-ipc.on('llsubmit4.error-log.analytics.server.stop', function (event) {
-  if(tcp_server) {
-    console.log('stop llsubmit4 error-log analytics server');
-    closeTcpServer(event)
-  }
-
-});
+module.exports = {
+  request_llsubmit4_error_log_analytics_get,
+  receive_llsubmit4_error_log_analytics_response
+};

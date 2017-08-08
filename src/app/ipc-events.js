@@ -3,6 +3,12 @@ const ipc = electron.ipcMain;
 const ssh2 = require('ssh2');
 
 
+let analytics_program = {
+  interpreter_path: "/cma/g3/wangdp/usr/local/bin/python3",
+  script_path: "/cma/g3/wangdp/work/2016/nwpc-operation-system-tool/submit_analytics/llsubmit4_error_analyzer.py"
+};
+
+
 /**
  *  test session
  *      1. ssh login

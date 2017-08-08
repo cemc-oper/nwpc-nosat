@@ -58,13 +58,11 @@ class SubmitLogAnalyticsApp extends Component{
       dispatch(receiveErrorLogInfo(log_info_response));
     });
 
-    ipcRenderer.send('llsubmit4.error-log.analytics.server.start');
+    ipcRenderer.on('llsubmit4.error-log.analytics.message', function (event, message) {
+      console.log(message);
+    });
 
     // this.runAnalyzer();
-  }
-
-  componentWillUnmount() {
-    ipcRenderer.send('llsubmit4.error-log.analytics.server.stop');
   }
 
   runAnalyzer() {

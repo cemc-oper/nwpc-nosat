@@ -66,9 +66,31 @@ def get(session_config, data_config, analyzer_config, socket_config):
         print('command not supported:', analyzer_config_dict['analytics_command'])
         sys.exit(-1)
 
+    if s:
+        socket_message = {
+            'app': 'submit_log_analytics_tool',
+            'type': 'message',
+            'timestamp': datetime.datetime.now().timestamp(),
+            'data': {
+                'message': 'connecting to remote server ...'
+            }
+        }
+        s.send(json.dumps(socket_message).encode('utf-8'))
+
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     client.connect(host, port, user, password)
+
+    if s:
+        socket_message = {
+            'app': 'submit_log_analytics_tool',
+            'type': 'message',
+            'timestamp': datetime.datetime.now().timestamp(),
+            'data': {
+                'message': 'running command in remote server ...'
+            }
+        }
+        s.send(json.dumps(socket_message).encode('utf-8'))
 
     stdin, stdout, stderr = client.exec_command(
         command
@@ -80,6 +102,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
     if s:
         socket_message = {
             'app': 'submit_log_analytics_tool',
+            'type': 'result',
             'timestamp': datetime.datetime.now().timestamp(),
             'data': {
                 'response': {
