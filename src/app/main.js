@@ -61,3 +61,4 @@ app.on('activate', function () {
 
 require('./ipc-events.js');
 require('./tcp_server');
+require('./server/submit_log_server');

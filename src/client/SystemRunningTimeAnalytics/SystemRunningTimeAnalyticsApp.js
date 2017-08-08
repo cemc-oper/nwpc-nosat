@@ -21,7 +21,12 @@ class SystemRunningTimeAnalyticsApp extends Component{
     super(props);
     this.state = {
       data_file_path: ''
-    }
+    };
+
+    ipcRenderer.on('system-running-time-analytics.draw.reply', function (event, result) {
+      let response = JSON.parse(result);
+      console.log(response)
+    });
   }
 
   handleDrawClick(){

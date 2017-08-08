@@ -78,6 +78,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
 
     if socket_flag:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         s.connect((socket_server_dict['server']['host'], socket_server_dict['server']['port']))
 
         socket_message = {
