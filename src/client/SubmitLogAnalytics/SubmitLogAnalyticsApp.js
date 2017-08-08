@@ -17,6 +17,7 @@ import AnalyzerResult from './components/llsubmit4/AnalyzerResult/index'
 import {
   requestErrorLogAnalytics,
   receiveErrorLogAnalytics,
+  receiveErrorLogAnalyticsFailure,
   changeErrorLogPath,
   loadErrorLog,
   saveErrorLog,
@@ -40,6 +41,11 @@ class SubmitLogAnalyticsApp extends Component{
       console.log('llsubmit4.error-log.analytics.get.reply');
       let analytics_result = JSON.parse(result);
       dispatch(receiveErrorLogAnalytics(analytics_result));
+    });
+
+    ipcRenderer.on('llsubmit4.error-log.analytics.get.reply.error', function (event) {
+      console.log('llsubmit4.error-log.analytics.get.reply.error');
+      dispatch(receiveErrorLogAnalyticsFailure());
     });
 
     ipcRenderer.on('session-system.session.test.get.reply', function (event, result) {

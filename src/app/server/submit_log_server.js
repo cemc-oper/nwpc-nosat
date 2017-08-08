@@ -40,6 +40,9 @@ ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, dat
 
   analytics_tool.on('close', (code) => {
     console.log(`analytics_tool process exited with code ${code}`);
+    if (code > 0 || code < 0) {
+      event.sender.send('llsubmit4.error-log.analytics.get.reply.error');
+    }
   });
 });
 
