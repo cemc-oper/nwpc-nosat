@@ -67,6 +67,7 @@ function createTcpServer(event) {
 
     sock.on('data', function(data){
       let received_string = data.toString();
+      console.log(received_string);
       let message = JSON.parse(received_string);
       console.log('============tcp_server receive data================\n', message);
       if(message.app === 'submit_log_analytics_tool') {
@@ -79,10 +80,23 @@ function createTcpServer(event) {
   tcp_server.listen(tcp_port);
 }
 
+function closeTcpServer(event) {
+  tcp_server.close();
+  tcp_server = null;
+}
+
 ipc.on('llsubmit4.error-log.analytics.server.start', function (event) {
   if(tcp_server === null) {
     console.log('start llsubmit4 error-log analytics server');
     createTcpServer(event)
+  }
+
+});
+
+ipc.on('llsubmit4.error-log.analytics.server.stop', function (event) {
+  if(tcp_server) {
+    console.log('stop llsubmit4 error-log analytics server');
+    closeTcpServer(event)
   }
 
 });

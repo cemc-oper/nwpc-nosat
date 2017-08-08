@@ -64,7 +64,7 @@ class SubmitLogAnalyticsApp extends Component{
   }
 
   componentWillUnmount() {
-
+    ipcRenderer.send('llsubmit4.error-log.analytics.server.stop');
   }
 
   runAnalyzer() {

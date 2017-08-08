@@ -32,9 +32,12 @@ def get(session_config, data_config, analyzer_config, socket_config):
     session_config_dict = json.loads(session_config)
     data_config_dict = json.loads(data_config)
     analyzer_config_dict = json.loads(analyzer_config)
+    s = None
     if socket_config:
         socket_flag = True
         socket_server_dict = json.loads(socket_config)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((socket_server_dict['server']['host'], socket_server_dict['server']['port']))
     else:
         socket_flag = False
         socket_server_dict = dict()
@@ -74,13 +77,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
     std_out_string = stdout.read().decode('UTF-8')
     std_error_string = stderr.read().decode('UTF-8')
 
-    std_out_lines = std_out_string.split("\n")
-
-    if socket_flag:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        s.connect((socket_server_dict['server']['host'], socket_server_dict['server']['port']))
-
+    if s:
         socket_message = {
             'app': 'submit_log_analytics_tool',
             'timestamp': datetime.datetime.now().timestamp(),
