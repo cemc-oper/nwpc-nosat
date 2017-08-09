@@ -61,7 +61,7 @@ class SubmitLogAnalyticsApp extends Component{
 
     ipcRenderer.on('llsubmit4.error-log.analytics.message', function (event, message) {
       console.log("[SubmitLogAnalyticsApp.componentDidMount] llsubmit4.error-log.analytics.message", message);
-      dispatch(receiveErrorLogAnalyticsMessage, message);
+      dispatch(receiveErrorLogAnalyticsMessage(message));
     });
 
     // this.runAnalyzer();

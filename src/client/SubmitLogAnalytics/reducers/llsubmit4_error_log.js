@@ -22,10 +22,9 @@ function error_log_analyzer_config_reducer(state, action){
       t[action.config.analytics_command] = action.config;
       let command_map = Object.assign({}, state.command_map, t);
 
-      let new_state = Object.assign({}, state, {
+      return Object.assign({}, state, {
         command_map: command_map
       });
-      return new_state;
       break;
     case CHANGE_ANALYZER_CONFIG_COMMAND:
       return Object.assign({}, state, {
@@ -208,6 +207,7 @@ export default function llsubmit4_error_log_reducer(state={
       });
       break;
     default:
+      console.log("[llsubmit4_error_log_reducer] default action:", action.type);
       return state;
   }
 }
