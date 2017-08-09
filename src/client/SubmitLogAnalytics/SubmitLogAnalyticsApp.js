@@ -18,6 +18,7 @@ import {
   requestErrorLogAnalytics,
   receiveErrorLogAnalytics,
   receiveErrorLogAnalyticsFailure,
+  receiveErrorLogAnalyticsMessage,
   changeErrorLogPath,
   loadErrorLog,
   saveErrorLog,
@@ -59,7 +60,8 @@ class SubmitLogAnalyticsApp extends Component{
     });
 
     ipcRenderer.on('llsubmit4.error-log.analytics.message', function (event, message) {
-      console.log(message);
+      console.log("[SubmitLogAnalyticsApp.componentDidMount] llsubmit4.error-log.analytics.message", message);
+      dispatch(receiveErrorLogAnalyticsMessage, message);
     });
 
     // this.runAnalyzer();
@@ -74,7 +76,7 @@ class SubmitLogAnalyticsApp extends Component{
     let {current_command, command_map} = error_log_analyzer_config;
     let send_analyzer_config =  Object.assign({}, command_map[current_command], {
       command_map: command_map,
-      begin_date: command_map[current_command].first_date.format("YYYY-MM-DD"),
+      begin_date: moment(command_map[current_command].first_date).format("YYYY-MM-DD"),
       end_date: moment(command_map[current_command].last_date).add(1, "days").format("YYYY-MM-DD")
     });
 

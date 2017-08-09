@@ -19,13 +19,13 @@ function request_llsubmit4_error_log_analytics_get(event, session_config, data_c
     '--socket-config=' + JSON.stringify(socket_config)
   ]);
 
-  analytics_tool.stdout.on('data', (data) => {
-    console.log(`analytics_tool stdout: ${data}`);
-  });
-
-  analytics_tool.stderr.on('data', (data) => {
-    console.log(`analytics_tool stderr: ${data}`);
-  });
+  // analytics_tool.stdout.on('data', (data) => {
+  //   console.log(`analytics_tool stdout: ${data}`);
+  // });
+  //
+  // analytics_tool.stderr.on('data', (data) => {
+  //   console.log(`analytics_tool stderr: ${data}`);
+  // });
 
   analytics_tool.on('close', (code) => {
     console.log(`analytics_tool process exited with code ${code}`);
@@ -40,9 +40,11 @@ function request_llsubmit4_error_log_analytics_get(event, session_config, data_c
 
 function receive_llsubmit4_error_log_analytics_response(event, message) {
   if(message.type === 'message') {
+    console.log('[receive_llsubmit4_error_log_analytics_response] message');
     let message_string = message.data.message;
     event.sender.send('llsubmit4.error-log.analytics.message', message_string);
   } else if (message.type === 'result') {
+    console.log('[receive_llsubmit4_error_log_analytics_response] result');
     let std_out = message.data.response.std_out;
     event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
   }

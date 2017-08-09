@@ -9,8 +9,8 @@ export default class ErrorAnalyzerCountConfig extends Component {
         let config = Object();
         config.analytics_command = 'count';
         config.analytics_type = this.refs.analytics_type_node.value;
-        config.first_date = moment(this.refs.first_date_node.value);
-        config.last_date = moment(this.refs.last_date_node.value);
+        config.first_date = moment(this.refs.first_date_node.value).toDate();
+        config.last_date = moment(this.refs.last_date_node.value).toDate();
         return config;
     }
 
@@ -46,12 +46,12 @@ export default class ErrorAnalyzerCountConfig extends Component {
                 <div className="form-group">
                     <label>起始日期</label>
                     <input type="date" className="form-control" ref="first_date_node"
-                           value={first_date.format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
+                           value={moment(first_date).format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
                 </div>
                 <div className="form-group">
                     <label>结束日期</label>
                     <input type="date" className="form-control" ref="last_date_node"
-                           value={last_date.format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
+                           value={moment(last_date).format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
                 </div>
             </form>
         )

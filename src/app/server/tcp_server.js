@@ -36,9 +36,10 @@ function createTcpServer(event) {
 
     sock.on('data', function(data){
       let received_string = data.toString();
-      console.log(received_string);
+      console.log('[data] ', received_string);
+      //console.log(received_string);
       let message = JSON.parse(received_string);
-      console.log('============analytics_tool_server receive data================\n', message);
+      // console.log('============analytics_tool_server receive data================\n', message);
       if(message.app === 'submit_log_analytics_tool') {
         submit_log_server.receive_llsubmit4_error_log_analytics_response(event, message);
       }

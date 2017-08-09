@@ -22,6 +22,15 @@ export function receiveErrorLogAnalyticsFailure() {
   }
 }
 
+
+export const RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE = "RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE";
+export function receiveErrorLogAnalyticsMessage(message) {
+  return {
+    type: RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE,
+    message
+  }
+}
+
 export const CHANGE_ERROR_LOG_PATH = "CHANGE_ERROR_LOG_PATH";
 export function changeErrorLogPath(error_log_path){
   return {

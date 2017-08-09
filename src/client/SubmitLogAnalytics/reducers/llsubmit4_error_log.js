@@ -2,6 +2,7 @@ import {
   REQUEST_ERROR_LOG_ANALYTICS,
   RESPONSE_ERROR_LOG_ANALYTICS,
   RESPONSE_ERROR_LOG_ANALYTICS_FAILURE,
+  RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE,
   CHANGE_ERROR_LOG_PATH,
   LOAD_ERROR_LOG,
   SAVE_ERROR_LOG,
@@ -36,6 +37,50 @@ function error_log_analyzer_config_reducer(state, action){
   }
 }
 
+function error_log_analyzer_reducer(state, action){
+  switch(action.type) {
+    case REQUEST_ERROR_LOG_ANALYTICS:
+      return Object.assign({}, state, {
+        status: {
+          is_fetching: true,
+        },
+        dialog_content: {
+          title: "日志分析",
+          message: "分析程序正在运行...",
+          value: 45
+        },
+      });
+      break;
+    case RESPONSE_ERROR_LOG_ANALYTICS:
+      return Object.assign({}, state, {
+        status: {
+          is_fetching: false
+        },
+        analytics_result: action.analytics_result,
+      });
+      break;
+    case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
+      return Object.assign({}, state, {
+        status: {
+          is_fetching: false
+        },
+        analytics_result:null
+      });
+      break;
+    case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
+      console.log("[error_log_analyzer_reducer] action message:", action.message);
+      let dialog_content = Object.assign({}, state.dialog_content, {
+        message: action.message
+      });
+      return Object.assign({}, state, {
+        dialog_content: dialog_content
+      });
+      break;
+    default:
+      return state;
+  }
+}
+
 
 export default function llsubmit4_error_log_reducer(state={
   status: {
@@ -49,8 +94,8 @@ export default function llsubmit4_error_log_reducer(state={
       'count': {
         analytics_command: 'count',
         analytics_type: 'date',
-        first_date: moment().subtract(1, 'weeks'),
-        last_date: moment().subtract(1, 'days')
+        first_date: moment().subtract(1, 'weeks').toDate(),
+        last_date: moment().subtract(1, 'days').toDate()
       },
       'grid': {
         analytics_command: 'grid',
@@ -63,7 +108,12 @@ export default function llsubmit4_error_log_reducer(state={
   },
   error_log_analyzer:{
     status: {
-      is_fetching: false
+      is_fetching: false,
+    },
+    dialog_content: {
+      title: "日志分析",
+      message: "分析程序正在运行...",
+      value: 45
     },
     analytics_result:null
   },
@@ -92,33 +142,12 @@ export default function llsubmit4_error_log_reducer(state={
 }, action) {
   switch(action.type){
     case REQUEST_ERROR_LOG_ANALYTICS:
-      return Object.assign({}, state, {
-        error_log_analyzer: {
-          status: {
-            is_fetching: true
-          },
-          analytics_result: state.error_log_analyzer.analytics_result
-        }
-      });
-      break;
     case RESPONSE_ERROR_LOG_ANALYTICS:
-      return Object.assign({}, state, {
-        error_log_analyzer: {
-          status: {
-            is_fetching: false
-          },
-          analytics_result: action.analytics_result,
-        }
-      });
-      break;
     case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
+    case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
+      console.log("[llsubmit4_error_log_reducer] action for error_log_analyzer_reducer:", action.type);
       return Object.assign({}, state, {
-        error_log_analyzer: {
-          status: {
-            is_fetching: false
-          },
-          analytics_result:null
-        }
+        error_log_analyzer: error_log_analyzer_reducer(state.error_log_analyzer, action)
       });
       break;
     case CHANGE_ERROR_LOG_PATH:
