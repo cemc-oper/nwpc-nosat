@@ -72,7 +72,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
             'type': 'message',
             'timestamp': datetime.datetime.now().timestamp(),
             'data': {
-                'message': 'connecting to remote server ...'
+                'message': '正在连接远程服务器...'
             }
         }
         s.send(json.dumps(socket_message).encode('utf-8'))
@@ -87,7 +87,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
             'type': 'message',
             'timestamp': datetime.datetime.now().timestamp(),
             'data': {
-                'message': 'running command in remote server ...'
+                'message': '正在远程服务器上执行命令...'
             }
         }
         s.send(json.dumps(socket_message).encode('utf-8'))
