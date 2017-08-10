@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { dispatch } from 'redux'
 
+import { Row, Col, Button, Form } from 'antd';
+
 require("./style.css");
 
 import LoadSessionDropMenu from "./components/LoadSessionDropMenu"
@@ -73,51 +75,49 @@ export default class HpcAuth extends Component{
 
     return (
       <div className="hpc-auth-box">
-          <div className="row">
-              <div className="col-xs-9">
-                  <SessionBarEditor
-                    ref="session_bar_editor"
-                    host={host}
-                    port={port}
-                    user={user}
-                    password={password}
-                    handler={{
-                      change_handler: this.props.handler.bar_editor_change_handler.bind(this)
-                    }}
-                  />
-              </div>
-              <div className="col-xs-3">
-                  <div className="btn-group pull-right">
-                      <button className="btn btn-default" onClick={this.handleTestClick.bind(this)}>测试</button>
-                      <button className="btn btn-default" onClick={this.handleSaveClick.bind(this)}>保存</button>
-                      <div className="btn-group">
-                          <LoadSessionDropMenu
-                            rel="load_session_drop_menu"
-                            session_list={session_list}
-                            handler={{
-                              load_session_handler: this.props.handler.load_session_handler.bind(this)
-                            }}
-                          />
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <SaveSessionDialog
-            is_open={is_save_dialog_open}
-            session={working_session}
-            handler={{
-              close_handler: this.closeSaveSessionDialog.bind(this),
-              save_handler: this.acceptSaveSessionDialog.bind(this)
-            }}
-          />
-          <TestSessionDialog
-            is_open={is_test_dialog_open}
-            session={working_session}
-            handler={{
-              close_handler: this.closeTestSessionDialog.bind(this)
-            }}
-            status={test_session.status}
-          />
+        <Row>
+          <Col span={18}>
+            <SessionBarEditor
+              ref="session_bar_editor"
+              host={host}
+              port={port}
+              user={user}
+              password={password}
+              handler={{
+                change_handler: this.props.handler.bar_editor_change_handler.bind(this)
+              }}
+            />
+          </Col>
+          <Col span={6}>
+            <div style={{ textAlign: 'right' }}>
+              <Button onClick={this.handleTestClick.bind(this)}>测试</Button>
+              <Button onClick={this.handleSaveClick.bind(this)}>保存</Button>
+              <LoadSessionDropMenu
+                rel="load_session_drop_menu"
+                session_list={session_list}
+                handler={{
+                  load_session_handler: this.props.handler.load_session_handler.bind(this)
+                }}
+              />
+            </div>
+          </Col>
+        </Row>
+        <SaveSessionDialog
+          is_open={is_save_dialog_open}
+          session={working_session}
+          handler={{
+            close_handler: this.closeSaveSessionDialog.bind(this),
+            save_handler: this.acceptSaveSessionDialog.bind(this)
+          }}
+        />
+        <TestSessionDialog
+          is_open={is_test_dialog_open}
+          session={working_session}
+          handler={{
+            close_handler: this.closeTestSessionDialog.bind(this)
+          }}
+          status={test_session.status}
+        />
       </div>
     );
   }

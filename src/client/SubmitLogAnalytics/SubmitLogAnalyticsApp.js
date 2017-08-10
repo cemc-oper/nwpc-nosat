@@ -6,6 +6,15 @@ import {ipcRenderer} from 'electron'
 import moment from 'moment'
 import {Link} from 'react-router'
 
+import {
+  Layout, Row, Col,
+  Form, Input, Button, Menu, Alert, Icon
+} from 'antd';
+
+import "../Core/containers/nost_box.scss"
+
+const { Header, Footer, Content } = Layout;
+
 global.jQuery = require('jquery');
 require('bootstrap-loader');
 
@@ -130,73 +139,90 @@ class SubmitLogAnalyticsApp extends Component{
     const { dispatch } = this.props;
     dispatch(changeAnalyzerConfig(config));
   }
+
   changeAnalyzerConfigCommand(command){
     const { dispatch } = this.props;
     dispatch(changeAnalyzerConfigCommand(command));
   }
-
 
   render() {
     const { error_log_analyzer, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
     const { session_list, current_session, test_session } = session_system;
     const { error_log_path, info, error_log_list } = error_log_data_config;
     return (
-      <div>
-        <nav className="navbar navbar-default" role="navigation">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <Link className="navbar-brand" to="/">NOST</Link>
-            </div>
-          </div>
-        </nav>
-        <div className="row">
-          <div className="col-sm-12">
-            <HpcAuth
-              ref="hpc_auth"
-              current_session={current_session}
-              handler={{
-                test_click_handler: this.testSession.bind(this),
-                save_click_handler: this.saveSession.bind(this),
-                load_session_handler: this.loadSession.bind(this),
-                bar_editor_change_handler: this.loadSession.bind(this)
-              }}
-              session_list={session_list}
-              test_session={test_session}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
-            <ErrorAnalyzerDataConfig
-              ref="data_config"
-              error_log_path={error_log_path}
-              error_log_info={info}
-              error_log_list={error_log_list}
-              handler={{
-                request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
-                change_error_log_path_handler: this.changeErrorLogPath.bind(this),
-                load_error_log_handler: this.handleLoadErrorLog.bind(this),
-                save_click_handler: this.handleSaveErrorLog.bind(this)
-              }}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3">
-            <ErrorAnalyzerConfig ref="analyzer_config"
-                                 analyzer_config={error_log_analyzer_config}
-                                 handler={{
-                                   run_handler: this.runAnalyzer.bind(this),
-                                   change_handler: this.changeAnalyzerConfig.bind(this),
-                                   change_command_handler: this.changeAnalyzerConfigCommand.bind(this)
-                                 }}
-            />
-          </div>
-          <div className="col-sm-9">
-            <AnalyzerResult error_log_analyzer={error_log_analyzer}/>
-          </div>
-        </div>
-      </div>
+      <Layout className="layout" style={{ height: '100vh' }}>
+        <Header>
+          <Row className="nost-navi-bar">
+            <Col span={4}>
+              <Link className="logo" to="/">NOST</Link>
+            </Col>
+            <Col span={20}>
+              <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['1']}
+                style={{ lineHeight: '64px' }}
+              >
+                <Menu.Item key="1"><Link to="/submit-log-analytics">提交分析</Link></Menu.Item>
+                <Menu.Item key="2"><Link to="/system-running-time-analytics">运行时间</Link></Menu.Item>
+              </Menu>
+            </Col>
+          </Row>
+        </Header>
+        <Content style={{padding: '25px 25px 0px 25px'}}>
+          <Row>
+            <Col span={24}>
+              <HpcAuth
+                ref="hpc_auth"
+                current_session={current_session}
+                handler={{
+                  test_click_handler: this.testSession.bind(this),
+                  save_click_handler: this.saveSession.bind(this),
+                  load_session_handler: this.loadSession.bind(this),
+                  bar_editor_change_handler: this.loadSession.bind(this)
+                }}
+                session_list={session_list}
+                test_session={test_session}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <ErrorAnalyzerDataConfig
+                ref="data_config"
+                error_log_path={error_log_path}
+                error_log_info={info}
+                error_log_list={error_log_list}
+                handler={{
+                  request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
+                  change_error_log_path_handler: this.changeErrorLogPath.bind(this),
+                  load_error_log_handler: this.handleLoadErrorLog.bind(this),
+                  save_click_handler: this.handleSaveErrorLog.bind(this)
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={6}>
+              <ErrorAnalyzerConfig
+                ref="analyzer_config"
+                analyzer_config={error_log_analyzer_config}
+                handler={{
+                  run_handler: this.runAnalyzer.bind(this),
+                  change_handler: this.changeAnalyzerConfig.bind(this),
+                  change_command_handler: this.changeAnalyzerConfigCommand.bind(this)
+                }}
+              />
+            </Col>
+            <Col span={18}>
+              <AnalyzerResult error_log_analyzer={error_log_analyzer}/>
+            </Col>
+          </Row>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          NOST &copy; 2017 NWPC
+        </Footer>
+      </Layout>
     );
   }
 }
