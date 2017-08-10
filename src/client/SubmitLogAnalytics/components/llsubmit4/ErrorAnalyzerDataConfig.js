@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import PropTypes from 'prop-types'
 
 import { Row, Col, Button, Form, Input, Menu, Dropdown } from 'antd';
@@ -28,13 +29,13 @@ export default  class ErrorAnalyzerDataConfig extends Component{
 
   getErrorLogPath(){
     let error_log_path_node = this.refs.error_log_path_node;
-    return error_log_path_node.value;
+    return ReactDom.findDOMNode(error_log_path_node).value;
   }
   getErrorLog(){
     let error_log_path_node = this.refs.error_log_path_node;
     return {
       name: null,
-      path: error_log_path_node.value
+      path: ReactDom.findDOMNode(error_log_path_node.value)
     };
   }
 

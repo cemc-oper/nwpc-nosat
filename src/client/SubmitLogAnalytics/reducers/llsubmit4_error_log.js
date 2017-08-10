@@ -67,7 +67,7 @@ function error_log_analyzer_reducer(state, action){
       });
       break;
     case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
-      console.log("[error_log_analyzer_reducer] action message:", action.message);
+      // console.log("[error_log_analyzer_reducer] action message:", action.message);
       let dialog_content = Object.assign({}, state.dialog_content, {
         message: action.message
       });
@@ -144,7 +144,7 @@ export default function llsubmit4_error_log_reducer(state={
     case RESPONSE_ERROR_LOG_ANALYTICS:
     case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
     case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
-      console.log("[llsubmit4_error_log_reducer] action for error_log_analyzer_reducer:", action.type);
+      // console.log("[llsubmit4_error_log_reducer] action for error_log_analyzer_reducer:", action.type);
       return Object.assign({}, state, {
         error_log_analyzer: error_log_analyzer_reducer(state.error_log_analyzer, action)
       });

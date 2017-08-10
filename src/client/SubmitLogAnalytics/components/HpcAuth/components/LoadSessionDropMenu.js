@@ -6,7 +6,9 @@ import { Button, Dropdown, Menu } from 'antd';
 
 export default class LoadSessionDropMenu extends Component{
 
-  handleLoadSessionClick(session){
+  handleLoadSessionClick(item, key, keyPath){
+    console.log("[LoadSessionDropMenu.handleLoadSessionClick] item:", item);
+    let session = item.props.session;
     let {load_session_handler} = this.props.handler;
     load_session_handler(session);
   }
@@ -16,22 +18,22 @@ export default class LoadSessionDropMenu extends Component{
     let component = this;
     let session_nodes = session_list.map(function(session, index){
       return (
-        <Menu.Item key={index}>
-          <a href="#" onClick={component.handleLoadSessionClick.bind(component, session)}>{session.name}</a>
+        <Menu.Item key={index} session={session}>
+          {session.name}
         </Menu.Item>
       )
     });
 
     let menu = (
-      <Menu>
+      <Menu onClick={component.handleLoadSessionClick.bind(component)}>
         { session_nodes }
       </Menu>
     );
 
     return (
-        <Dropdown.Button overlay={menu}>
-          打开
-        </Dropdown.Button>
+      <Dropdown.Button overlay={menu}>
+        打开
+      </Dropdown.Button>
     )
   }
 }
