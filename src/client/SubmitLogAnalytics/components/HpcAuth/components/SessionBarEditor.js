@@ -8,8 +8,7 @@ const FormItem = Form.Item;
 
 export default class SessionBarEditor extends Component{
 
-  getSession(e) {
-    let target_dom = e.target;
+  getSession() {
     let auth = Object();
     let host_node = this.refs.host;
     auth.host = ReactDom.findDOMNode(host_node).value;
@@ -23,9 +22,9 @@ export default class SessionBarEditor extends Component{
   }
 
   handleChange(e) {
-    let session = this.getSession(e);
-    console.log("[SessionBarEditor.handleChange] event:", e);
-    console.log("[SessionBarEditor.handleChange] session:", session);
+    let session = this.getSession();
+    // console.log("[SessionBarEditor.handleChange] event:", e);
+    // console.log("[SessionBarEditor.handleChange] session:", session);
     let { change_handler } = this.props.handler;
     change_handler(session);
   }

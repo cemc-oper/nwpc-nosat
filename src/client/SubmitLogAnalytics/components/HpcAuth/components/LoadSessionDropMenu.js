@@ -6,9 +6,9 @@ import { Button, Dropdown, Menu } from 'antd';
 
 export default class LoadSessionDropMenu extends Component{
 
-  handleLoadSessionClick(item, key, keyPath){
-    console.log("[LoadSessionDropMenu.handleLoadSessionClick] item:", item);
-    let session = item.props.session;
+  handleLoadSessionClick(info){
+    // console.log("[LoadSessionDropMenu.handleLoadSessionClick] info:", info);
+    let session = info.item.props.session;
     let {load_session_handler} = this.props.handler;
     load_session_handler(session);
   }

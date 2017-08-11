@@ -124,31 +124,29 @@ export default  class ErrorAnalyzerDataConfig extends Component{
       <div>
         <h4>错误日志路径</h4>
         <Form>
-        <Row className="config-row">
-          <Col span={18}>
-            <Form.Item>
-              <Input
-                type="text"
-                ref="error_log_path_node"
-                value={error_log_path}
-                onChange={this.handleErrorLogPathChange.bind(this)}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <div style={{ textAlign: 'right' }}>
+          <Row className="config-row">
+            <Col span={18}>
+              <Form.Item>
+                <Input
+                  type="text"
+                  ref="error_log_path_node"
+                  value={error_log_path}
+                  onChange={this.handleErrorLogPathChange.bind(this)}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6} style={{ textAlign: 'right' }}>
               <Button onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
                 测试
               </Button>
               <Button onClick={this.handleSaveClick.bind(this)}>
                 保存
               </Button>
-                <Dropdown.Button overlay={menu}>
-                  打开
-                </Dropdown.Button>
-            </div>
-          </Col>
-        </Row>
+              <Dropdown.Button overlay={menu}>
+                打开
+              </Dropdown.Button>
+            </Col>
+          </Row>
         </Form>
         { log_info_node }
         <SaveErrorLogDialog

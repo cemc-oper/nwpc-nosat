@@ -14,7 +14,7 @@ export default class WaitingAnalyzerDialog extends Component{
 
   render(){
     const { is_open, content } = this.props;
-    console.log("[WaitingAnalyzerDialog.render] content:", content);
+    // console.log("[WaitingAnalyzerDialog.render] content:", content);
     const { title, message, value } = content;
     return (
       <Modal

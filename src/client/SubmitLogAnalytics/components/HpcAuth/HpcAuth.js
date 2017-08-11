@@ -30,7 +30,6 @@ export default class HpcAuth extends Component{
   }
 
   componentDidMount(){
-
   }
 
   getSession() {
@@ -69,9 +68,9 @@ export default class HpcAuth extends Component{
   }
 
   render() {
-    const { current_session, session_list, test_session } = this.props;
-    const { host, port, user, password} = current_session;
+    const { session_list, test_session, current_session } = this.props;
     let { is_save_dialog_open, working_session, is_test_dialog_open } = this.state;
+    const { host, port, user, password} = current_session;
 
     return (
       <div className="hpc-auth-box">
@@ -88,8 +87,7 @@ export default class HpcAuth extends Component{
               }}
             />
           </Col>
-          <Col span={6}>
-            <div style={{ textAlign: 'right' }}>
+          <Col span={6} style={{ textAlign: 'right' }}>
               <Button onClick={this.handleTestClick.bind(this)}>测试</Button>
               <Button onClick={this.handleSaveClick.bind(this)}>保存</Button>
               <LoadSessionDropMenu
@@ -99,7 +97,6 @@ export default class HpcAuth extends Component{
                   load_session_handler: this.props.handler.load_session_handler.bind(this)
                 }}
               />
-            </div>
           </Col>
         </Row>
         <SaveSessionDialog

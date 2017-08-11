@@ -28,9 +28,9 @@ export default class AnalyzerResult extends Component{
   render(){
     const { error_log_analyzer } = this.props;
     const { analytics_result, status, dialog_content } = error_log_analyzer;
-    console.log("[AnalyzerResult.render] dialog_content:", dialog_content);
+    // console.log("[AnalyzerResult.render] dialog_content:", dialog_content);
 
-    console.log("[AnalyzerResult]analytics_result", analytics_result);
+    // console.log("[AnalyzerResult]analytics_result", analytics_result);
     let chart_data = AnalyzerResult.generateChartData(analytics_result);
     // console.log("[AnalyzerResult]", chart_data);
 
