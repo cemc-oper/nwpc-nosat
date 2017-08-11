@@ -1,108 +1,108 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Modal from 'react-modal'
+import { Modal, Form, Input, Alert } from 'antd'
+
 
 export default class SaveErrorLogDialog extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            name_group_class: "form-group"
-        }
+  constructor(props){
+    super(props);
+    this.state = {
+      name_group_class: "form-group"
     }
+  }
 
-    getErrorLog() {
-        let error_log = Object();
-        let name_node = this.refs.name;
-        error_log.name = name_node.value;
-        let path_node = this.refs.path;
-        error_log.path = path_node.value;
-        return error_log;
-    }
+  getErrorLog() {
+    let error_log = Object();
+    const form = this.form.props.form;
+    error_log.name = form.getFieldValue('name');
+    error_log.path = form.getFieldValue('path');
+    return error_log;
+  }
 
-    handleCloseClick(){
-        let { close_handler } = this.props.handler;
-        this.setState({
-            name_group_class: "form-group"
-        });
-        close_handler();
-    }
+  handleCloseClick(){
+    let { close_handler } = this.props.handler;
+    close_handler();
+  }
 
-    handleSaveClick(){
-        let { save_handler } = this.props.handler;
+  handleSaveClick(){
+    let { save_handler } = this.props.handler;
+    const form = this.form.props.form;
+    form.validateFields((err, values)=>{
+      if(err)
+        return;
 
-        let name_node = this.refs.name;
-        let name = name_node.value;
-        if(name.length == 0){
-            this.setState({
-                name_group_class: "form-group has-error"
-            });
-            return;
-        }
+      let error_log = this.getErrorLog();
+      save_handler(error_log);
+    });
 
-        let error_log = this.getErrorLog();
-        this.setState({
-            name_group_class: "form-group"
-        });
-        save_handler(error_log);
-    }
+  }
 
-    render(){
-        const { is_open, error_log } = this.props;
-        const {session_name_group_class } = this.state;
-        return (
-            <Modal
-                isOpen={is_open}
-                className="Modal__Bootstrap modal-dialog"
-                contentLabel="Save Error Log Dialog"
-            >
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" onClick={this.handleCloseClick.bind(this)}>
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 className="modal-title">保存错误日志信息</h4>
-                    </div>
-                    <div className="modal-body">
-                        <div className="alert alert-danger" role="adangerlert">正在开发中，仅在本次运行中有效！</div>
-                        <form>
-                            <div className={session_name_group_class}>
-                                <label className="control-label">日志名称</label>
-                                <input type="text" className="form-control" placeholder="日志名称"
-                                       ref="name" defaultValue={error_log.name} />
-                            </div>
-                            <div className="form-group">
-                                <label>日志路径</label>
-                                <input type="text" className="form-control" placeholder="日志路径"
-                                       ref="path" defaultValue={error_log.path} />
-                            </div>
-                        </form>
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-default" onClick={this.handleCloseClick.bind(this)}>关闭</button>
-                        <button type="button" className="btn btn-primary" onClick={this.handleSaveClick.bind(this)}>保存</button>
-                    </div>
-                </div>
-            </Modal>
-        )
-    }
+  render(){
+    const { is_open, error_log } = this.props;
+
+    let SaveErrorLogForm = Form.create()((props)=>{
+      const { is_open, error_log, handler, form } = props;
+      const { getFieldDecorator } = form;
+      return (
+        <Modal
+          visible={is_open}
+          title="保存错误日志信息"
+          onOk={handler.save_handler}
+          onCancel={handler.close_handler}
+        >
+          <Alert message="正在开发中，仅在本次运行中有效！" type="warning" closable/>
+          <Form>
+            <Form.Item label="日志名称">
+              {getFieldDecorator('name', {
+                rules: [{required: true, message: "请输入日志名称"}],
+                initialValue: error_log.name
+              })(
+                <Input type="text"  placeholder="日志名称"/>
+              )}
+            </Form.Item>
+            <Form.Item label="日志路径">
+              {getFieldDecorator('path', {
+                rules: [{required: true, message: "请输入日志路径"}],
+                initialValue: error_log.path
+              })(
+                <Input type="text"  placeholder="日志路径"/>
+              )}
+            </Form.Item>
+          </Form>
+        </Modal>
+      )
+    });
+
+    return (
+      <SaveErrorLogForm
+        is_open={is_open}
+        error_log={error_log}
+        wrappedComponentRef={(form)=>{this.form = form}}
+        handler={{
+          save_handler: this.handleSaveClick.bind(this),
+          close_handler: this.handleSaveClick.bind(this)
+        }}
+      />
+    )
+  }
 }
 
 SaveErrorLogDialog.propTypes = {
-    is_open: PropTypes.bool,
-    error_log: PropTypes.shape({
-        path: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-        name: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
-    }),
-    handler: PropTypes.shape({
-        close_handler: PropTypes.func,
-        save_handler: PropTypes.func
-    })
+  is_open: PropTypes.bool,
+  error_log: PropTypes.shape({
+    path: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    name: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+  }),
+  handler: PropTypes.shape({
+    close_handler: PropTypes.func,
+    save_handler: PropTypes.func
+  })
 };
 
 SaveErrorLogDialog.defaultProps = {
-    is_open: false,
-    error_log: {
-        path: null,
-        name: null
-    }
+  is_open: false,
+  error_log: {
+    path: null,
+    name: null
+  }
 };

@@ -12,7 +12,6 @@ require("./style.css");
 
 class DataConfigFormComponent extends Component{
   render(){
-    let component = this;
     const { error_log_path, error_log_list, handler } = this.props;
 
     let log_path_nodes = error_log_list.map(function(an_error_log, index){
@@ -87,7 +86,6 @@ export default  class ErrorAnalyzerDataConfig extends Component{
   }
 
   handleErrorLogPathChange(event){
-    // console.log("[ErrorAnalyzerDataConfig.handleErrorLogPathChange] event:", e);
     let error_log_path = event.target.value;
     const { change_error_log_path_handler } = this.props.handler;
     change_error_log_path_handler(error_log_path);
