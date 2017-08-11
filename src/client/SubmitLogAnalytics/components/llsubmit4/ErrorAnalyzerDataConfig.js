@@ -9,6 +9,61 @@ import SaveErrorLogDialog from './SaveErrorLogDialog'
 
 require("./style.css");
 
+
+class DataConfigFormComponent extends Component{
+  render(){
+    let component = this;
+    const { error_log_path, error_log_list, handler } = this.props;
+
+    let log_path_nodes = error_log_list.map(function(an_error_log, index){
+      return (
+        <Menu.Item key={index}>
+          <a onClick={()=>{
+            handler.handleLoadErrorLogClick(an_error_log);
+          }}>
+            {an_error_log.name}
+          </a>
+        </Menu.Item>
+      )
+    });
+
+    let menu = (
+      <Menu>
+        { log_path_nodes }
+      </Menu>
+    );
+
+    return (
+      <Form>
+        <Row className="config-row">
+          <Col span={18}>
+            <Form.Item>
+              <Input
+                type="text"
+                ref="error_log_path_node"
+                value={error_log_path}
+                onChange={handler.handleErrorLogPathChange}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={6} style={{ textAlign: 'right' }}>
+            <Button onClick={handler.handleRequestErrorLogInfoClick}>
+              测试
+            </Button>
+            <Button onClick={handler.handleSaveClick}>
+              保存
+            </Button>
+            <Dropdown.Button overlay={menu}>
+              打开
+            </Dropdown.Button>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+}
+
+
 export default  class ErrorAnalyzerDataConfig extends Component{
   constructor(props) {
     super(props);
@@ -28,21 +83,14 @@ export default  class ErrorAnalyzerDataConfig extends Component{
   }
 
   getErrorLogPath(){
-    let error_log_path_node = this.refs.error_log_path_node;
-    return ReactDom.findDOMNode(error_log_path_node).value;
-  }
-  getErrorLog(){
-    let error_log_path_node = this.refs.error_log_path_node;
-    return {
-      name: null,
-      path: ReactDom.findDOMNode(error_log_path_node.value)
-    };
+    return this.props.error_log_path;
   }
 
   handleErrorLogPathChange(event){
-    // let error_log_path = event.target.value;
+    // console.log("[ErrorAnalyzerDataConfig.handleErrorLogPathChange] event:", e);
+    let error_log_path = event.target.value;
     const { change_error_log_path_handler } = this.props.handler;
-    change_error_log_path_handler(this.getErrorLogPath())
+    change_error_log_path_handler(error_log_path);
   }
 
   handleRequestErrorLogInfoClick(event) {
@@ -56,7 +104,10 @@ export default  class ErrorAnalyzerDataConfig extends Component{
   }
 
   handleSaveClick() {
-    let error_log = this.getErrorLog();
+    let error_log = {
+      name: null,
+      path: this.getErrorLogPath()
+    };
     error_log.name = null;
     this.setState({
       is_save_dialog_open: true,
@@ -80,11 +131,10 @@ export default  class ErrorAnalyzerDataConfig extends Component{
 
     let { is_save_dialog_open, working_error_log } = this.state;
 
-
     let log_info_node = null;
     if(error_log_info) {
-      const { range } = error_log_info;
-      const { start_date_time, end_date_time, count } = range;
+      const {range} = error_log_info;
+      const {start_date_time, end_date_time, count} = range;
       log_info_node = (
         <Row>
           <Col span={24}>
@@ -104,50 +154,20 @@ export default  class ErrorAnalyzerDataConfig extends Component{
       )
     }
 
-    let log_path_nodes = error_log_list.map(function(an_error_log, index){
-      return (
-        <Menu.Item key={index}>
-          <a onClick={component.handleLoadErrorLogClick.bind(component, an_error_log)}>
-            {an_error_log.name}
-          </a>
-        </Menu.Item>
-      )
-    });
-
-    let menu = (
-      <Menu>
-        { log_path_nodes }
-      </Menu>
-    );
-
     return (
       <div>
         <h4>错误日志路径</h4>
-        <Form>
-          <Row className="config-row">
-            <Col span={18}>
-              <Form.Item>
-                <Input
-                  type="text"
-                  ref="error_log_path_node"
-                  value={error_log_path}
-                  onChange={this.handleErrorLogPathChange.bind(this)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={6} style={{ textAlign: 'right' }}>
-              <Button onClick={this.handleRequestErrorLogInfoClick.bind(this)}>
-                测试
-              </Button>
-              <Button onClick={this.handleSaveClick.bind(this)}>
-                保存
-              </Button>
-              <Dropdown.Button overlay={menu}>
-                打开
-              </Dropdown.Button>
-            </Col>
-          </Row>
-        </Form>
+        <DataConfigFormComponent
+          error_log_path={error_log_path}
+          error_log_list={error_log_list}
+          wrappedComponentRef={(form) => {this.form=form;}}
+          handler={{
+            handleErrorLogPathChange: this.handleErrorLogPathChange.bind(this),
+            handleLoadErrorLogClick: this.handleLoadErrorLogClick.bind(this),
+            handleRequestErrorLogInfoClick: this.handleRequestErrorLogInfoClick.bind(this),
+            handleSaveClick: this.handleSaveClick.bind(this)
+          }}
+        />
         { log_info_node }
         <SaveErrorLogDialog
           is_open={is_save_dialog_open}

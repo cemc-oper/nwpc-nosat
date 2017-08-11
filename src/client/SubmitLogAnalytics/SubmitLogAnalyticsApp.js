@@ -64,6 +64,7 @@ class SubmitLogAnalyticsApp extends Component{
     });
 
     ipcRenderer.on('llsubmit4.error-log.info.get.reply', function (event, result) {
+      console.log('llsubmit4.error-log.info.get.reply');
       let log_info_response = JSON.parse(result);
       dispatch(receiveErrorLogInfo(log_info_response));
     });
@@ -120,7 +121,8 @@ class SubmitLogAnalyticsApp extends Component{
     dispatch(requestErrorLogInfo(current_session));
   }
 
-  changeErrorLogPath(error_log_path){
+  handleChangeErrorLogPath(error_log_path){
+    // console.log("[SubmitLogAnalyticsApp.handleChangeErrorLogPath]", this);
     const { dispatch } = this.props;
     dispatch(changeErrorLogPath(error_log_path));
   }
@@ -195,7 +197,7 @@ class SubmitLogAnalyticsApp extends Component{
                 error_log_list={error_log_list}
                 handler={{
                   request_error_log_info_handler: this.requestErrorLogInfo.bind(this),
-                  change_error_log_path_handler: this.changeErrorLogPath.bind(this),
+                  change_error_log_path_handler: this.handleChangeErrorLogPath.bind(this),
                   load_error_log_handler: this.handleLoadErrorLog.bind(this),
                   save_click_handler: this.handleSaveErrorLog.bind(this)
                 }}
@@ -268,4 +270,6 @@ function mapStateToProps(state){
   }
 }
 
-export default connect(mapStateToProps)(SubmitLogAnalyticsApp)
+export default connect(
+  mapStateToProps
+)(SubmitLogAnalyticsApp)

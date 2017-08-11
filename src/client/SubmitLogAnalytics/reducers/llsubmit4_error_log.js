@@ -150,6 +150,7 @@ export default function llsubmit4_error_log_reducer(state={
       });
       break;
     case CHANGE_ERROR_LOG_PATH:
+      // console.log("[llsubmit4_error_log_reducer] CHANGE_ERROR_LOG_PATH action:", action);
       return Object.assign({}, state, {
         error_log_data_config: {
           error_log_path: action.error_log_path,
