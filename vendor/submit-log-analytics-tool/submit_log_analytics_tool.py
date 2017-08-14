@@ -5,7 +5,7 @@ import sys
 import socket
 
 import click
-from paramiko import SSHClient, AutoAddPolicy
+from paramiko import SSHClient, AutoAddPolicy, SSHException
 
 
 analytics_program = {
@@ -18,6 +18,61 @@ analytics_program = {
 @click.group()
 def cli():
     pass
+
+
+@cli.command('test_connect')
+@click.option('--session-config', required=True)
+@click.option('--socket-config')
+def test_connect(session_config, socket_config):
+    request_date_time = datetime.datetime.now()
+    request_time_string = request_date_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    session_config_dict = json.loads(session_config)
+    host = session_config_dict['host']
+    port = session_config_dict['port']
+    user = session_config_dict['user']
+    password = session_config_dict['password']
+
+    client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy())
+    try:
+        client.connect(host, port, user, password)
+    except SSHException as ssh_exception:
+        result = {
+            'app': 'submit_log_analytics_tool',
+            'type': 'result',
+            'timestamp': datetime.datetime.now().timestamp(),
+            'data': {
+                'request': {
+                    'command': 'test_connect',
+                    'session': session_config_dict
+                },
+                'response': {
+                    'status': 'error'
+                }
+            }
+        }
+
+        print(json.dumps(result, indent=4))
+        return
+
+    result = {
+        'app': 'submit_log_analytics_tool',
+        'type': 'result',
+        'timestamp': datetime.datetime.now().timestamp(),
+        'data': {
+            'request': {
+                'command': 'test_connect',
+                'session': session_config_dict
+            },
+            'response': {
+                'status': 'success'
+            }
+        }
+    }
+
+    print(json.dumps(result, indent=4))
+    return
 
 
 @cli.command('get')
@@ -110,6 +165,7 @@ def get(session_config, data_config, analyzer_config, socket_config):
                     'std_err': std_error_string
                 },
                 'request': {
+                    'command': 'get',
                     'session': session_config_dict,
                     'data': data_config_dict,
                     'analyzer': analyzer_config_dict,

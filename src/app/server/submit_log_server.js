@@ -44,9 +44,16 @@ function receive_llsubmit4_error_log_analytics_response(event, message) {
     let message_string = message.data.message;
     event.sender.send('llsubmit4.error-log.analytics.message', message_string);
   } else if (message.type === 'result') {
-    console.log('[receive_llsubmit4_error_log_analytics_response] result');
-    let std_out = message.data.response.std_out;
-    event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
+    let request = message.data.request;
+    if(request.command === 'get') {
+      console.log('[receive_llsubmit4_error_log_analytics_response] result');
+      let std_out = message.data.response.std_out;
+      event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
+    } else {
+      console.log('[receive_llsubmit4_error_log_analytics_response] request command not supported:', request.command);
+    }
+  } else {
+    console.log('[receive_llsubmit4_error_log_analytics_response] message type not supported:', message.type)
   }
 }
 
