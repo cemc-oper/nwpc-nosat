@@ -28,6 +28,38 @@ function createTcpServer(event) {
         event, session_config, data_config, analyzer_config, socket_config);
     });
 
+
+    ipc.on('llsubmit4.error-log.info.get', function (event, session, error_log_path) {
+      let data_config = {
+        error_log_path: error_log_path
+      };
+      let socket_config = {
+        "server": {
+          "host": "localhost",
+          "port": tcp_port
+        }
+      };
+      submit_log_server.request_llsubmit4_error_log_analytics_info(event, session, data_config, socket_config);
+    });
+
+
+    /**
+     *  test session
+     *      1. ssh login
+     *      2. interpreter
+     *      3. script
+     *      4. analytics version
+     */
+    ipc.on('session-system.session.test.get', function(event, session){
+      let socket_config = {
+        "server": {
+          "host": "localhost",
+          "port": tcp_port
+        }
+      };
+      submit_log_server.request_llsubmit4_error_log_analytics_test_connect(event, session, socket_config);
+    });
+
   });
 
   analytics_tool_server.on('connection', function(sock){

@@ -13,9 +13,7 @@
     "url": "https://github.com/perillaroc"
   },
   "license": "GPL-3.0",
-  "dependencies": {
-    "ssh2": "^0.5.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "antd": "^2.12.5",
     "babel-core": "^6.25.0",
