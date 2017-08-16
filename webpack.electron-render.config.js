@@ -67,10 +67,6 @@ let module_config= {
       use: 'file-loader',
     },
     {
-      test: /bootstrap-sass\/assets\/javascripts\//,
-      use: 'imports-loader?jQuery=jquery'
-    },
-    {
       test: /\.(png|jpeg|jpg)/,
       use: [
         'url-loader?limit=8192'

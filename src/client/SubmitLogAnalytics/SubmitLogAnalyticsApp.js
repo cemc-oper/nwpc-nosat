@@ -15,8 +15,6 @@ import "../Core/containers/nost_box.scss"
 
 const { Header, Footer, Content } = Layout;
 
-global.jQuery = require('jquery');
-require('bootstrap-loader');
 
 import HpcAuth from './components/HpcAuth/index'
 import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
