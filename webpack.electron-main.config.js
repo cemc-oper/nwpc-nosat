@@ -1,7 +1,8 @@
 'use strict';
-let path = require('path');
-let webpack = require('webpack');
-let CopyWebPackPlugin = require('copy-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const CopyWebPackPlugin = require('copy-webpack-plugin');
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 
 let nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
@@ -15,11 +16,25 @@ let module_config= {
 
 let resolve = {};
 
+const package_config = require("./package.json");
+
+let app_package_config = {
+  "name": package_config.name,
+  "productName": "operation-system-analytics-tool",
+  "version": package_config.version,
+  "description": package_config.description,
+  "main": "./main.js",
+  "author": package_config.author,
+  "license": package_config.license,
+  "dependencies": package_config.dependencies
+};
+
 let plugins = [
   new CopyWebPackPlugin([
     {'from': './src/app'},
     {'from': './vendor/', 'to': './vendor'}
-  ])
+  ]),
+  new GenerateJsonPlugin('package.json', app_package_config, null, 2)
 ];
 
 let externals= {};
