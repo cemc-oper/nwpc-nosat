@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import {Row, Col, Card} from 'antd'
 
 import AnalyticsChart from './components/chart/AnalyticsChart'
 import WaitingAnalyzerDialog from './components/WaitingAnalyzerDialog'
@@ -35,25 +36,20 @@ export default class AnalyzerResult extends Component{
     // console.log("[AnalyzerResult]", chart_data);
 
     return (
-      <div>
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <h3 className="panel-title">统计结果</h3>
-          </div>
-          <div className="panel-body">
-            <div className="row">
-              <div className="col-xs-12">
-                <AnalyticsChart chart_data={chart_data} analytics_result={analytics_result}/>
-              </div>
-            </div>
-          </div>
-        </div>
-        <WaitingAnalyzerDialog
-          is_open={status.is_fetching}
-          handler={{ close_handler: function(){} }}
-          content={ dialog_content }
-        />
-      </div>
+      <Card title="统计结果">
+        <Row>
+          <Col span={24}>
+            <AnalyticsChart chart_data={chart_data} analytics_result={analytics_result}/>
+          </Col>
+        </Row>
+        <Row>
+          <WaitingAnalyzerDialog
+            visible={status.is_fetching}
+            handler={{ close_handler: function(){} }}
+            content={ dialog_content }
+          />
+        </Row>
+      </Card>
     )
   }
 }

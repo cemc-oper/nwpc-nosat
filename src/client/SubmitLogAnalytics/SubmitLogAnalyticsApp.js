@@ -204,7 +204,7 @@ class SubmitLogAnalyticsApp extends Component{
               />
             </Col>
           </Row>
-          <Row>
+          <Row gutter={8}>
             <Col span={6}>
               <ErrorAnalyzerConfig
                 ref="analyzer_config"
