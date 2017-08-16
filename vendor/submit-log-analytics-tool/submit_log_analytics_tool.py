@@ -127,9 +127,9 @@ def get(session_config, data_config, analyzer_config, socket_config):
     elif analyzer_config_dict['analytics_command'] == 'grid':
         command = analytics_program['interpreter_path'] + " " \
                   + analytics_program['script_path'] + " " \
-                  + "grid -f " + data_config_dict['error_log_path'] + " " \
-                  + "--x-type=" + analyzer_config_dict['x_type'] \
-                  + "--y-type=" + analyzer_config_dict['y_type'] \
+                  + "grid -f " + data_config_dict['error_log_path'] \
+                  + " --x-type=" + analyzer_config_dict['x_type'] \
+                  + " --y-type=" + analyzer_config_dict['y_type'] \
                   + " --begin-date=" + analyzer_config_dict['begin_date'] \
                   + " --end-date=" + analyzer_config_dict['end_date']
     else:
