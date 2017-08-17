@@ -2,7 +2,7 @@
   "name": "nwpc-operation-system-analytics-tool",
   "version": "1.1.0",
   "description": "A desktop analytics app for operation system running in NWPC.",
-  "main": "app/main.js",
+  "main": "./main.js",
   "scripts": {
     "start": "node_modules\\.bin\\electron .\\dist\\app",
     "build-render": "webpack --colors --progress --config=./webpack.electron-render.config.js",
@@ -54,5 +54,15 @@
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.4.1"
+  },
+  "build": {
+    "appId": "com.perillaroc.nwpc-operation-system-analytics-tool",
+    "asar": false,
+    "files": [
+      {
+        "from": "dist/app/",
+        "to": "."
+      }
+    ]
   }
 }
