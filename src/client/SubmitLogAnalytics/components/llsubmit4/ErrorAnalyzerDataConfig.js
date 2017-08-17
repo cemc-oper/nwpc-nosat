@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import PropTypes from 'prop-types'
 
-import { Row, Col, Button, Form, Input, Menu, Dropdown } from 'antd';
+import { Row, Col, Button, Form, Input, Menu, Dropdown, Alert } from 'antd';
 
 
 import SaveErrorLogDialog from './SaveErrorLogDialog'
@@ -136,17 +136,19 @@ export default  class ErrorAnalyzerDataConfig extends Component{
       log_info_node = (
         <Row>
           <Col span={24}>
-            <div className="alert alert-info" role="alert">
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <p>
-                <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
-              </p>
-              <p>
-                <strong>记录总数</strong>: {count}
-              </p>
-            </div>
+            <Alert
+              closable
+              type="info"
+              message={(<div>
+                  <p>
+                    <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+                  </p>
+                  <p>
+                    <strong>记录总数</strong>: {count}
+                  </p>
+                </div>
+              )}
+            />
           </Col>
         </Row>
       )
