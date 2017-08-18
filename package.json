@@ -63,6 +63,9 @@
         "from": "dist/app/",
         "to": "."
       }
-    ]
+    ],
+    "win": {
+      "icon": "asserts/icon/analytics.ico"
+    }
   }
 }
