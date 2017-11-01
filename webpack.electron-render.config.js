@@ -77,8 +77,8 @@ let module_config= {
 
 let resolve = {
   alias: {
-    'react': path.join(nodeModulesPath, '/react/dist/react'),
-    'react-dom': path.join(nodeModulesPath, '/react-dom/dist/react-dom'),
+    'react': path.join(nodeModulesPath, '/react'),
+    'react-dom': path.join(nodeModulesPath, '/react-dom'),
     'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
     'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
     'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
@@ -102,7 +102,7 @@ let plugins = [
 ];
 
 let externals= {
-  // 'electron': 'electron'
+  // 'electron': 'electron',
   // 'react': 'React',
   // 'react-dom': 'ReactDOM',
   // 'redux': 'Redux',

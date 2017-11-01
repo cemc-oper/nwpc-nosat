@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
@@ -21,7 +21,9 @@ let store = createStore(
 
 const history = syncHistoryWithStore(hashHistory, store);
 
-render(
-  <Root store={store} history={history} />,
+const element = (<Root store={store} history={history}/>);
+
+ReactDOM.render(
+  element,
   document.getElementById('app')
 );
