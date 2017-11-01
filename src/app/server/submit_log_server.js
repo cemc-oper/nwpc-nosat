@@ -76,7 +76,7 @@ function request_llsubmit4_error_log_analytics_info(event, session_config, data_
 }
 
 
-function receive_llsubmit4_error_log_analytics_response(event, message) {
+function receive_server_response(event, message) {
   if(message.type === 'message') {
     console.log('[receive_llsubmit4_error_log_analytics_response] message');
 
@@ -107,9 +107,53 @@ function receive_llsubmit4_error_log_analytics_response(event, message) {
   }
 }
 
+
+function register_to_server(tcp_port) {
+  ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, data_config, analyzer_config) {
+    let socket_config = {
+      "server": {
+        "host": "localhost",
+        "port": tcp_port
+      }
+    };
+    request_llsubmit4_error_log_analytics_get(
+      event, session_config, data_config, analyzer_config, socket_config);
+  });
+
+
+  ipc.on('llsubmit4.error-log.info.get', function (event, session, error_log_path) {
+    let data_config = {
+      error_log_path: error_log_path
+    };
+    let socket_config = {
+      "server": {
+        "host": "localhost",
+        "port": tcp_port
+      }
+    };
+    request_llsubmit4_error_log_analytics_info(event, session, data_config, socket_config);
+  });
+
+
+  /**
+   *  test session
+   *      1. ssh login
+   *      2. interpreter
+   *      3. script
+   *      4. analytics version
+   */
+  ipc.on('session-system.session.test.get', function(event, session){
+    let socket_config = {
+      "server": {
+        "host": "localhost",
+        "port": tcp_port
+      }
+    };
+    request_llsubmit4_error_log_analytics_test_connect(event, session, socket_config);
+  });
+}
+
 module.exports = {
-  request_llsubmit4_error_log_analytics_get,
-  receive_llsubmit4_error_log_analytics_response,
-  request_llsubmit4_error_log_analytics_info,
-  request_llsubmit4_error_log_analytics_test_connect
+  register_to_server,
+  receive_server_response
 };

@@ -17,49 +17,7 @@ function createTcpServer(event) {
     let server_address = analytics_tool_server.address();
     console.log(server_address.port);
 
-    ipc.on('llsubmit4.error-log.analytics.get', function (event, session_config, data_config, analyzer_config) {
-      let socket_config = {
-        "server": {
-          "host": "localhost",
-          "port": tcp_port
-        }
-      };
-      submit_log_server.request_llsubmit4_error_log_analytics_get(
-        event, session_config, data_config, analyzer_config, socket_config);
-    });
-
-
-    ipc.on('llsubmit4.error-log.info.get', function (event, session, error_log_path) {
-      let data_config = {
-        error_log_path: error_log_path
-      };
-      let socket_config = {
-        "server": {
-          "host": "localhost",
-          "port": tcp_port
-        }
-      };
-      submit_log_server.request_llsubmit4_error_log_analytics_info(event, session, data_config, socket_config);
-    });
-
-
-    /**
-     *  test session
-     *      1. ssh login
-     *      2. interpreter
-     *      3. script
-     *      4. analytics version
-     */
-    ipc.on('session-system.session.test.get', function(event, session){
-      let socket_config = {
-        "server": {
-          "host": "localhost",
-          "port": tcp_port
-        }
-      };
-      submit_log_server.request_llsubmit4_error_log_analytics_test_connect(event, session, socket_config);
-    });
-
+    submit_log_server.register_to_server(tcp_port);
   });
 
   analytics_tool_server.on('connection', function(sock){
@@ -73,7 +31,7 @@ function createTcpServer(event) {
       let message = JSON.parse(received_string);
       // console.log('============analytics_tool_server receive data================\n', message);
       if(message.app === 'submit_log_analytics_tool') {
-        submit_log_server.receive_llsubmit4_error_log_analytics_response(event, message);
+        submit_log_server.receive_server_response(event, message);
       }
     });
 
