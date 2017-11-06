@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import {Link} from 'react-router'
 
 import {
-  Layout, Row, Col,
-  Form, Input, Button, Menu, Alert, Icon
+  Layout, Row, Col, Steps,
+  Form, Input, Button, Menu, Alert, Icon, message
 } from 'antd';
 
 import {ipcRenderer} from 'electron'
@@ -15,39 +15,47 @@ import './index.css'
 
 
 const { Header, Footer, Content } = Layout;
+const { Step } = Steps;
 
 class SystemRunningTimeAnalyticsApp extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      data_file_path: ''
+      current_index: 0
     };
-
-    ipcRenderer.on('system-running-time-analytics.draw.reply', function (event, result) {
-      let response = JSON.parse(result);
-      console.log(response)
-    });
   }
 
-  handleDrawClick(){
-    ipcRenderer.send('system-running-time-analytics.draw.click');
+  next() {
+    const current_index = this.state.current_index + 1;
+    this.setState({ current_index });
   }
-
-  handleSelectDataFile(){
-    let event = new MouseEvent('click', {
-      'view': window,
-      'bubbles': true,
-      'cancelable': true
-    });
-    this.refs.input_data_file.refs.input.dispatchEvent(event);
-  }
-
-  handleDataFileSelected(e){
-    let file_path = e.target.files[0].path;
-    this.setState({data_file_path: file_path});
+  prev() {
+    const current_index = this.state.current_index - 1;
+    this.setState({ current_index });
   }
 
   render() {
+    const { current_index } = this.state;
+    const steps = [{
+      title: '创建环境',
+      content: 'First-content',
+    }, {
+      title: '载入日志',
+      content: 'Second-content',
+    }, {
+      title: '处理数据',
+      content: 'Last-content',
+    }, {
+      title: '生成结果',
+      content: 'Last-content',
+    }, {
+      title: '绘制图形',
+      content: 'Last-content',
+    }, {
+      title: '清理环境',
+      content: 'Last-content',
+    }];
+
     return (
       <Layout className="layout" style={{
         minHeight: '100vh'
@@ -70,36 +78,31 @@ class SystemRunningTimeAnalyticsApp extends Component{
             </Col>
           </Row>
         </Header>
-        <Content style={{ padding: '25px 25px 0px 25px' }}>
-          <div style={{ background: 'white', padding: 24, minHeight: "100%" }}>
-            <Row>
-              <Col span={24}>
-                <Form>
-                  <Form.Item>
-                    <Row>
-                      <Col span={18}>
-                        <Input type="text" ref="input_data_file_path" value={this.state.data_file_path} />
-                        <Input type="file" ref="input_data_file"
-                               onChange={this.handleDataFileSelected.bind(this)}
-                               style={{display: "none"}}
-                        />
-                      </Col>
-                      <Col span={6}>
-                        <Button onClick={this.handleSelectDataFile.bind(this)}>
-                          <Icon type="upload" /> 选择数据文件
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                  <Form.Item>
-                    <Alert message="请选择符合 nuwe-timeline 规范的数据文件。" type="info" />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button onClick={this.handleDrawClick.bind(this)}>绘图</Button>
-                  </Form.Item>
-                </Form>
-              </Col>
-            </Row>
+        <Content style={{ padding: '25px 25px 0px 25px', background: '#fff' }}>
+          <div>
+            <Steps current={current_index}>
+              {steps.map(item => <Step key={item.title} title={item.title} />)}
+            </Steps>
+            <div className="steps-content">{steps[this.state.current_index].content}</div>
+            <div className="steps-action">
+              {
+                current_index < steps.length - 1
+                &&
+                <Button type="primary" onClick={() => this.next()}>前进</Button>
+              }
+              {
+                current_index === steps.length - 1
+                &&
+                <Button type="primary" onClick={() => message.success('成功!')}>完成</Button>
+              }
+              {
+                current_index > 0
+                &&
+                <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+                  后退
+                </Button>
+              }
+            </div>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
