@@ -9,6 +9,7 @@ import {
   Form, Input, Button, Menu, Alert, Icon
 } from 'antd';
 
+import {NOSTFooter} from '../components/NOSTFooter';
 import "./nost_box.scss"
 
 const { Header, Footer, Content } = Layout;
@@ -55,9 +56,7 @@ class WelcomeApp extends Component{
             </Col>
           </Row>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          NOST &copy; 2017 NWPC
-        </Footer>
+        <NOSTFooter />
       </Layout>
     )
   }

@@ -21,6 +21,9 @@ import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/Erro
 import ErrorAnalyzerDataConfig from './components/llsubmit4/ErrorAnalyzerDataConfig'
 import AnalyzerResult from './components/llsubmit4/AnalyzerResult/index'
 
+import {NOSTFooter} from '../Core/components/NOSTFooter';
+import {NOSTHeader} from '../Core/components/NOSTHeader';
+
 import {
   requestErrorLogAnalytics,
   receiveErrorLogAnalytics,
@@ -151,24 +154,7 @@ class SubmitLogAnalyticsApp extends Component{
     const { error_log_path, info, error_log_list } = error_log_data_config;
     return (
       <Layout className="layout" style={{ height: '100vh' }}>
-        <Header>
-          <Row className="nost-navi-bar">
-            <Col span={4}>
-              <Link className="logo" to="/">NOST</Link>
-            </Col>
-            <Col span={20}>
-              <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={['1']}
-                style={{ lineHeight: '64px' }}
-              >
-                <Menu.Item key="1"><Link to="/submit-log-analytics">提交分析</Link></Menu.Item>
-                <Menu.Item key="2"><Link to="/system-running-time-analytics">运行时间</Link></Menu.Item>
-              </Menu>
-            </Col>
-          </Row>
-        </Header>
+        <NOSTHeader default_selected_keys={['1']} />
         <Content style={{padding: '25px 25px 0px 25px'}}>
           <Row>
             <Col span={24}>
@@ -219,9 +205,7 @@ class SubmitLogAnalyticsApp extends Component{
             </Col>
           </Row>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          NOST &copy; 2017 NWPC
-        </Footer>
+        <NOSTFooter />
       </Layout>
     );
   }

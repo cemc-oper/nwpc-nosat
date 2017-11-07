@@ -1,20 +1,23 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { dispatch } from 'redux'
-import { connect } from 'react-redux'
-import {Link} from 'react-router'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { dispatch } from 'redux';
+import { connect } from 'react-redux';
+import {Link} from 'react-router';
 
 import {
   Layout, Row, Col, Steps,
   Form, Input, Button, Menu, Alert, Icon, message
 } from 'antd';
 
-import {ipcRenderer} from 'electron'
+import {ipcRenderer} from 'electron';
+
+import {NOSTFooter} from '../Core/components/NOSTFooter';
+import {NOSTHeader} from '../Core/components/NOSTHeader';
 
 import './index.css'
 
 
-const { Header, Footer, Content } = Layout;
+const { Content } = Layout;
 const { Step } = Steps;
 
 class SystemRunningTimeAnalyticsApp extends Component{
@@ -38,46 +41,29 @@ class SystemRunningTimeAnalyticsApp extends Component{
     const { current_index } = this.state;
     const steps = [{
       title: '创建环境',
-      content: 'First-content',
+      content: 'Setup Environment',
     }, {
       title: '载入日志',
-      content: 'Second-content',
+      content: 'Load Logs',
     }, {
       title: '处理数据',
-      content: 'Last-content',
+      content: 'Process Data',
     }, {
       title: '生成结果',
-      content: 'Last-content',
+      content: 'Generate Results',
     }, {
       title: '绘制图形',
-      content: 'Last-content',
+      content: 'Plot Draws',
     }, {
       title: '清理环境',
-      content: 'Last-content',
+      content: 'Cleanup Environment',
     }];
 
     return (
       <Layout className="layout" style={{
         minHeight: '100vh'
       }}>
-        <Header>
-          <Row className="nost-navi-bar">
-            <Col span={4}>
-              <Link className="logo" to="/">NOST</Link>
-            </Col>
-            <Col span={20}>
-              <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={['2']}
-                style={{ lineHeight: '64px' }}
-              >
-                <Menu.Item key="1"><Link to="/submit-log-analytics">提交分析</Link></Menu.Item>
-                <Menu.Item key="2"><Link to="/system-running-time-analytics">运行时间</Link></Menu.Item>
-              </Menu>
-            </Col>
-          </Row>
-        </Header>
+        <NOSTHeader default_selected_keys={['2']} />
         <Content style={{ padding: '25px 25px 0px 25px', background: '#fff' }}>
           <div>
             <Steps current={current_index}>
@@ -105,9 +91,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
             </div>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          NOST &copy; 2017 NWPC
-        </Footer>
+        <NOSTFooter/>
       </Layout>
     );
   }
