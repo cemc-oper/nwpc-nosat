@@ -4,7 +4,7 @@ import { dispatch } from 'redux'
 
 import { Row, Col, Button, Form } from 'antd';
 
-require("./style.css");
+require("./style.scss");
 
 import LoadSessionDropMenu from "./components/LoadSessionDropMenu"
 import SessionBarEditor from "./components/SessionBarEditor"
