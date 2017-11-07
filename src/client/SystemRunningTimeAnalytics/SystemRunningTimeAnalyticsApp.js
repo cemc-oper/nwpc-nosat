@@ -14,6 +14,8 @@ import {ipcRenderer} from 'electron';
 import {NOSTFooter} from '../Core/components/NOSTFooter';
 import {NOSTHeader} from '../Core/components/NOSTHeader';
 
+import { SetupEnvPage } from './containers/SetupEnvPage'
+
 import './index.css'
 
 
@@ -41,7 +43,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
     const { current_index } = this.state;
     const steps = [{
       title: '创建环境',
-      content: 'Setup Environment',
+      content: (<SetupEnvPage></SetupEnvPage>),
     }, {
       title: '载入日志',
       content: 'Load Logs',
@@ -69,7 +71,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
             <Steps current={current_index}>
               {steps.map(item => <Step key={item.title} title={item.title} />)}
             </Steps>
-            <div className="steps-content">{steps[this.state.current_index].content}</div>
+            <div className="steps-content" style={{ padding: '25px'}}>{steps[this.state.current_index].content}</div>
             <div className="steps-action">
               {
                 current_index < steps.length - 1
