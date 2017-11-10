@@ -1,7 +1,3 @@
-const electron = require('electron');
-const ipc = electron.ipcMain;
-const { spawn } = require('child_process');
-const path = require('path');
 const net = require('net');
 const submit_log_server = require('./submit_log_server');
 
@@ -9,6 +5,9 @@ let analytics_tool_server = null;
 
 let tcp_port = 62861;
 
+function isTcpServerCreated(){
+  return analytics_tool_server !== null;
+}
 
 function createTcpServer(event) {
   analytics_tool_server = net.createServer();
@@ -29,6 +28,7 @@ function createTcpServer(event) {
       console.log('[data] ', received_string);
       //console.log(received_string);
       let message = JSON.parse(received_string);
+
       // console.log('============analytics_tool_server receive data================\n', message);
       if(message.app === 'submit_log_analytics_tool') {
         submit_log_server.receive_server_response(event, message);
@@ -45,17 +45,8 @@ function closeTcpServer(event) {
   analytics_tool_server = null;
 }
 
-ipc.on('analytics-tool.server.start', function (event) {
-  if(analytics_tool_server === null) {
-    console.log('start analytics-tool server');
-    createTcpServer(event)
-  }
-
-});
-
-ipc.on('analytics-tool.server.stop', function (event) {
-  if(analytics_tool_server) {
-    console.log('stop analytics-tool server');
-    closeTcpServer(event)
-  }
-});
+module.exports = {
+  isTcpServerCreated,
+  createTcpServer,
+  closeTcpServer
+};
