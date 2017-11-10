@@ -7,6 +7,7 @@ import { Row, Col, Button, Form, Input, Icon } from 'antd';
 const remote = require('electron').remote;
 
 let uuid = 0;
+
 class SetupEnvForm extends React.Component{
   constructor(props){
     super(props);
@@ -51,6 +52,7 @@ class SetupEnvForm extends React.Component{
 
   handleSubmit(e){
     e.preventDefault();
+    console.log("SetupEnvForm:handleSubmit:", this);
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.doSetupEnv(values);
@@ -81,8 +83,11 @@ class SetupEnvForm extends React.Component{
         repo: repo_name
       }
     });
-    console.log(config_file_path);
-    console.log(repo_list);
+    // console.log(config_file_path);
+    // console.log(repo_list);
+
+    const {handler} = this.props;
+    handler.submit(config_file_path, repo_list);
   }
 
   render() {
@@ -208,9 +213,16 @@ const SetupEnvFormNode = Form.create({
   }
 )(SetupEnvForm);
 
+
 export class SetupEnvPage extends React.Component{
   constructor(props){
     super(props);
+  }
+
+  setupEnv(config_file_path, repo_list){
+    console.log('SetupEnvPage:setupEnv', this);
+    const {setup_env} = this.props.handler;
+    setup_env(config_file_path, repo_list);
   }
 
   render(){
@@ -223,9 +235,17 @@ export class SetupEnvPage extends React.Component{
               { owner: 'nwp_xp', repo: 'nwpc_op' },
               { owner: 'nwp_xp', repo: 'nwpc_qu' }
             ]}
+            handler={{submit: this.setupEnv.bind(this)}}
           />
         </Col>
       </Row>
     )
   }
 }
+
+SetupEnvPage.propTypes = {
+  handler: PropTypes.shape({
+    setup_env: PropTypes.func
+  })
+}
+;

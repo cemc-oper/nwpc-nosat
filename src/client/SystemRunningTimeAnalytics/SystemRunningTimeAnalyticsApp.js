@@ -30,10 +30,15 @@ class SystemRunningTimeAnalyticsApp extends Component{
     };
   }
 
+  handleSetupEnv(config_file_path, repo_list){
+    console.log(config_file_path, repo_list);
+  }
+
   next() {
     const current_index = this.state.current_index + 1;
     this.setState({ current_index });
   }
+
   prev() {
     const current_index = this.state.current_index - 1;
     this.setState({ current_index });
@@ -43,7 +48,13 @@ class SystemRunningTimeAnalyticsApp extends Component{
     const { current_index } = this.state;
     const steps = [{
       title: '创建环境',
-      content: (<SetupEnvPage></SetupEnvPage>),
+      content: (
+        <SetupEnvPage
+          handler={{
+            setup_env: this.handleSetupEnv.bind(this)
+          }}
+        />
+      ),
     }, {
       title: '载入日志',
       content: 'Load Logs',

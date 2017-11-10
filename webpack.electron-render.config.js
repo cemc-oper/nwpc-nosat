@@ -90,7 +90,8 @@ let resolve = {
     'd3-format': path.join(nodeModulesPath, '/d3-format/build/d3-format'),
     'd3-time': path.join(nodeModulesPath, '/d3-time/build/d3-time'),
     'd3-time-format': path.join(nodeModulesPath, '/d3-time-format/build/d3-time-format'),
-    'jquery': path.join(nodeModulesPath, '/jquery/dist/jquery')
+    'jquery': path.join(nodeModulesPath, '/jquery/dist/jquery'),
+    'js-yaml': path.join(nodeModulesPath, '/js-yaml/dist/js-yaml')
   }
 };
 
