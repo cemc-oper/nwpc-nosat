@@ -4,6 +4,9 @@ import { dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 
+const electron = require('electron');
+const ipc_render = electron.ipcRenderer;
+
 import {
   Layout, Row, Col, Steps,
   Form, Input, Button, Menu, Alert, Icon, message
@@ -32,6 +35,8 @@ class SystemRunningTimeAnalyticsApp extends Component{
 
   handleSetupEnv(config_file_path, repo_list){
     console.log(config_file_path, repo_list);
+    ipc_render.send('system-time-line.request.setup-env',
+      config_file_path, repo_list);
   }
 
   next() {
