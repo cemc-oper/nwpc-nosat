@@ -39,15 +39,15 @@ ipc.on('system-time-line.request.setup-env', function(event, config_file_path, r
     return;
   }
 
-  let setup_repo_function = repo_list.map(function(repo_object){
-      return function(callback){
-        console.log(repo_object.owner, repo_object.repo);
-      }
+  async.eachSeries(repo_list, function(repo_object, callback){
+    console.log("setup env for " + repo_object.owner + "/" + repo_object.repo);
+    callback()
+  }, function(err){
+    if( err ) {
+      console.error('[ipc.js][system-time-line]A repo is not set up.');
+      console.log(err);
+    } else {
+      console.log('[ipc.js][system-time-line]All repos have been set up.');
+    }
   });
-
-  async.series(setup_repo_function, function(err, results){
-
-  });
-
-
 });
