@@ -160,7 +160,7 @@ export default  class ErrorAnalyzerDataConfig extends Component{
         <DataConfigFormComponent
           error_log_path={error_log_path}
           error_log_list={error_log_list}
-          wrappedComponentRef={(form) => {this.form=form;}}
+          ref={(form) => {this.form=form;}}
           handler={{
             handleErrorLogPathChange: this.handleErrorLogPathChange.bind(this),
             handleLoadErrorLogClick: this.handleLoadErrorLogClick.bind(this),

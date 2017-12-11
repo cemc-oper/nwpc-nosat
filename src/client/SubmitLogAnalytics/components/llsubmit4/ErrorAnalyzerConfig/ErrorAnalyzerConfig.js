@@ -30,21 +30,7 @@ export default  class ErrorAnalyzerConfig extends Component{
     return this.getCurrentTabRef().getConfig();
   }
 
-  checkDate(){
-    return this.getCurrentTabRef().checkDate();
-  }
-
-  // handleChange() {
-  //   let config = this.getCurrentTabRef().getConfig();
-  //   const {change_handler} = this.props.handler;
-  //   change_handler(config);
-  // }
-
   handleRunClick(event) {
-    if(!this.checkDate()){
-      alert("请选择有效的日期范围，结束日期无法早于起始日期。");
-      return;
-    }
     let {run_handler } = this.props.handler;
     run_handler();
   }

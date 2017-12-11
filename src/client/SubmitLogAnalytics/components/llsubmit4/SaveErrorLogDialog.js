@@ -77,7 +77,7 @@ export default class SaveErrorLogDialog extends Component{
       <SaveErrorLogForm
         is_open={is_open}
         error_log={error_log}
-        wrappedComponentRef={(form)=>{this.form = form}}
+        ref={(form)=>{this.form = form}}
         handler={{
           save_handler: this.handleSaveClick.bind(this),
           close_handler: this.handleSaveClick.bind(this)

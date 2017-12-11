@@ -90,6 +90,7 @@ class SubmitLogAnalyticsApp extends Component{
       begin_date: moment(command_map[current_command].first_date).format("YYYY-MM-DD"),
       end_date: moment(command_map[current_command].last_date).add(1, "days").format("YYYY-MM-DD")
     });
+    console.log(send_analyzer_config);
 
     const {dispatch} = this.props;
     dispatch(requestErrorLogAnalytics());
