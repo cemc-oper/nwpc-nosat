@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Row, Col, Button, Form, Input, Menu, Dropdown, Alert } from 'antd';
 
 
-import SaveErrorLogDialog from './SaveErrorLogDialog'
+import SaveErrorLogDialog from './components/SaveErrorLogDialog'
 
 require("./style.css");
 
