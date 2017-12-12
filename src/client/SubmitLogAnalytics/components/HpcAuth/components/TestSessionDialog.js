@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Modal, Progress} from 'antd'
+import {Modal, Progress, Alert, Icon} from 'antd'
 
 export default class TestSessionDialog extends Component{
   constructor(props){
@@ -15,14 +15,14 @@ export default class TestSessionDialog extends Component{
   }
 
   render(){
-    const { is_open, session, status } = this.props;
+    const { is_open, session, status, message } = this.props;
 
     let status_bar;
     switch(status) {
       case 'active':
         status_bar = (
           <div>
-            <p className="text-info">测试中..</p>
+            <p className="text-info"><Icon type="loading" />测试中..</p>
             <Progress percent={45} status="active" showInfo={false} />
           </div>
         );
@@ -30,7 +30,7 @@ export default class TestSessionDialog extends Component{
       case 'success':
         status_bar = (
           <div>
-            <p className="text-success">测试成功</p>
+            <p className="text-success"><Icon type="check-circle" />测试成功</p>
             <Progress percent={100} showInfo={false} />
           </div>
         );
@@ -38,8 +38,9 @@ export default class TestSessionDialog extends Component{
       case 'error':
         status_bar = (
           <div>
-            <p className="text-danger">测试失败</p>
+            <p className="text-danger"><Icon type="close-circle" />测试失败</p>
             <Progress percent={100} status="exception" showInfo={false} />
+            <Alert type="error" message={message}/>
           </div>
         );
         break;
@@ -77,8 +78,9 @@ TestSessionDialog.propTypes = {
     close_handler: PropTypes.func
   }),
   status: PropTypes.oneOf([
-    'unknown', 'active', 'success', 'fail'
-  ])
+    'unknown', 'active', 'success', 'error'
+  ]),
+  message: PropTypes.string
 };
 
 TestSessionDialog.defaultProps = {
@@ -89,5 +91,6 @@ TestSessionDialog.defaultProps = {
     user: null,
     password: null
   },
-  status: 'unknown'
+  status: 'unknown',
+  message: ''
 };

@@ -52,7 +52,8 @@ export default function session_reducer(state={
   test_session: {
     is_open: false,
     session: null,
-    status: 'unknown'
+    status: 'unknown',
+    message: ''
   }
 }, action) {
   switch(action.type){
@@ -74,18 +75,18 @@ export default function session_reducer(state={
           status: 'active'
         }
       });
-      break;
 
     case RECEIVE_TEST_SESSION_RESPONSE:
       let status = action.test_result.data.response.status;
+      let message = action.test_result.data.response.message;
       return Object.assign({}, state, {
         test_session: {
           is_open: true,
           session: action.session,
-          status: status
+          status: status,
+          message: message
         }
       });
-      break;
     default:
       return state;
   }

@@ -58,7 +58,8 @@ def test_connect(session_config, socket_config):
                     'session': session_config_dict
                 },
                 'response': {
-                    'status': 'error'
+                    'status': 'error',
+                    'message': str(ssh_exception)
                 }
             }
         }
@@ -78,7 +79,8 @@ def test_connect(session_config, socket_config):
                 'session': session_config_dict
             },
             'response': {
-                'status': 'success'
+                'status': 'success',
+                'message': ''
             }
         }
     }
@@ -245,7 +247,32 @@ def info(session_config, data_config, socket_config):
 
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(host, port, user, password)
+
+    try:
+        client.connect(host, port, user, password)
+    except SSHException as ssh_exception:
+        result = {
+            'app': 'submit_log_analytics_tool',
+            'type': 'result',
+            'timestamp': datetime.datetime.now().timestamp(),
+            'data': {
+                'response': {
+                    'status': 'error',
+                    'message': str(ssh_exception)
+                },
+                'request': {
+                    'command': 'info',
+                    'session': session_config_dict,
+                    'data': data_config_dict,
+                    'socket': socket_server_dict
+                }
+            }
+        }
+        if s:
+            s.send(json.dumps(result).encode('utf-8'))
+        else:
+            print(json.dumps(result, indent=4))
+        return
 
     if s:
         socket_message = {
@@ -278,6 +305,7 @@ def info(session_config, data_config, socket_config):
             'timestamp': datetime.datetime.now().timestamp(),
             'data': {
                 'response': {
+                    'status': 'success',
                     'std_out': std_out_string,
                     'std_err': std_error_string
                 },

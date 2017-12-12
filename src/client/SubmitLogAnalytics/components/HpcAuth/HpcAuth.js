@@ -114,6 +114,7 @@ export default class HpcAuth extends Component{
             close_handler: this.closeTestSessionDialog.bind(this)
           }}
           status={test_session.status}
+          message={test_session.message}
         />
       </div>
     );
