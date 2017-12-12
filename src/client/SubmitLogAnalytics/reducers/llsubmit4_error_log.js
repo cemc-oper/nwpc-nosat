@@ -9,7 +9,8 @@ import {
   REQUEST_ERROR_LOG_INFO,
   RECEIVE_ERROR_LOG_INFO,
   CHANGE_ANALYZER_CONFIG,
-  CHANGE_ANALYZER_CONFIG_COMMAND
+  CHANGE_ANALYZER_CONFIG_COMMAND,
+  CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE,
 } from '../actions/llsubmit4_error_log_action'
 
 import moment from 'moment'
@@ -44,27 +45,51 @@ function error_log_analyzer_reducer(state, action){
         dialog_content: {
           title: "日志分析",
           message: "分析程序正在运行...",
-          value: 45
+          message_type: "info",
+          value: 45,
+          visible: true
         },
       });
     case RESPONSE_ERROR_LOG_ANALYTICS:
+      let dialog_content = Object.assign({}, state.dialog_content, {
+        message: "分析程序运行成功",
+        message_type: "success",
+        value: 100,
+        visible: false
+      });
       return Object.assign({}, state, {
         status: {
           is_fetching: false
         },
+        dialog_content: dialog_content,
         analytics_result: action.analytics_result,
       });
     case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
+      dialog_content = Object.assign({}, state.dialog_content, {
+        message: "发生错误，请检查参数",
+        message_type: "error",
+        value: 100,
+        visible: true
+      });
       return Object.assign({}, state, {
         status: {
-          is_fetching: false
+          is_fetching: true
         },
+        dialog_content: dialog_content,
         analytics_result:null
       });
     case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
       // console.log("[error_log_analyzer_reducer] action message:", action.message);
-      let dialog_content = Object.assign({}, state.dialog_content, {
-        message: action.message
+      dialog_content = Object.assign({}, state.dialog_content, {
+        message: action.message,
+        message_type: "info"
+      });
+      return Object.assign({}, state, {
+        dialog_content: dialog_content
+      });
+    case CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE:
+      dialog_content = Object.assign({}, state.dialog_content, {
+        visible: action.visible
       });
       return Object.assign({}, state, {
         dialog_content: dialog_content
@@ -106,7 +131,9 @@ export default function llsubmit4_error_log_reducer(state={
     dialog_content: {
       title: "日志分析",
       message: "分析程序正在运行...",
-      value: 45
+      message_info: "info",
+      value: 45,
+      visible: false
     },
     analytics_result:null
   },
@@ -138,6 +165,7 @@ export default function llsubmit4_error_log_reducer(state={
     case RESPONSE_ERROR_LOG_ANALYTICS:
     case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
     case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
+    case CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE:
       // console.log("[llsubmit4_error_log_reducer] action for error_log_analyzer_reducer:", action.type);
       return Object.assign({}, state, {
         error_log_analyzer: error_log_analyzer_reducer(state.error_log_analyzer, action)

@@ -3,12 +3,15 @@ import PropTypes from 'prop-types'
 import {Row, Col, Card} from 'antd'
 
 import AnalyticsChart from './components/chart/AnalyticsChart'
-import WaitingAnalyzerDialog from './components/WaitingAnalyzerDialog'
 
 import OneDimensionDataGenerator from './components/OneDimensionDataGenerator'
 import TwoDimensionDataGenerator from './components/TwoDimensionDataGenerator'
 
+
 export default class AnalyzerResult extends Component{
+  constructor(props){
+    super(props);
+  }
 
   static generateChartData(analytics_result) {
     if(analytics_result===null){
@@ -42,13 +45,6 @@ export default class AnalyzerResult extends Component{
             <AnalyticsChart chart_data={chart_data} analytics_result={analytics_result}/>
           </Col>
         </Row>
-        <Row>
-          <WaitingAnalyzerDialog
-            visible={status.is_fetching}
-            handler={{ close_handler: function(){} }}
-            content={ dialog_content }
-          />
-        </Row>
       </Card>
     )
   }
@@ -58,11 +54,6 @@ AnalyzerResult.propTypes = {
   error_log_analyzer: PropTypes.shape({
     status: PropTypes.shape({
       is_fetching: PropTypes.bool
-    }),
-    dialog_content: PropTypes.shape({
-      title: PropTypes.string,
-      message: PropTypes.string,
-      value: PropTypes.number
     }),
     analytics_result: PropTypes.object
   })

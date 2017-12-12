@@ -4,22 +4,21 @@ import { dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {ipcRenderer} from 'electron'
 import moment from 'moment'
-import {Link} from 'react-router'
 
 import {
-  Layout, Row, Col,
-  Form, Input, Button, Menu, Alert, Icon
+  Layout, Row, Col
 } from 'antd';
 
 import "../Core/containers/nost_box.scss"
 
-const { Header, Footer, Content } = Layout;
+const { Content } = Layout;
 
 
 import HpcAuth from './components/HpcAuth/index'
 import ErrorAnalyzerConfig from './components/llsubmit4/ErrorAnalyzerConfig/ErrorAnalyzerConfig'
 import ErrorAnalyzerDataConfig from './components/llsubmit4/ErrorAnalyzerDataConfig'
 import AnalyzerResult from './components/llsubmit4/AnalyzerResult/index'
+import WaitingAnalyzerDialog from './components/llsubmit4/components/WaitingAnalyzerDialog'
 
 import {NOSTFooter} from '../Core/components/NOSTFooter';
 import {NOSTHeader} from '../Core/components/NOSTHeader';
@@ -35,7 +34,8 @@ import {
   requestErrorLogInfo,
   receiveErrorLogInfo,
   changeAnalyzerConfig,
-  changeAnalyzerConfigCommand
+  changeAnalyzerConfigCommand,
+  changeWaitingAnalyzerDialogVisible
 } from './actions/llsubmit4_error_log_action'
 
 import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from './actions/session_action'
@@ -75,6 +75,11 @@ class SubmitLogAnalyticsApp extends Component{
     });
 
     // this.runAnalyzer();
+  }
+
+  closeWaitingAnalyzerDialog() {
+    const { dispatch } = this.props;
+    dispatch(changeWaitingAnalyzerDialogVisible(false));
   }
 
   runAnalyzer() {
@@ -152,6 +157,7 @@ class SubmitLogAnalyticsApp extends Component{
     const { error_log_analyzer, session_system, error_log_data_config, error_log_analyzer_config } = this.props;
     const { session_list, current_session, test_session } = session_system;
     const { error_log_path, info, error_log_list } = error_log_data_config;
+    const { dialog_content } = error_log_analyzer;
     return (
       <Layout className="layout" style={{ height: '100vh' }}>
         <NOSTHeader default_selected_keys={['1']} />
@@ -204,6 +210,12 @@ class SubmitLogAnalyticsApp extends Component{
               <AnalyzerResult error_log_analyzer={error_log_analyzer}/>
             </Col>
           </Row>
+          <Row>
+            <WaitingAnalyzerDialog
+              handler={{ close_handler: this.closeWaitingAnalyzerDialog.bind(this) }}
+              content={ dialog_content }
+            />
+          </Row>
         </Content>
         <NOSTFooter />
       </Layout>
@@ -215,6 +227,11 @@ SubmitLogAnalyticsApp.propTypes = {
   error_log_analyzer: PropTypes.shape({
     status: PropTypes.shape({
       is_fetching: PropTypes.bool
+    }),
+    dialog_content: PropTypes.shape({
+      title: PropTypes.string,
+      message: PropTypes.string,
+      value: PropTypes.number
     }),
     analytics_result: PropTypes.object
   }),

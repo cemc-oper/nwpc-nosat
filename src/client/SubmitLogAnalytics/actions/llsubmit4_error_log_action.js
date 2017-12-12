@@ -86,3 +86,11 @@ export function changeAnalyzerConfigCommand(command){
     command
   }
 }
+
+export const CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE="CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE";
+export function changeWaitingAnalyzerDialogVisible(visible){
+  return {
+    type: CHANGE_WAITING_ANALYZER_DIALOG_VISIBLE,
+    visible
+  }
+}

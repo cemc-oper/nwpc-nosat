@@ -13,17 +13,19 @@ export default class WaitingAnalyzerDialog extends Component{
   }
 
   render(){
-    const { visible, content } = this.props;
+    const { content } = this.props;
     // console.log("[WaitingAnalyzerDialog.render] content:", content);
-    const { title, message, value } = content;
+    const { title, message, value, message_type, visible } = content;
     return (
       <Modal
         visible={visible}
         title={title}
+        onOk={this.handleCloseClick.bind(this)}
+        onCancel={this.handleCloseClick.bind(this)}
       >
         <div>
-          <Alert message={message} type="info"/>
-          <Progress percent={value} status="active" showInfo={false}/>
+          <Alert message={message} type={message_type} />
+          <Progress percent={value} status="active" showInfo={false} />
         </div>
       </Modal>
     )
@@ -31,22 +33,22 @@ export default class WaitingAnalyzerDialog extends Component{
 }
 
 WaitingAnalyzerDialog.propTypes = {
-  visible: PropTypes.bool,
   handler: PropTypes.shape({
     close_handler: PropTypes.func
   }),
   content: PropTypes.shape({
     title: PropTypes.string,
     message: PropTypes.string,
-    value: PropTypes.number
+    value: PropTypes.number,
+    visible: PropTypes.bool,
   })
 };
 
 WaitingAnalyzerDialog.defaultProps = {
-  visible: false,
   content: {
     title: "日志分析",
     message: "分析程序正在运行...",
-    value: 45
+    value: 45,
+    visible: false
   }
 };
