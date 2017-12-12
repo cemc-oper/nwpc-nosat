@@ -131,27 +131,46 @@ export default  class ErrorAnalyzerDataConfig extends Component{
 
     let log_info_node = null;
     if(error_log_info) {
-      const {range} = error_log_info;
-      const {start_date_time, end_date_time, count} = range;
-      log_info_node = (
-        <Row>
-          <Col span={24}>
-            <Alert
-              closable
-              type="info"
-              message={(<div>
-                  <p>
-                    <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+      let error_log_info_status = error_log_info.status;
+      if(error_log_info_status === 'success') {
+        const {range} = error_log_info;
+        const {start_date_time, end_date_time, count} = range;
+        log_info_node = (
+          <Row>
+            <Col span={24}>
+              <Alert
+                closable
+                type="info"
+                message={(<div>
+                    <p>
+                      <strong>日志记录时间</strong>：{start_date_time.format()} 至 {end_date_time.format()}
+                    </p>
+                    <p>
+                      <strong>记录总数</strong>: {count}
+                    </p>
+                  </div>
+                )}
+              />
+            </Col>
+          </Row>
+        )
+      } else {
+        log_info_node = (
+          <Row>
+            <Col span={24}>
+              <Alert
+                closable
+                type="error"
+                message={ ( <p>
+                    测试发生异常：<br/>
+                    {error_log_info.message}
                   </p>
-                  <p>
-                    <strong>记录总数</strong>: {count}
-                  </p>
-                </div>
-              )}
-            />
-          </Col>
-        </Row>
-      )
+                )}
+              />
+            </Col>
+          </Row>
+        )
+      }
     }
 
     return (

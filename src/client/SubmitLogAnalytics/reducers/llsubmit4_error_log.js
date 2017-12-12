@@ -25,12 +25,10 @@ function error_log_analyzer_config_reducer(state, action){
       return Object.assign({}, state, {
         command_map: command_map
       });
-      break;
     case CHANGE_ANALYZER_CONFIG_COMMAND:
       return Object.assign({}, state, {
         current_command: action.command
       });
-      break;
     default:
       return state;
   }
@@ -49,7 +47,6 @@ function error_log_analyzer_reducer(state, action){
           value: 45
         },
       });
-      break;
     case RESPONSE_ERROR_LOG_ANALYTICS:
       return Object.assign({}, state, {
         status: {
@@ -57,7 +54,6 @@ function error_log_analyzer_reducer(state, action){
         },
         analytics_result: action.analytics_result,
       });
-      break;
     case RESPONSE_ERROR_LOG_ANALYTICS_FAILURE:
       return Object.assign({}, state, {
         status: {
@@ -65,7 +61,6 @@ function error_log_analyzer_reducer(state, action){
         },
         analytics_result:null
       });
-      break;
     case RECEIVE_ERROR_LOG_ANALYTICS_MESSAGE:
       // console.log("[error_log_analyzer_reducer] action message:", action.message);
       let dialog_content = Object.assign({}, state.dialog_content, {
@@ -74,7 +69,6 @@ function error_log_analyzer_reducer(state, action){
       return Object.assign({}, state, {
         dialog_content: dialog_content
       });
-      break;
     default:
       return state;
   }
@@ -118,7 +112,6 @@ export default function llsubmit4_error_log_reducer(state={
   },
   error_log_data_config:{
     error_log_path: '/cma/g1/nwp/sublog/llsubmit4.error.log',
-    info: null,
     error_log_list: [
       {
         name: 'nwp',
@@ -136,7 +129,8 @@ export default function llsubmit4_error_log_reducer(state={
         name: 'nwp_sp',
         path: '/cma/g1/nwp_sp/sublog/llsubmit4.error.log'
       }
-    ]
+    ],
+    info: null,
   }
 }, action) {
   switch(action.type){
@@ -148,7 +142,6 @@ export default function llsubmit4_error_log_reducer(state={
       return Object.assign({}, state, {
         error_log_analyzer: error_log_analyzer_reducer(state.error_log_analyzer, action)
       });
-      break;
     case CHANGE_ERROR_LOG_PATH:
       // console.log("[llsubmit4_error_log_reducer] CHANGE_ERROR_LOG_PATH action:", action);
       return Object.assign({}, state, {
@@ -158,7 +151,6 @@ export default function llsubmit4_error_log_reducer(state={
           error_log_list: state.error_log_data_config.error_log_list
         }
       });
-      break;
     case LOAD_ERROR_LOG:
       return Object.assign({}, state, {
         error_log_data_config: {
@@ -167,7 +159,6 @@ export default function llsubmit4_error_log_reducer(state={
           error_log_list: state.error_log_data_config.error_log_list
         }
       });
-      break;
     case SAVE_ERROR_LOG:
       return Object.assign({}, state, {
         error_log_data_config: {
@@ -176,8 +167,6 @@ export default function llsubmit4_error_log_reducer(state={
           error_log_list: state.error_log_data_config.error_log_list.concat([action.error_log])
         }
       });
-      break;
-      break;
     case REQUEST_ERROR_LOG_INFO:
       return Object.assign({}, state, {
         error_log_data_config: {
@@ -186,27 +175,50 @@ export default function llsubmit4_error_log_reducer(state={
           error_log_list: state.error_log_data_config.error_log_list
         }
       });
-      break;
     case RECEIVE_ERROR_LOG_INFO:
-      let info = action.error_log_info_response.data;
-      let info_range = info.range;
-      info_range.start_date_time = moment(info_range.start_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
-      info_range.end_date_time = moment(info_range.end_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
+      let response_status = action.error_log_info_response.status;
+      if(response_status === "success"){
+        let response_data = JSON.parse(action.error_log_info_response.std_out);
+        let info = {
+          status: response_status,
+          data: response_data.data
+        };
+        let data = info.data;
+        let data_range = data.range;
+        data_range.start_date_time = moment(info_range.start_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
+        data_range.end_date_time = moment(info_range.end_date_time+" +0000", "YYYY-MM-DDTHH:mm:ss Z");
 
-      return Object.assign({}, state, {
-        error_log_data_config: {
-          error_log_path: state.error_log_data_config.error_log_path,
-          info: info,
-          error_log_list: state.error_log_data_config.error_log_list
-        }
-      });
-      break;
+        return Object.assign({}, state, {
+          error_log_data_config: {
+            error_log_path: state.error_log_data_config.error_log_path,
+            info: info,
+            error_log_list: state.error_log_data_config.error_log_list
+          }
+        });
+      } else if(response_status === "error") {
+        let info = action.error_log_info_response;
+        return Object.assign({}, state, {
+          error_log_data_config: {
+            error_log_path: state.error_log_data_config.error_log_path,
+            info: info,
+            error_log_list: state.error_log_data_config.error_log_list
+          }
+        });
+      } else {
+        let info = action.error_log_info_response;
+        return Object.assign({}, state, {
+          error_log_data_config: {
+            error_log_path: state.error_log_data_config.error_log_path,
+            info: info,
+            error_log_list: state.error_log_data_config.error_log_list
+          }
+        });
+      }
     case CHANGE_ANALYZER_CONFIG:
     case CHANGE_ANALYZER_CONFIG_COMMAND:
       return Object.assign({}, state, {
         error_log_analyzer_config: error_log_analyzer_config_reducer(state.error_log_analyzer_config, action)
       });
-      break;
     default:
       // console.log("[llsubmit4_error_log_reducer] default action:", action.type);
       return state;

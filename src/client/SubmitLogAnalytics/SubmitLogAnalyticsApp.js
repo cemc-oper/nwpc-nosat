@@ -66,8 +66,7 @@ class SubmitLogAnalyticsApp extends Component{
 
     ipcRenderer.on('llsubmit4.error-log.info.get.reply', function (event, result) {
       console.log('llsubmit4.error-log.info.get.reply');
-      let log_info_response = JSON.parse(result);
-      dispatch(receiveErrorLogInfo(log_info_response));
+      dispatch(receiveErrorLogInfo(result));
     });
 
     ipcRenderer.on('llsubmit4.error-log.analytics.message', function (event, message) {

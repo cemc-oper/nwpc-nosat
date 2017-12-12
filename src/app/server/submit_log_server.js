@@ -95,8 +95,8 @@ function receive_server_response(event, message) {
       event.sender.send('llsubmit4.error-log.analytics.get.reply', std_out);
 
     } else if (request.command === 'info') {
-      let std_out = message.data.response.std_out;
-      event.sender.send('llsubmit4.error-log.info.get.reply', std_out);
+      let response = message.data.response;
+      event.sender.send('llsubmit4.error-log.info.get.reply', response);
 
     } else {
       console.log('[receive_llsubmit4_error_log_analytics_response] request command not supported:', request.command);
