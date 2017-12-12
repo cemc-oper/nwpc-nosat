@@ -17,11 +17,9 @@ class SetupEnvForm extends React.Component{
     const {form} = this.props;
     const {getFieldDecorator} = form;
 
-    getFieldDecorator('repo_list_keys', {initialValue: []});
-
     const repo_list = form.getFieldValue('repo_list');
     let repo_list_length = repo_list.length;
-    let repo_list_keys = form.getFieldValue('repo_list_keys');
+    let repo_list_keys = [];
 
     while(repo_list_keys.length < repo_list_length){
       uuid++;
@@ -33,9 +31,7 @@ class SetupEnvForm extends React.Component{
       getFieldDecorator(`repo_${value}_repo`, {initialValue: repo_list[index].repo});
     });
 
-    form.setFieldsValue({
-      repo_list_keys: repo_list_keys
-    });
+    getFieldDecorator('repo_list_keys', {initialValue: repo_list_keys});
   }
 
   componentWillUnmount(){
