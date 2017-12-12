@@ -94,11 +94,10 @@ ipc.on('system-time-line.request.setup-env', function(event, config_file_path, r
 
     system_time_line_tool.on('close', (code) => {
       console.log(code);
+      callback(null, code)
     });
-
-    callback()
-
-  }, function(err){
+  }, function(err, code){
+    console.log("[system-time-line.request.setup-env'] results:", code);
     if( err ) {
       console.error('[ipc.js][system-time-line]A repo is not set up.');
       console.log(err);

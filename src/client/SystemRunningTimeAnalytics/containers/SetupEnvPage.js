@@ -17,31 +17,55 @@ class SetupEnvForm extends React.Component{
     const {form} = this.props;
     const {getFieldDecorator} = form;
 
-    getFieldDecorator('repo_list_keys', { initialValue: [] });
+    getFieldDecorator('repo_list_keys', {initialValue: []});
 
     const repo_list = form.getFieldValue('repo_list');
     let repo_list_length = repo_list.length;
-    while(form.getFieldValue('repo_list_keys').length < repo_list_length){
-      this.addRepoItem();
+    let repo_list_keys = form.getFieldValue('repo_list_keys');
+
+    while(repo_list_keys.length < repo_list_length){
+      uuid++;
+      repo_list_keys = repo_list_keys.concat(uuid);
     }
+
+    repo_list_keys.forEach(function(value, index){
+      getFieldDecorator(`repo_${value}_owner`, {initialValue:repo_list[index].owner});
+      getFieldDecorator(`repo_${value}_repo`, {initialValue: repo_list[index].repo});
+    });
+
+    form.setFieldsValue({
+      repo_list_keys: repo_list_keys
+    });
+  }
+
+  componentWillUnmount(){
+    const {form} = this.props;
+    const {getFieldValue} = form;
+    const repo_list_keys = getFieldValue('repo_list_keys');
+    console.log('[SetupEnvForm.componentWillUnmount] repo_list_keys:', repo_list_keys);
   }
 
   addRepoItem(){
     const {form} = this.props;
-    const repo_list_keys = form.getFieldValue('repo_list_keys');
+    const {getFieldDecorator, getFieldValue, setFieldsValue} = form;
+    const repo_list_keys = getFieldValue('repo_list_keys');
 
     uuid++;
     const new_repo_list_keys = repo_list_keys.concat(uuid);
-    form.setFieldsValue({
+    let fields = {
       repo_list_keys: new_repo_list_keys
-    });
+    };
+    getFieldDecorator(`repo_${uuid}_owner`, {initialValue: ''});
+    getFieldDecorator(`repo_${uuid}_repo`, {initialValue: ''});
+
+    setFieldsValue(fields);
   }
 
   removeRepoItem(k){
     const {form} = this.props;
     const repo_list_keys = form.getFieldValue('repo_list_keys');
 
-    if(repo_list_keys.length === 1){
+    if(repo_list_keys.length === 1) {
       return;
     }
 
@@ -112,18 +136,11 @@ class SetupEnvForm extends React.Component{
     const {form} = this.props;
     const {getFieldDecorator} = form;
 
+
     const repo_list = form.getFieldValue('repo_list');
-    const repo_list_length = repo_list.length;
     const repo_list_keys = form.getFieldValue('repo_list_keys');
 
     const repo_list_nodes = repo_list_keys.map((key, index)=>{
-      let repo_name = '';
-      let owner_name = '';
-      if(index<repo_list_length) {
-        const repo_object = repo_list[index];
-        repo_name = repo_object.repo;
-        owner_name = repo_object.owner;
-      }
       return (
         <Form.Item
           {...(index===0?formItemLayout:formItemLayoutWithOutLabel)}
@@ -133,7 +150,6 @@ class SetupEnvForm extends React.Component{
           <Col span={6}>
             <Form.Item>{
               getFieldDecorator(`repo_${key}_owner`, {
-                initialValue: owner_name,
                 rules:[{
                   required: true, message: '请输入用户名'
                 }],
@@ -148,7 +164,6 @@ class SetupEnvForm extends React.Component{
           <Col span={6}>
             <Form.Item>{
               getFieldDecorator(`repo_${key}_repo`, {
-                initialValue: repo_name,
                 rules:[{
                   required: true, message: '请输入项目名'
                 }],
@@ -156,11 +171,11 @@ class SetupEnvForm extends React.Component{
             }</Form.Item>
           </Col>
           <Col span={2} style={{textAlign:'center'}}>
-            {repo_list.length > 1 ? (
+            {repo_list_keys.length > 1 ? (
               <Icon
                 className="dynamic-delete-button"
                 type="minus-circle-o"
-                disabled={repo_list.length === 1}
+                disabled={repo_list_keys.length === 1}
                 onClick={this.removeRepoItem.bind(this, key)}
               />
             ) : null}
@@ -177,11 +192,11 @@ class SetupEnvForm extends React.Component{
         >
           <Row gutter={8}>
             <Col span={12}>{
-          getFieldDecorator('config_file_path', {
-            rules:[{
-              required: true, message: '请选择一个配置文件'
-            }],
-          })(<Input/>)
+              getFieldDecorator('config_file_path', {
+                rules:[{
+                  required: true, message: '请选择一个配置文件'
+                }],
+              })(<Input/>)
             }</Col>
             <Col span={12}>
               <Button size='large' onClick={this.handleSelectFile.bind(this)}>选择文件</Button>
@@ -206,8 +221,12 @@ class SetupEnvForm extends React.Component{
 const SetupEnvFormNode = Form.create({
     mapPropsToFields(props){
       return {
-        config_file_path: { value: props.config_file_path},
-        repo_list: {value: props.repo_list}
+        config_file_path: Form.createFormField({
+          value: props.config_file_path
+        }),
+        repo_list: Form.createFormField({
+          value: props.repo_list
+        })
       }
     }
   }
@@ -237,6 +256,8 @@ export class SetupEnvPage extends React.Component{
             ]}
             handler={{submit: this.setupEnv.bind(this)}}
           />
+        </Col>
+        <Col span={6}>
         </Col>
       </Row>
     )
