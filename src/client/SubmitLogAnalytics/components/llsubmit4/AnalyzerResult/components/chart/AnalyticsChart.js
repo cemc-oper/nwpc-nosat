@@ -16,13 +16,17 @@ export default  class AnalyticsChart extends Component{
   render() {
     const {chart_data, analytics_result} = this.props;
     let empty_chart = (
-      <div className="row">
-        <div className="col-xs-4 col-xs-offset-4 text-center">
-          <img src={chart_placeholder_url} />
-        </div>
-        <div className="col-xs-4 col-xs-offset-4 text-center">
-          <p>欢迎您的使用</p>
-        </div>
+      <div style={{ textAlign: 'center' }}>
+        <Row type="flex" justify="center">
+          <Col span={8}>
+            <img src={chart_placeholder_url} />
+          </Col>
+        </Row>
+        <Row type="flex" justify="center">
+          <Col span={8}>
+            <p >欢迎您的使用</p>
+          </Col>
+        </Row>
       </div>
     );
     if(chart_data === null){
