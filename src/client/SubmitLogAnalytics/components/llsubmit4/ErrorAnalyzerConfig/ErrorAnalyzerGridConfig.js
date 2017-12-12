@@ -4,57 +4,133 @@ import moment from 'moment';
 import { Form, Select, Input } from 'antd'
 
 
+
+class ErrorAnalyzerGridConfigForm extends Component{
+  constructor(props){
+    super(props);
+  }
+
+  checkDate(rule, value, callback){
+    const {form} = this.props;
+    let first_date = moment(form.getFieldValue('first_date'));
+    let last_date = moment(form.getFieldValue('end_date'));
+    if(first_date<=last_date){
+      callback();
+    } else {
+      callback('日期范围有误');
+    }
+  }
+
+  render() {
+    const {form} = this.props;
+    const {getFieldDecorator} = form;
+
+    return (
+      <Form>
+        <Form.Item label="X轴类型">
+          {getFieldDecorator('x_type', {
+            initialValue: form.getFieldValue('x_type'),
+            rules: [{ required: true, message: '请选择X轴类型' }],
+          })(
+            <Select>
+              <Select.Option value="hour">Hour</Select.Option>
+              <Select.Option value="weekday">Weekday</Select.Option>
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="Y轴类型">
+          {getFieldDecorator('y_type', {
+            initialValue: form.getFieldValue('y_type'),
+            rules: [{ required: true, message: '请选择Y轴类型' }],
+          })(
+            <Select>
+              <Select.Option value="date">Date</Select.Option>
+              <Select.Option value="weekday">Weekday</Select.Option>
+              <Select.Option value="system">System</Select.Option>
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="起始日期">{
+          getFieldDecorator('first_date', {
+            rules:[{
+              required: true, message: '请输入起始日期'
+            }, {
+              validator: this.checkDate.bind(this)
+            }],
+          })(<Input type='date'/>)
+        }</Form.Item>
+        <Form.Item label="结束日期">{
+          getFieldDecorator('end_date', {
+            rules:[{
+              required: true, message: '请输入结束日期',
+            }, {
+              validator: this.checkDate.bind(this)
+            }],
+          })(<Input type='date'/>)
+        }</Form.Item>
+      </Form>
+    )
+  }
+}
+
+
+const ErrorAnalyzerGridConfigFormNode = Form.create({
+  mapPropsToFields(props){
+    return {
+      x_type: Form.createFormField({
+        value: props.x_type
+      }),
+      y_type: Form.createFormField({
+        value: props.y_type
+      }),
+      first_date: Form.createFormField({
+        value: moment(props.first_date).format("YYYY-MM-DD")
+      }),
+      end_date: Form.createFormField({
+        value: moment(props.end_date).format("YYYY-MM-DD")
+      })
+    }
+  },
+  onFieldsChange(props, changed_fields){
+    let config = Object.assign({
+      analytics_command: 'grid'
+    }, props);
+
+    let changed_props = {};
+    Object.keys(changed_fields).map(function(key, index){
+      changed_props[key] = changed_fields[key].value;
+    });
+
+    if('first_date' in changed_fields){
+      changed_props['first_date'] = moment(changed_props['first_date']).toDate();
+    }
+
+    if('end_date' in changed_fields){
+      changed_props['first_date'] = moment(changed_props['end_date']).toDate();
+    }
+
+    let new_config = Object.assign(config, changed_props);
+
+    // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] config:", config);
+    // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] new config:", new_config);
+
+    props.change_handler(new_config);
+  }
+})(ErrorAnalyzerGridConfigForm);
+
+
 export default class ErrorAnalyzerGridConfig extends Component {
-
-  getConfig() {
-    let config = Object();
-    config.analytics_command = 'grid';
-    config.x_type = this.refs.x_type_node.value;
-    config.y_type = this.refs.y_type_node.value;
-    config.first_date = moment(this.refs.first_date_node.value).toDate();
-    config.last_date = moment(this.refs.last_date_node.value).toDate();
-    return config;
-  }
-
-  handleChange() {
-    let config = this.getConfig();
-    const {change_handler} = this.props.handler;
-    change_handler(config);
-  }
-
-  checkDate(){
-    let first_date = moment(this.refs.first_date_node.value);
-    let last_date = moment(this.refs.last_date_node.value);
-    return first_date<=last_date;
-  }
 
   render() {
     const {analyzer_config} = this.props;
     const {first_date, last_date, x_type, y_type} = analyzer_config;
     return (
-      <Form>
-        <Form.Item label="X轴类型">
-          <Select ref="x_type_node" value={x_type} onChange={this.handleChange.bind(this)}>
-            <Select.Option value="hour">Hour</Select.Option>
-            <Select.Option value="weekday">Weekday</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="Y轴类型">
-          <Select ref="y_type_node" value={y_type} onChange={this.handleChange.bind(this)}>
-            <Select.Option value="date">Date</Select.Option>
-            <Select.Option value="weekday">Weekday</Select.Option>
-            <Select.Option value="system">System</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="起始日期">
-          <input type="date" ref="first_date_node"
-                 value={moment(first_date).format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
-        </Form.Item>
-        <Form.Item label="结束日期">
-          <input type="date" ref="last_date_node"
-                 value={moment(last_date).format("YYYY-MM-DD")} onChange={this.handleChange.bind(this)} />
-        </Form.Item>
-      </Form>
+      <ErrorAnalyzerGridConfigFormNode
+        x_type={x_type}
+        y_type={y_type}
+        first_date={first_date}
+        last_date={last_date}
+      />
     )
   }
 }

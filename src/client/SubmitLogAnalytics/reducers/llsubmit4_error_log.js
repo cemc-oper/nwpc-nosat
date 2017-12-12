@@ -100,8 +100,8 @@ export default function llsubmit4_error_log_reducer(state={
         analytics_command: 'grid',
         x_type: 'hour',
         y_type: 'weekday',
-        first_date: moment().subtract(1, 'weeks'),
-        last_date: moment().subtract(1, 'days')
+        first_date: moment().subtract(1, 'weeks').toDate(),
+        last_date: moment().subtract(1, 'days').toDate()
       }
     }
   },

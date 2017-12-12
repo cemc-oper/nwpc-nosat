@@ -9,21 +9,6 @@ class ErrorAnalyzerCountConfigForm extends Component{
     super(props);
   }
 
-  componentWillMount(){
-    const {form} = this.props;
-    const {getFieldDecorator} = form;
-  }
-
-  handleSubmit(e){
-    e.preventDefault();
-    console.log("SetupEnvForm:handleSubmit:", this);
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.doSubmit(values);
-      }
-    });
-  }
-
   checkDate(rule, value, callback){
     const {form} = this.props;
     let first_date = moment(form.getFieldValue('first_date'));
@@ -41,7 +26,7 @@ class ErrorAnalyzerCountConfigForm extends Component{
 
     return (
       <Form>
-        <Form.Item label="统计类型" onHandle={this.handleSubmit.bind(this)}>
+        <Form.Item label="统计类型">
           {getFieldDecorator('analytics_type', {
             initialValue: form.getFieldValue('analytics_type'),
             rules: [{ required: true, message: '请选择统计类型' }],
@@ -114,8 +99,8 @@ const ErrorAnalyzerCountConfigFormNode = Form.create({
 
     let new_config = Object.assign(config, changed_props);
 
-    console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] config:", config);
-    console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] new config:", new_config);
+    // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] config:", config);
+    // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] new config:", new_config);
 
     props.change_handler(new_config);
   }
@@ -124,26 +109,10 @@ const ErrorAnalyzerCountConfigFormNode = Form.create({
 
 export default class ErrorAnalyzerCountConfig extends Component {
 
-  getConfig() {
-    // let config = Object();
-    // config.analytics_command = 'count';
-    // config.analytics_type = this.refs.analytics_type_node.value;
-    // config.first_date = moment(this.refs.first_date_node.value).toDate();
-    // config.last_date = moment(this.refs.last_date_node.value).toDate();
-    // return config;
-  }
-
-  handleChange() {
-    // let config = this.getConfig();
-    // console.log("[ErrorAnalyzerCountConfig.handleChange] config", config);
-    // const {change_handler} = this.props.handler;
-    // change_handler(config);
-  }
-
   render() {
     const {analyzer_config} = this.props;
     const {analytics_type, first_date, last_date} = analyzer_config;
-    console.log(analyzer_config);
+
     return (
       <ErrorAnalyzerCountConfigFormNode
         analytics_type={analytics_type}
