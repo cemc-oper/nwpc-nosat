@@ -17,7 +17,7 @@ import {ipcRenderer} from 'electron';
 import {NOSTFooter} from '../Core/components/NOSTFooter';
 import {NOSTHeader} from '../Core/components/NOSTHeader';
 
-import { SetupEnvPage } from './containers/SetupEnvPage'
+import SetupEnvPage from './containers/SetupEnvPage'
 
 import './index.css'
 
@@ -51,6 +51,8 @@ class SystemRunningTimeAnalyticsApp extends Component{
 
   render() {
     const { current_index } = this.state;
+    const { system_running_time } = this.props;
+    const { setup_env } = system_running_time;
     const steps = [{
       title: '创建环境',
       content: (
@@ -58,6 +60,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
           handler={{
             setup_env: this.handleSetupEnv.bind(this)
           }}
+          repo_list={setup_env.repo_list}
         />
       ),
     }, {
@@ -117,7 +120,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
 
 function mapStateToProps(state){
   return {
-
+    system_running_time:state.system_running_time
   }
 }
 

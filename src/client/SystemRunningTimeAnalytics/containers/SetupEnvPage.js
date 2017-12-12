@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { dispatch } from 'redux'
+import { connect } from 'react-redux';
 
 import { Row, Col, Button, Form, Input, Icon } from 'antd';
+
+import {change_repo_list} from '../reducers/index'
 
 const remote = require('electron').remote;
 
@@ -35,10 +38,19 @@ class SetupEnvForm extends React.Component{
   }
 
   componentWillUnmount(){
-    const {form} = this.props;
+    const {form, handler} = this.props;
     const {getFieldValue} = form;
     const repo_list_keys = getFieldValue('repo_list_keys');
-    console.log('[SetupEnvForm.componentWillUnmount] repo_list_keys:', repo_list_keys);
+
+    const repo_list = repo_list_keys.map((key, index)=>{
+      const owner_name = form.getFieldValue[`repo_${key}_owner`];
+      const repo_name = form.getFieldValue[`repo_${key}_repo`];
+      return {
+        owner: owner_name,
+        repo: repo_name
+      }
+    });
+    handler.change_repo_list(repo_list);
   }
 
   addRepoItem(){
@@ -229,7 +241,7 @@ const SetupEnvFormNode = Form.create({
 )(SetupEnvForm);
 
 
-export class SetupEnvPage extends React.Component{
+class SetupEnvPage extends React.Component{
   constructor(props){
     super(props);
   }
@@ -240,17 +252,23 @@ export class SetupEnvPage extends React.Component{
     setup_env(config_file_path, repo_list);
   }
 
+  changeRepoList(repo_list){
+    const {dispatch} = this.props;
+    dispatch(change_repo_list(repo_list));
+  }
+
   render(){
+    const {repo_list} = this.props;
     return (
       <Row>
         <Col span={18}>
           <SetupEnvFormNode
             config_file_path={''}
-            repo_list={[
-              { owner: 'nwp_xp', repo: 'nwpc_op' },
-              { owner: 'nwp_xp', repo: 'nwpc_qu' }
-            ]}
-            handler={{submit: this.setupEnv.bind(this)}}
+            repo_list={repo_list}
+            handler={{
+              submit: this.setupEnv.bind(this),
+              change_repo_list: this.changeRepoList.bind(this)
+            }}
           />
         </Col>
         <Col span={6}>
@@ -263,6 +281,21 @@ export class SetupEnvPage extends React.Component{
 SetupEnvPage.propTypes = {
   handler: PropTypes.shape({
     setup_env: PropTypes.func
-  })
+  }),
+  repo_list: PropTypes.array
+};
+
+// SetupEnvPage.defaultProps = {
+//   repo_list: [
+//     { owner: 'nwp_xp', repo: 'nwpc_op' },
+//     { owner: 'nwp_xp', repo: 'nwpc_qu' }
+//   ]
+// };
+
+function mapStateToProps(state){
+  return {
+    repo_list:state.system_running_time.setup_env.repo_list
+  }
 }
-;
+
+export default connect(mapStateToProps)(SetupEnvPage)
