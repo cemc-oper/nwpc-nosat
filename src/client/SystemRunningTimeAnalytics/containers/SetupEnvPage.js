@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { Row, Col, Button, Form, Input, Icon } from 'antd';
 
-import {change_repo_list} from '../reducers/index'
+import {change_repo_list, change_environment} from '../reducers/index'
 
 const remote = require('electron').remote;
 
@@ -44,15 +44,20 @@ class SetupEnvForm extends React.Component{
 
     const repo_list = repo_list_keys.map((key, index)=>{
       const owner_name = form.getFieldValue(`repo_${key}_owner`);
-      console.log(form.getFieldsValue());
       const repo_name = form.getFieldValue(`repo_${key}_repo`);
       return {
         owner: owner_name,
         repo: repo_name
       }
     });
-    console.log(repo_list);
-    handler.change_repo_list(repo_list);
+
+    // form.setFieldsValue({
+    //   repo_list: repo_list
+    // });
+
+    handler.change_environment_handler({
+      repo_list: repo_list
+    });
   }
 
   addRepoItem(){
@@ -231,18 +236,29 @@ class SetupEnvForm extends React.Component{
 
 
 const SetupEnvFormNode = Form.create({
-    mapPropsToFields(props){
-      return {
-        config_file_path: Form.createFormField({
-          value: props.config_file_path
-        }),
-        repo_list: Form.createFormField({
-          value: props.repo_list
-        })
+  mapPropsToFields(props){
+    return {
+      config_file_path: Form.createFormField({
+        value: props.config_file_path
+      }),
+      repo_list: Form.createFormField({
+        value: props.repo_list
+      })
+    }
+  },
+  onFieldsChange(props, changed_fields){
+    let changed_props = {};
+    const environment_keys = props.environment_props;
+    environment_keys.forEach((value)=>{
+      if(value in changed_fields){
+        changed_props[value] = changed_fields[value].key;
       }
+    });
+    if(changed_fields.length > 0) {
+      props.handler.change_environment_handler(changed_props);
     }
   }
-)(SetupEnvForm);
+})(SetupEnvForm);
 
 
 class SetupEnvPage extends React.Component{
@@ -256,22 +272,24 @@ class SetupEnvPage extends React.Component{
     setup_env(config_file_path, repo_list);
   }
 
-  changeRepoList(repo_list){
+  handleEnvironmentChanged(changed_props){
     const {dispatch} = this.props;
-    dispatch(change_repo_list(repo_list));
+    dispatch(change_environment(changed_props));
   }
 
   render(){
-    const {repo_list} = this.props;
+    const {environment} = this.props;
+    const {repo_list, config_file_path} = environment;
     return (
       <Row>
         <Col span={18}>
           <SetupEnvFormNode
-            config_file_path={''}
+            config_file_path={config_file_path}
             repo_list={repo_list}
+            environment_props={['config_file_path', 'repo_list']}
             handler={{
               submit: this.setupEnv.bind(this),
-              change_repo_list: this.changeRepoList.bind(this)
+              change_environment_handler: this.handleEnvironmentChanged.bind(this)
             }}
           />
         </Col>
@@ -286,7 +304,13 @@ SetupEnvPage.propTypes = {
   handler: PropTypes.shape({
     setup_env: PropTypes.func
   }),
-  repo_list: PropTypes.array
+  environment: PropTypes.shape({
+    repo_list: PropTypes.arrayOf(PropTypes.shape({
+      owner: PropTypes.string,
+      repo: PropTypes.string
+    })),
+    config_file_path: PropTypes.string
+  })
 };
 
 // SetupEnvPage.defaultProps = {
@@ -298,7 +322,7 @@ SetupEnvPage.propTypes = {
 
 function mapStateToProps(state){
   return {
-    repo_list:state.system_running_time.setup_env.repo_list
+    environment:state.system_running_time.environment
   }
 }
 

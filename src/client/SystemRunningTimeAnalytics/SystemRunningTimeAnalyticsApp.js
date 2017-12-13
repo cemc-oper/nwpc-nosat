@@ -52,7 +52,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
   render() {
     const { current_index } = this.state;
     const { system_running_time } = this.props;
-    const { setup_env } = system_running_time;
+    const { environment } = system_running_time;
     const steps = [{
       title: '创建环境',
       content: (
@@ -60,7 +60,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
           handler={{
             setup_env: this.handleSetupEnv.bind(this)
           }}
-          repo_list={setup_env.repo_list}
+          environment={environment}
         />
       ),
     }, {
