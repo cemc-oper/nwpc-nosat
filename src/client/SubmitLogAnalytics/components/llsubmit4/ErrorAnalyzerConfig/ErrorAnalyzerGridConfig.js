@@ -114,7 +114,7 @@ const ErrorAnalyzerGridConfigFormNode = Form.create({
     // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] config:", config);
     // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] new config:", new_config);
 
-    props.change_handler(new_config);
+    props.handler.change_handler(new_config);
   }
 })(ErrorAnalyzerGridConfigForm);
 
@@ -122,7 +122,7 @@ const ErrorAnalyzerGridConfigFormNode = Form.create({
 export default class ErrorAnalyzerGridConfig extends Component {
 
   render() {
-    const {analyzer_config} = this.props;
+    const {analyzer_config, handler} = this.props;
     const {first_date, last_date, x_type, y_type} = analyzer_config;
     return (
       <ErrorAnalyzerGridConfigFormNode
@@ -130,6 +130,7 @@ export default class ErrorAnalyzerGridConfig extends Component {
         y_type={y_type}
         first_date={first_date}
         last_date={last_date}
+        handler={handler}
       />
     )
   }

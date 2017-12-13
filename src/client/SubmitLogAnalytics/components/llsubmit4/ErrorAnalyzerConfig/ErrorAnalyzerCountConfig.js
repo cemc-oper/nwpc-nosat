@@ -102,7 +102,7 @@ const ErrorAnalyzerCountConfigFormNode = Form.create({
     // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] config:", config);
     // console.log("[ErrorAnalyzerCountConfigFormNode:onFieldsChange] new config:", new_config);
 
-    props.change_handler(new_config);
+    props.handler.change_handler(new_config);
   }
 })(ErrorAnalyzerCountConfigForm);
 
@@ -110,7 +110,7 @@ const ErrorAnalyzerCountConfigFormNode = Form.create({
 export default class ErrorAnalyzerCountConfig extends Component {
 
   render() {
-    const {analyzer_config} = this.props;
+    const {analyzer_config, handler} = this.props;
     const {analytics_type, first_date, last_date} = analyzer_config;
 
     return (
@@ -118,6 +118,7 @@ export default class ErrorAnalyzerCountConfig extends Component {
         analytics_type={analytics_type}
         first_date={first_date}
         end_date={last_date}
+        handler={handler}
       />
     )
   }
