@@ -28,6 +28,9 @@ export default class DimensionGenerator{
       case "hour":
         x = DimensionGenerator.getHourDimension();
         break;
+      case "month":
+        x = DimensionGenerator.getMonthDimension(count_result);
+        break;
       default:
         x = null;
     }
@@ -134,6 +137,25 @@ export default class DimensionGenerator{
     return {
       type: 'hour',
       data: x_data
+    }
+  }
+
+  /**
+   * 系统名列表
+   * @param result 统计结果
+   * @returns {{type: string, data: Array}}
+   */
+  static getMonthDimension(result){
+    let data = Object.keys(result).map(function(item, index){
+      return {
+        label: item,
+        value: item
+      }
+    });
+
+    return {
+      type: 'month',
+      data: data
     }
   }
 };

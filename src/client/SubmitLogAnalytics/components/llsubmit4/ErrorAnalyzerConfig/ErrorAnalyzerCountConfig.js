@@ -37,7 +37,7 @@ class ErrorAnalyzerCountConfigForm extends Component{
               <Select.Option value="system">System</Select.Option>
               <Select.Option value="date-hour">Hour by day</Select.Option>
               <Select.Option value="hour">Hour</Select.Option>
-              <Select.Option value="grid">Grid</Select.Option>
+              <Select.Option value="month">Month</Select.Option>
             </Select>
           )}
         </Form.Item>
