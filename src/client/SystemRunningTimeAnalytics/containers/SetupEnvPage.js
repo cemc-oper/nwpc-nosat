@@ -43,13 +43,15 @@ class SetupEnvForm extends React.Component{
     const repo_list_keys = getFieldValue('repo_list_keys');
 
     const repo_list = repo_list_keys.map((key, index)=>{
-      const owner_name = form.getFieldValue[`repo_${key}_owner`];
-      const repo_name = form.getFieldValue[`repo_${key}_repo`];
+      const owner_name = form.getFieldValue(`repo_${key}_owner`);
+      console.log(form.getFieldsValue());
+      const repo_name = form.getFieldValue(`repo_${key}_repo`);
       return {
         owner: owner_name,
         repo: repo_name
       }
     });
+    console.log(repo_list);
     handler.change_repo_list(repo_list);
   }
 
@@ -77,8 +79,10 @@ class SetupEnvForm extends React.Component{
       return;
     }
 
+    let new_repo_list_keys = repo_list_keys.filter(key => key !== k);
+
     form.setFieldsValue({
-      repo_list_keys: repo_list_keys.filter(key => key !== k)
+      repo_list_keys: new_repo_list_keys
     })
   }
 
