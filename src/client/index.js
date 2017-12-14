@@ -12,11 +12,15 @@ import operationSystemAnalyticsAppReducer from './Core/reducers/index'
 
 import Root from './Core/Root'
 
+
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 let store = createStore(
-  operationSystemAnalyticsAppReducer,
+  operationSystemAnalyticsAppReducer,composeEnhancers(
   applyMiddleware(
     thunkMiddleware
-  )
+  )),
 );
 
 const history = syncHistoryWithStore(hashHistory, store);
