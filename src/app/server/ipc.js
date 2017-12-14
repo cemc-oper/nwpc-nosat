@@ -106,3 +106,78 @@ ipc.on('system-time-line.request.setup-env', function(event, config_file_path, r
     }
   });
 });
+
+ipc.on('system-time-line.request.load-log', function(
+  event, config_file_path, owner, repo, log_file_path, begin_date, end_date
+){
+  console.log('[ipc.js][system-time-line] request load log');
+  let system_running_time_analytics_config = null;
+  try {
+    config = yaml.safeLoad(fs.readFileSync(config_file_path, 'utf8'));
+    system_running_time_analytics_config = config['system_running_time_analytics'];
+    console.log(system_running_time_analytics_config);
+  } catch (e) {
+    console.error('[ipc.js][system-time-line] loading config file failed. Error is:');
+    console.log(e);
+    return;
+  }
+
+  let system_time_line_config = system_running_time_analytics_config['system_time_line']['config'];
+  let system_time_line_project_base = system_running_time_analytics_config['system_time_line']['project']['base'];
+  let python_exe_path = system_running_time_analytics_config['system_time_line']['python']['exe_path'];
+
+  let system_time_line_config_path = path.join(
+    path.dirname(config_file_path),
+    system_time_line_config
+  );
+
+  let system_time_line_script_path = path.join(
+    system_time_line_project_base,
+    './nwpc_system_time_line/system_time_line_tool.py'
+  );
+
+
+  console.log("setup env for " + owner + "/" + repo);
+
+  console.log(
+    python_exe_path, [
+      system_time_line_script_path,
+      'load',
+      `--config=${system_time_line_config_path}`,
+      `--owner=${owner}`,
+      `--repo=${repo}`,
+      `--log-file=${log_file_path}`,
+      `--begin-date=${begin_date}`,
+      `--end-date=${end_date}`
+    ]
+  );
+
+  let env = process.env;
+  env.PYTHONPATH = ".";
+  const system_time_line_tool = spawn(python_exe_path, [
+    system_time_line_script_path,
+    'load',
+    `--config=${system_time_line_config_path}`,
+    `--owner=${owner}`,
+    `--repo=${repo}`,
+    `--log-file=${log_file_path}`,
+    `--begin-date=${begin_date}`,
+    `--end-date=${end_date}`
+  ], {
+    env: {
+      PYTHONPATH: system_time_line_project_base
+    }
+  });
+
+  system_time_line_tool.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  system_time_line_tool.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+  });
+
+  system_time_line_tool.on('close', (code) => {
+    console.log(code);
+  });
+});

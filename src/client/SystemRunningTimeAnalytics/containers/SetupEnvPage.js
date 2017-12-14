@@ -266,12 +266,6 @@ class SetupEnvPage extends React.Component{
     super(props);
   }
 
-  setupEnv(config_file_path, repo_list){
-    // console.log('SetupEnvPage:setupEnv', this);
-    const {setup_env} = this.props.handler;
-    setup_env(config_file_path, repo_list);
-  }
-
   handleFieldChanged(changed_fields){
     const {dispatch} = this.props;
     // console.log('[SetupEnvPage.handleFieldChanged] changed_fields:', changed_fields);
@@ -289,7 +283,6 @@ class SetupEnvPage extends React.Component{
             repo_list={repo_list}
             environment_props={['config_file_path', 'repo_list']}
             handler={{
-              submit: this.setupEnv.bind(this),
               change_field_handler: this.handleFieldChanged.bind(this)
             }}
           />
