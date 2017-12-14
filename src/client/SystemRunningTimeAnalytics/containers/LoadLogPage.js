@@ -11,7 +11,7 @@ const ipc_render = electron.ipcRenderer;
 const remote = electron.remote;
 
 
-import {set_load_env_repo} from '../reducers/index'
+import {set_load_env_repo, append_load_log_repo_command_stdout} from '../reducers/index'
 
 
 class RepoLoadLogForm extends React.Component {
@@ -53,7 +53,7 @@ class RepoLoadLogForm extends React.Component {
       repo:  getFieldValue('repo'),
       log_file_path:  getFieldValue('log_file_path'),
       begin_date:  getFieldValue('begin_date'),
-      end_date:  getFieldValue('end_date')
+      end_date:  getFieldValue('end_date'),
     };
     const key = `${repo.owner}/${repo.repo}`;
     handler.save_load_log_repo_handler(key, repo);
@@ -103,7 +103,6 @@ class RepoLoadLogForm extends React.Component {
         </Row>
       )
     }
-
 
     return (
       <div>
@@ -209,14 +208,24 @@ class LoadLogPage extends React.Component {
         current_key: `${repo.owner}/${repo.repo}`
       });
     }
+
   }
 
   loadLog(load_log_params){
+    const {dispatch} = this.props;
     const {owner, repo, log_file_path, begin_date, end_date, config_file_path} = load_log_params;
     ipc_render.send(
       'system-time-line.request.load-log',
       config_file_path, owner, repo, log_file_path, begin_date, end_date
     );
+    // ipc_render.on('system-time-line.response.load-log.stdout', (event, owner, repo, data)=>{
+    //   const repo_key = `${owner}/${repo}`;
+    //   console.log(data);
+    //   dispatch(append_load_log_repo_command_stdout({
+    //     key: repo_key,
+    //     data: data
+    //   }))
+    // });
   }
 
   saveLoadLogRepo(key, value){

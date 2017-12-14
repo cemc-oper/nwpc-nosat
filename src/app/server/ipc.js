@@ -170,10 +170,12 @@ ipc.on('system-time-line.request.load-log', function(
   });
 
   system_time_line_tool.stdout.on('data', (data) => {
+    // event.sender.send('system-time-line.response.load-log.stdout', owner, repo, data);
     console.log(`stdout: ${data}`);
   });
 
   system_time_line_tool.stderr.on('data', (data) => {
+    // event.sender.send('system-time-line.response.load-log.stderr', owner, repo, data);
     console.log(`stderr: ${data}`);
   });
 
