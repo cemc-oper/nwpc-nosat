@@ -11,6 +11,9 @@ const ipc_render = electron.ipcRenderer;
 const remote = electron.remote;
 
 
+import {set_load_env_repo} from '../reducers/index'
+
+
 class RepoLoadLogForm extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +43,21 @@ class RepoLoadLogForm extends React.Component {
       }
     });
   }
+  
+  handleSaveClick(e){
+    const {form, handler} = this.props;
+    const {getFieldValue} = form;
+    const repo = {
+      config_file_path: getFieldValue('config_file_path'),
+      owner:  getFieldValue('owner'),
+      repo:  getFieldValue('repo'),
+      log_file_path:  getFieldValue('log_file_path'),
+      begin_date:  getFieldValue('begin_date'),
+      end_date:  getFieldValue('end_date')
+    };
+    const key = `${repo.owner}/${repo.repo}`;
+    handler.save_load_log_repo_handler(key, repo);
+  }
 
   loadLog(form_values){
     const {handler} = this.props;
@@ -55,7 +73,7 @@ class RepoLoadLogForm extends React.Component {
   }
 
   render() {
-    const {form} = this.props;
+    const {form, load_log_repo} = this.props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -70,60 +88,80 @@ class RepoLoadLogForm extends React.Component {
     getFieldDecorator('config_file_path');
     getFieldDecorator('owner');
     getFieldDecorator('repo');
-    return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
-        <Form.Item
-          {...formItemLayout}
-          label='日志文件路径'
-        >
-          <Row gutter={8}>
-            <Col span={18}>{
-              getFieldDecorator(`log_file_path`, {
-                rules:[{
-                  required: true, message: '请输入日志文件路径'
-                }],
-              })(<Input/>)
-            }
-            </Col>
-            <Col span={6}>
-              <Button size='large' onClick={this.handleSelectFile.bind(this)}>选择文件</Button>
-            </Col>
-          </Row>
-        </Form.Item>
-        <Form.Item
-          {...formItemLayout}
-          label='起始日期'
-        >
-          <Row gutter={8}>
-            <Col span={6}>{
-          getFieldDecorator(`begin_date`, {
-            rules:[{
-              required: true, message: '请输入起始日期'
-            }],
-          })(<Input type='date'/>)
-            }
-            </Col>
-          </Row>
-        </Form.Item>
-        <Form.Item
-          {...formItemLayout}
-          label='截止日期'
-        ><Row gutter={8}>
-          <Col span={6}>{
-          getFieldDecorator(`end_date`, {
-            rules:[{
-              required: true, message: '请输入截止日期'
-            }],
-          })(<Input type='date'/>)
-        }
-          </Col>
+
+    let command_output_node = null;
+    if(load_log_repo){
+      const {command_output} = load_log_repo;
+      command_output_node = (
+        <Row>
+          <h3>命令输出</h3>
+          <Form>
+            <Form.Item>
+              <Input.TextArea value={command_output} readOnly/>
+            </Form.Item>
+          </Form>
         </Row>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">载入日志</Button>
-          <Button type="default">保存设置</Button>
-        </Form.Item>
-      </Form>
+      )
+    }
+
+
+    return (
+      <div>
+        <Form onSubmit={this.handleSubmit.bind(this)}>
+          <Form.Item
+            {...formItemLayout}
+            label='日志文件路径'
+          >
+            <Row gutter={8}>
+              <Col span={18}>{
+                getFieldDecorator(`log_file_path`, {
+                  rules:[{
+                    required: true, message: '请输入日志文件路径'
+                  }],
+                })(<Input/>)
+              }
+              </Col>
+              <Col span={6}>
+                <Button size='large' onClick={this.handleSelectFile.bind(this)}>选择文件</Button>
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label='起始日期'
+          >
+            <Row gutter={8}>
+              <Col span={6}>{
+                getFieldDecorator(`begin_date`, {
+                  rules:[{
+                    required: true, message: '请输入起始日期'
+                  }],
+                })(<Input type='date'/>)
+              }
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label='截止日期'
+          ><Row gutter={8}>
+            <Col span={6}>{
+              getFieldDecorator(`end_date`, {
+                rules:[{
+                  required: true, message: '请输入截止日期'
+                }],
+              })(<Input type='date'/>)
+            }
+            </Col>
+          </Row>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">载入日志</Button>
+            <Button type="default" onClick={this.handleSaveClick.bind(this)}>保存设置</Button>
+          </Form.Item>
+        </Form>
+        {command_output_node}
+      </div>
     )
   }
 }
@@ -132,22 +170,22 @@ const RepoLoadLogFormNode = Form.create({
   mapPropsToFields(props){
     return {
       owner: Form.createFormField({
-        value: props.owner
+        value: props.load_log_repo.owner
       }),
       repo: Form.createFormField({
-        value: props.repo
+        value: props.load_log_repo.repo
       }),
       begin_date: Form.createFormField({
-        value: props.begin_date
+        value: props.load_log_repo.begin_date
       }),
       end_date: Form.createFormField({
-        value: props.end_date
+        value: props.load_log_repo.end_date
       }),
       log_file_path: Form.createFormField({
-        value: props.log_file_path
+        value: props.load_log_repo.log_file_path
       }),
       config_file_path: Form.createFormField({
-        value: props.config_file_path
+        value: props.load_log_repo.config_file_path
       })
     }
   }
@@ -181,6 +219,14 @@ class LoadLogPage extends React.Component {
     );
   }
 
+  saveLoadLogRepo(key, value){
+    const {dispatch} = this.props;
+    dispatch(set_load_env_repo({
+      key: key,
+      value: value
+    }))
+  }
+
   handleMenuClick(e){
     const {key} = e;
     this.setState({
@@ -189,8 +235,9 @@ class LoadLogPage extends React.Component {
   }
 
   render(){
-    const {environment} = this.props;
+    const {environment, load_log} = this.props;
     const {repo_list, config_file_path} = environment;
+    const {repos} = load_log;
     const { current_key } = this.state;
 
     const formItemLayout = {
@@ -209,22 +256,34 @@ class LoadLogPage extends React.Component {
     repo_list.forEach(repo => {
       const {repo: repo_name, owner: owner_name} = repo;
       const repo_full_name = `${owner_name}/${repo_name}`;
+      let load_log_repo = {
+        config_file_path: config_file_path,
+        owner: owner_name,
+        repo: repo_name,
+        log_file_path: '',
+        begin_date: '',
+        end_date:''
+      };
+      if(repo_full_name in repos){
+        console.log("[LoadLogPage.render] use repo in load_log.");
+        load_log_repo = repos[repo_full_name];
+      } else {
+
+      }
 
       repo_contents_map[repo_full_name] = (
         <div>
           <h2>{repo_full_name}</h2>
-          <RepoLoadLogFormNode
-            key={repo_full_name}
-            config_file_path={config_file_path}
-            owner={owner_name}
-            repo={repo_name}
-            log_file_path={''}
-            begin_date={''}
-            end_date={''}
-            handler={{
-              load_log_handler: this.loadLog.bind(this)
-            }}
-          />
+          <Row>
+            <RepoLoadLogFormNode
+              key={repo_full_name}
+              load_log_repo={load_log_repo}
+              handler={{
+                load_log_handler: this.loadLog.bind(this),
+                save_load_log_repo_handler: this.saveLoadLogRepo.bind(this)
+              }}
+            />
+          </Row>
         </div>
       )
     });
