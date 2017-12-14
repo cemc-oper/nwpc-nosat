@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { dispatch } from 'redux'
 import { connect } from 'react-redux';
 
 import { Row, Col, Button, Form, Input, Icon } from 'antd';
 
-import {change_repo_list, change_environment} from '../reducers/index'
+const electron = require('electron');
+const ipc_render = electron.ipcRenderer;
+
+import {change_environment} from '../reducers/index'
 
 const remote = require('electron').remote;
 
@@ -17,10 +19,10 @@ class SetupEnvForm extends React.Component{
   }
 
   componentWillMount(){
-    const {form} = this.props;
+    const {form, repo_list, config_file_path} = this.props;
+    console.log('[SetupEnvForm.componentWillMount] repo_list:', repo_list);
     const {getFieldDecorator} = form;
 
-    const repo_list = form.getFieldValue('repo_list');
     let repo_list_length = repo_list.length;
     let repo_list_keys = [];
 
@@ -34,30 +36,10 @@ class SetupEnvForm extends React.Component{
       getFieldDecorator(`repo_${value}_repo`, {initialValue: repo_list[index].repo});
     });
 
+    getFieldDecorator('config_file_path', {initialValue: config_file_path});
     getFieldDecorator('repo_list_keys', {initialValue: repo_list_keys});
-  }
-
-  componentWillUnmount(){
-    const {form, handler} = this.props;
-    const {getFieldValue} = form;
-    const repo_list_keys = getFieldValue('repo_list_keys');
-
-    const repo_list = repo_list_keys.map((key, index)=>{
-      const owner_name = form.getFieldValue(`repo_${key}_owner`);
-      const repo_name = form.getFieldValue(`repo_${key}_repo`);
-      return {
-        owner: owner_name,
-        repo: repo_name
-      }
-    });
-
-    // form.setFieldsValue({
-    //   repo_list: repo_list
-    // });
-
-    handler.change_environment_handler({
-      repo_list: repo_list
-    });
+    // console.log('[SetupEnvForm.componentWillMount] config_file_path:', config_file_path);
+    // console.log('[SetupEnvForm.componentWillMount] repo_list_keys:', repo_list_keys);
   }
 
   addRepoItem(){
@@ -67,13 +49,16 @@ class SetupEnvForm extends React.Component{
 
     uuid++;
     const new_repo_list_keys = repo_list_keys.concat(uuid);
-    let fields = {
+    const fields = {
       repo_list_keys: new_repo_list_keys
     };
-    getFieldDecorator(`repo_${uuid}_owner`, {initialValue: ''});
-    getFieldDecorator(`repo_${uuid}_repo`, {initialValue: ''});
+    // getFieldDecorator(`repo_${uuid}_owner`, {initialValue: ''});
+    // getFieldDecorator(`repo_${uuid}_repo`, {initialValue: ''});
 
     setFieldsValue(fields);
+
+    console.log('[SetupEnvForm.addRepoItem] old keys:', repo_list_keys);
+    console.log('[SetupEnvForm.addRepoItem] new keys:', new_repo_list_keys);
   }
 
   removeRepoItem(k){
@@ -84,22 +69,16 @@ class SetupEnvForm extends React.Component{
       return;
     }
 
-    let new_repo_list_keys = repo_list_keys.filter(key => key !== k);
+    const new_repo_list_keys = repo_list_keys.filter(key => key !== k);
 
     form.setFieldsValue({
       repo_list_keys: new_repo_list_keys
-    })
+    });
+
+    // console.log('[SetupEnvForm.removeRepoItem] old keys:', repo_list_keys);
+    // console.log('[SetupEnvForm.removeRepoItem] new keys:', new_repo_list_keys);
   }
 
-  handleSubmit(e){
-    e.preventDefault();
-    console.log("SetupEnvForm:handleSubmit:", this);
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.doSetupEnv(values);
-      }
-    });
-  }
 
   handleSelectFile(e){
     e.preventDefault();
@@ -108,15 +87,28 @@ class SetupEnvForm extends React.Component{
     dialog.showOpenDialog({
       properties: ['openFile']
     }, function(file_paths){
+      if(file_paths === undefined)
+        return;
       form.setFieldsValue({
         config_file_path: file_paths[0]
       })
     });
   }
 
-  doSetupEnv(form_values){
+  handleSaveFields(d){
+    const {form} = this.props;
+    form.validateFields((err, values) => {
+      // console.log("[SetupEnvForm.handleSaveFields] err:", err);
+      if (!err) {
+        this.saveFields(values);
+      }
+    });
+  }
+
+  saveFields(form_values) {
+    const {handler}  = this.props;
     const {repo_list_keys, config_file_path} = form_values;
-    const repo_list = repo_list_keys.map((key, index)=>{
+    const repo_list = repo_list_keys.map(function(key, index){
       const owner_name = form_values[`repo_${key}_owner`];
       const repo_name = form_values[`repo_${key}_repo`];
       return {
@@ -124,12 +116,38 @@ class SetupEnvForm extends React.Component{
         repo: repo_name
       }
     });
-    // console.log(config_file_path);
-    // console.log(repo_list);
 
-    const {handler} = this.props;
-    handler.submit(config_file_path, repo_list);
+    handler.change_field_handler({
+      repo_list: repo_list,
+      config_file_path: config_file_path
+    });
+
+    return {
+      repo_list: repo_list,
+      config_file_path: config_file_path
+    }
   }
+
+  handleSubmit(e){
+    e.preventDefault();
+    const {form, handler}  = this.props;
+    const repo_list_keys = form.getFieldValue('repo_list_keys');
+    // console.log("[SetupEnvForm.handleSubmit] repo_list_keys:", repo_list_keys);
+    form.validateFields((err, values) => {
+      // console.log("[SetupEnvForm.handleSubmit] err:", err);
+      if (!err) {
+        this.doSetupEnv(values);
+      }
+    });
+  }
+
+  doSetupEnv(form_values){
+    const {config_file_path, repo_list} = this.saveFields(form_values);
+
+    ipc_render.send('system-time-line.request.setup-env',
+      config_file_path, repo_list);
+  }
+
 
   render() {
     const formItemLayout = {
@@ -153,9 +171,8 @@ class SetupEnvForm extends React.Component{
     const {form} = this.props;
     const {getFieldDecorator} = form;
 
-
-    const repo_list = form.getFieldValue('repo_list');
     const repo_list_keys = form.getFieldValue('repo_list_keys');
+    // console.log("[SetupEnvForm.render] repo_list_keys:", repo_list_keys);
 
     const repo_list_nodes = repo_list_keys.map((key, index)=>{
       return (
@@ -163,12 +180,15 @@ class SetupEnvForm extends React.Component{
           {...(index===0?formItemLayout:formItemLayoutWithOutLabel)}
           label={index===0?'项目列表':''}
           key={key}
+          required={false}
         >
           <Col span={6}>
             <Form.Item>{
               getFieldDecorator(`repo_${key}_owner`, {
+                validateTrigger: ['onChange', 'onBlur'],
                 rules:[{
-                  required: true, message: '请输入用户名'
+                  required: true,
+                  message: '请输入用户名'
                 }],
               })(<Input/>)
             }</Form.Item>
@@ -181,8 +201,10 @@ class SetupEnvForm extends React.Component{
           <Col span={6}>
             <Form.Item>{
               getFieldDecorator(`repo_${key}_repo`, {
+                validateTrigger: ['onChange', 'onBlur'],
                 rules:[{
-                  required: true, message: '请输入项目名'
+                  required: true,
+                  message: '请输入项目名'
                 }],
               })(<Input/>)
             }</Form.Item>
@@ -212,7 +234,7 @@ class SetupEnvForm extends React.Component{
               getFieldDecorator('config_file_path', {
                 rules:[{
                   required: true, message: '请选择一个配置文件'
-                }],
+                }]
               })(<Input/>)
             }</Col>
             <Col span={12}>
@@ -227,7 +249,8 @@ class SetupEnvForm extends React.Component{
           </Button>
         </Form.Item>
         <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit">创建环境</Button>
+          <Button type="primary" htmlType="submit" >创建环境</Button>
+          <Button type="default" onClick={this.handleSaveFields.bind(this)}>保存设置</Button>
         </Form.Item>
       </Form>
     )
@@ -235,30 +258,7 @@ class SetupEnvForm extends React.Component{
 }
 
 
-const SetupEnvFormNode = Form.create({
-  mapPropsToFields(props){
-    return {
-      config_file_path: Form.createFormField({
-        value: props.config_file_path
-      }),
-      repo_list: Form.createFormField({
-        value: props.repo_list
-      })
-    }
-  },
-  onFieldsChange(props, changed_fields){
-    let changed_props = {};
-    const environment_keys = props.environment_props;
-    environment_keys.forEach((value)=>{
-      if(value in changed_fields){
-        changed_props[value] = changed_fields[value].key;
-      }
-    });
-    if(changed_fields.length > 0) {
-      props.handler.change_environment_handler(changed_props);
-    }
-  }
-})(SetupEnvForm);
+const SetupEnvFormNode = Form.create({})(SetupEnvForm);
 
 
 class SetupEnvPage extends React.Component{
@@ -267,14 +267,15 @@ class SetupEnvPage extends React.Component{
   }
 
   setupEnv(config_file_path, repo_list){
-    console.log('SetupEnvPage:setupEnv', this);
+    // console.log('SetupEnvPage:setupEnv', this);
     const {setup_env} = this.props.handler;
     setup_env(config_file_path, repo_list);
   }
 
-  handleEnvironmentChanged(changed_props){
+  handleFieldChanged(changed_fields){
     const {dispatch} = this.props;
-    dispatch(change_environment(changed_props));
+    // console.log('[SetupEnvPage.handleFieldChanged] changed_fields:', changed_fields);
+    dispatch(change_environment(changed_fields));
   }
 
   render(){
@@ -289,7 +290,7 @@ class SetupEnvPage extends React.Component{
             environment_props={['config_file_path', 'repo_list']}
             handler={{
               submit: this.setupEnv.bind(this),
-              change_environment_handler: this.handleEnvironmentChanged.bind(this)
+              change_field_handler: this.handleFieldChanged.bind(this)
             }}
           />
         </Col>
@@ -301,24 +302,11 @@ class SetupEnvPage extends React.Component{
 }
 
 SetupEnvPage.propTypes = {
-  handler: PropTypes.shape({
-    setup_env: PropTypes.func
-  }),
   environment: PropTypes.shape({
-    repo_list: PropTypes.arrayOf(PropTypes.shape({
-      owner: PropTypes.string,
-      repo: PropTypes.string
-    })),
+    repo_list: PropTypes.array,
     config_file_path: PropTypes.string
   })
 };
-
-// SetupEnvPage.defaultProps = {
-//   repo_list: [
-//     { owner: 'nwp_xp', repo: 'nwpc_op' },
-//     { owner: 'nwp_xp', repo: 'nwpc_qu' }
-//   ]
-// };
 
 function mapStateToProps(state){
   return {

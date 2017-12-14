@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 
-const electron = require('electron');
-const ipc_render = electron.ipcRenderer;
 
 import {
   Layout, Row, Col, Steps,
-  Form, Input, Button, Menu, Alert, Icon, message
+  Button, message
 } from 'antd';
 
-import {ipcRenderer} from 'electron';
 
 import {NOSTFooter} from '../Core/components/NOSTFooter';
 import {NOSTHeader} from '../Core/components/NOSTHeader';
 
-import SetupEnvPage from './containers/SetupEnvPage'
+import SetupEnvPage from './containers/SetupEnvPage';
+import LoadLogPage from './containers/LoadLogPage';
 
 import './index.css'
 
@@ -31,12 +28,6 @@ class SystemRunningTimeAnalyticsApp extends Component{
     this.state = {
       current_index: 0
     };
-  }
-
-  handleSetupEnv(config_file_path, repo_list){
-    console.log(config_file_path, repo_list);
-    ipc_render.send('system-time-line.request.setup-env',
-      config_file_path, repo_list);
   }
 
   next() {
@@ -56,16 +47,13 @@ class SystemRunningTimeAnalyticsApp extends Component{
     const steps = [{
       title: '创建环境',
       content: (
-        <SetupEnvPage
-          handler={{
-            setup_env: this.handleSetupEnv.bind(this)
-          }}
-          environment={environment}
-        />
+        <SetupEnvPage />
       ),
     }, {
       title: '载入日志',
-      content: 'Load Logs',
+      content: (
+        <LoadLogPage />
+      ),
     }, {
       title: '处理数据',
       content: 'Process Data',
