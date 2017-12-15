@@ -20,7 +20,22 @@ class RepoLoadLogForm extends React.Component {
     super(props);
   }
 
-  handleSelectFile(e){
+  handleSelectConfigFile(e){
+    e.preventDefault();
+    const {form} = this.props;
+    const dialog = remote.dialog;
+    dialog.showOpenDialog({
+      properties: ['openFile']
+    }, function(file_paths){
+      if(file_paths === undefined)
+        return;
+      form.setFieldsValue({
+        config_file_path: file_paths[0]
+      })
+    });
+  }
+
+  handleSelectLogFile(e){
     e.preventDefault();
     const {form} = this.props;
     const dialog = remote.dialog;
@@ -116,19 +131,36 @@ class RepoLoadLogForm extends React.Component {
         <Form onSubmit={this.handleSubmit.bind(this)}>
           <Form.Item
             {...formItemLayout}
+            label="配置文件路径"
+          >
+            <Row gutter={8}>
+              <Col span={18}>{
+                getFieldDecorator('config_file_path', {
+                  rules:[{
+                    required: true, message: '请选择一个配置文件'
+                  }]
+                })(<Input/>)
+              }</Col>
+              <Col span={6}>
+                <Button size='large' onClick={this.handleSelectConfigFile.bind(this)}>选择文件</Button>
+              </Col>
+            </Row>
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
             label='日志文件路径'
           >
             <Row gutter={8}>
               <Col span={18}>{
                 getFieldDecorator(`log_file_path`, {
                   rules:[{
-                    required: true, message: '请输入日志文件路径'
+                    required: true, message: '请选择一个日志文件'
                   }],
                 })(<Input/>)
               }
               </Col>
               <Col span={6}>
-                <Button size='large' onClick={this.handleSelectFile.bind(this)}>选择文件</Button>
+                <Button size='large' onClick={this.handleSelectLogFile.bind(this)}>选择文件</Button>
               </Col>
             </Row>
           </Form.Item>
@@ -314,18 +346,6 @@ class LoadLogPage extends React.Component {
       return (
         <div>
           <Row>
-            <Col span={18} offset={4}>
-              <Form layout='horizontal'>
-                <Form.Item
-                  label='配置文件路径'
-                  {...formItemLayout}
-                >
-                  <Input value={config_file_path} readOnly />
-                </Form.Item>
-              </Form>
-            </Col>
-          </Row>
-          <Row>
             <Col span={4}>
               <Menu
                 onClick={this.handleMenuClick.bind(this)}
@@ -344,18 +364,6 @@ class LoadLogPage extends React.Component {
     } else {
       return (
         <div>
-          <Row>
-            <Col span={18} offset={4}>
-              <Form layout='horizontal'>
-                <Form.Item
-                  label='配置文件路径'
-                  {...formItemLayout}
-                >
-                  <Input value={config_file_path} readOnly />
-                </Form.Item>
-              </Form>
-            </Col>
-          </Row>
           <Row>
             请创建环境
           </Row>
