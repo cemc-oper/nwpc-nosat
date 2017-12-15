@@ -11,7 +11,11 @@ const ipc_render = electron.ipcRenderer;
 const remote = electron.remote;
 
 
-import {set_load_env_repo, append_load_log_repo_command_stdout} from '../reducers/index';
+import {
+  set_load_env_repo,
+  append_load_log_repo_command_output,
+  clear_load_log_repo_command_output
+} from '../reducers/index';
 import CommandOutputPanel from '../components/command_output_panel';
 
 
@@ -260,7 +264,7 @@ class LoadLogPage extends React.Component {
     ipc_render.on('system-time-line.response.load-log.stdout', (event, owner, repo, data)=>{
       const repo_key = `${owner}/${repo}`;
       // console.log(data);
-      dispatch(append_load_log_repo_command_stdout({
+      dispatch(append_load_log_repo_command_output({
         key: repo_key,
         data: data
       }))
@@ -278,6 +282,7 @@ class LoadLogPage extends React.Component {
   clearRepoCommandOutput(key){
     const {dispatch} = this.props;
     console.log("[LoadLogPage.clearRepoCommandOutput] key:", key);
+    dispatch(clear_load_log_repo_command_output({key: key}));
   }
 
   handleMenuClick(e){
