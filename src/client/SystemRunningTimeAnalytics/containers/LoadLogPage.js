@@ -74,6 +74,7 @@ class RepoLoadLogForm extends React.Component {
       log_file_path:  getFieldValue('log_file_path'),
       begin_date:  getFieldValue('begin_date'),
       end_date:  getFieldValue('end_date'),
+      command_output: ''
     };
     const key = `${repo.owner}/${repo.repo}`;
     handler.save_repo_handler(key, repo);
@@ -243,7 +244,7 @@ class LoadLogPage extends React.Component {
   }
 
   componentWillMount(){
-    const {environment} = this.props;
+    const {environment, dispatch} = this.props;
     const {repo_list} = environment;
     if(repo_list.length>0) {
       const repo = repo_list[0];
@@ -252,23 +253,22 @@ class LoadLogPage extends React.Component {
       });
     }
 
-  }
-
-  loadLog(load_log_params){
-    const {dispatch} = this.props;
-    const {owner, repo, log_file_path, begin_date, end_date, config_file_path} = load_log_params;
-    ipc_render.send(
-      'system-time-line.request.load-log',
-      config_file_path, owner, repo, log_file_path, begin_date, end_date
-    );
     ipc_render.on('system-time-line.response.load-log.stdout', (event, owner, repo, data)=>{
       const repo_key = `${owner}/${repo}`;
-      // console.log(data);
       dispatch(append_load_log_repo_command_output({
         key: repo_key,
         data: data
       }))
     });
+
+  }
+
+  loadLog(load_log_params){
+    const {owner, repo, log_file_path, begin_date, end_date, config_file_path} = load_log_params;
+    ipc_render.send(
+      'system-time-line.request.load-log',
+      config_file_path, owner, repo, log_file_path, begin_date, end_date
+    );
   }
 
   saveLoadLogRepo(key, value){
