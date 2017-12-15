@@ -11,7 +11,8 @@ const ipc_render = electron.ipcRenderer;
 const remote = electron.remote;
 
 
-import {set_load_env_repo, append_load_log_repo_command_stdout} from '../reducers/index'
+import {set_load_env_repo, append_load_log_repo_command_stdout} from '../reducers/index';
+import CommandOutputPanel from '../components/command_output_panel';
 
 
 class RepoLoadLogForm extends React.Component {
@@ -56,7 +57,15 @@ class RepoLoadLogForm extends React.Component {
       end_date:  getFieldValue('end_date'),
     };
     const key = `${repo.owner}/${repo.repo}`;
-    handler.save_load_log_repo_handler(key, repo);
+    handler.save_repo_handler(key, repo);
+  }
+
+  handleClearCommandOutput(e){
+    const {form, handler} = this.props;
+    const {getFieldValue} = form;
+    const owner = getFieldValue('owner');
+    const repo = getFieldValue('repo');
+    handler.clear_command_output_handler(`${owner}/${repo}`);
   }
 
   loadLog(form_values){
@@ -93,14 +102,12 @@ class RepoLoadLogForm extends React.Component {
     if(load_log_repo){
       const {command_output} = load_log_repo;
       command_output_node = (
-        <Row>
-          <h3>命令输出</h3>
-          <Form>
-            <Form.Item>
-              <Input.TextArea value={command_output} readOnly/>
-            </Form.Item>
-          </Form>
-        </Row>
+        <CommandOutputPanel
+          command_output={command_output}
+          handler={{
+            clear_command_output_handler: this.handleClearCommandOutput.bind(this)
+          }}
+        />
       )
     }
 
@@ -218,14 +225,14 @@ class LoadLogPage extends React.Component {
       'system-time-line.request.load-log',
       config_file_path, owner, repo, log_file_path, begin_date, end_date
     );
-    // ipc_render.on('system-time-line.response.load-log.stdout', (event, owner, repo, data)=>{
-    //   const repo_key = `${owner}/${repo}`;
-    //   console.log(data);
-    //   dispatch(append_load_log_repo_command_stdout({
-    //     key: repo_key,
-    //     data: data
-    //   }))
-    // });
+    ipc_render.on('system-time-line.response.load-log.stdout', (event, owner, repo, data)=>{
+      const repo_key = `${owner}/${repo}`;
+      // console.log(data);
+      dispatch(append_load_log_repo_command_stdout({
+        key: repo_key,
+        data: data
+      }))
+    });
   }
 
   saveLoadLogRepo(key, value){
@@ -234,6 +241,11 @@ class LoadLogPage extends React.Component {
       key: key,
       value: value
     }))
+  }
+
+  clearRepoCommandOutput(key){
+    const {dispatch} = this.props;
+    console.log("[LoadLogPage.clearRepoCommandOutput] key:", key);
   }
 
   handleMenuClick(e){
@@ -289,7 +301,8 @@ class LoadLogPage extends React.Component {
               load_log_repo={load_log_repo}
               handler={{
                 load_log_handler: this.loadLog.bind(this),
-                save_load_log_repo_handler: this.saveLoadLogRepo.bind(this)
+                save_repo_handler: this.saveLoadLogRepo.bind(this),
+                clear_command_output_handler: this.clearRepoCommandOutput.bind(this)
               }}
             />
           </Row>
