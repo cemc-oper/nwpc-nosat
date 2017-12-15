@@ -5,10 +5,14 @@ import {
   RECEIVE_TEST_SESSION_RESPONSE
 } from '../../SubmitLogAnalytics/actions/session_action'
 
-export default function session_reducer(state={
+
+// import Immutable  from 'immutable';
+
+
+const initial_state = {
   status: {
     is_fetching: false,
-    last_updated: null
+      last_updated: null
   },
   session_list: [
     {
@@ -40,22 +44,25 @@ export default function session_reducer(state={
       password: ''
     }
   ],
-  current_session: {
-    host: "uranus-bk.hpc.nmic.cn",
+    current_session: {
+  host: "uranus-bk.hpc.nmic.cn",
     port: 22,
     user: "nwp",
     password: ""
-  },
+},
   save_session: {
 
   },
   test_session: {
     is_open: false,
-    session: null,
-    status: 'unknown',
-    message: ''
+      session: null,
+      status: 'unknown',
+      message: ''
   }
-}, action) {
+};
+
+
+export default function session_reducer(state=initial_state, action) {
   switch(action.type){
     case SAVE_SESSION:
       return Object.assign({}, state, {
