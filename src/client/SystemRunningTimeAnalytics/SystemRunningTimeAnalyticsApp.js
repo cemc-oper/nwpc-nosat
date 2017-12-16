@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {Link} from 'react-router';
 
+const electron = require('electron');
+const ipc_render = electron.ipcRenderer;
 
 import {
   Layout, Row, Col, Tabs,
@@ -15,8 +17,10 @@ import {NOSTHeader} from '../Core/components/NOSTHeader';
 
 import SetupEnvPage from './containers/SetupEnvPage';
 import LoadLogPage from './containers/LoadLogPage';
+import ProcessDataPage from './containers/ProcessDataPage';
 
 import './index.css'
+import {append_process_data_repo_command_output} from "./reducers";
 
 
 const { Content } = Layout;
@@ -27,8 +31,27 @@ class SystemRunningTimeAnalyticsApp extends Component{
     super(props);
   }
 
+  componentWillMount(){
+    const {dispatch} = this.props;
+    ipc_render.on('system-time-line.response.process-data.stdout', (event, owner, repo, data)=>{
+      const repo_key = `${owner}/${repo}`;
+      dispatch(append_process_data_repo_command_output({
+        key: repo_key,
+        data: data
+      }))
+    });
+  }
+
   handleTabChange(tab_key) {
-    console.log("[SystemRunningTimeAnalyticsApp.handleTabChange] tab_key:", tab_key);
+    // console.log("[SystemRunningTimeAnalyticsApp.handleTabChange] tab_key:", tab_key);
+  }
+
+  processData(params){
+    const {owner, repo, begin_date, end_date, config_file_path} = params;
+    ipc_render.send(
+      'system-time-line.request.process-data',
+      config_file_path, owner, repo, begin_date, end_date
+    );
   }
 
   render() {
@@ -49,7 +72,11 @@ class SystemRunningTimeAnalyticsApp extends Component{
     }, {
       title: '处理数据',
       key: 'process-data',
-      content: 'process-data'
+      content: <ProcessDataPage
+        handler={{
+          process_data_handler: this.processData.bind(this)
+        }}
+      />
     }, {
       title: '生成结果',
       key: 'generate-result',
