@@ -5,5 +5,7 @@ import SystemRunningTimeAnalyticsApp from './SystemRunningTimeAnalyticsApp'
 
 
 export const RouteNode = (
-  <Route path="/system-running-time-analytics" component={SystemRunningTimeAnalyticsApp}/>
+  <Route path="/system-running-time-analytics" component={SystemRunningTimeAnalyticsApp}>
+
+  </Route>
 );

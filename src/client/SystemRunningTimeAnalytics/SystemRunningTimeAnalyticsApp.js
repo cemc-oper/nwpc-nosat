@@ -5,7 +5,7 @@ import {Link} from 'react-router';
 
 
 import {
-  Layout, Row, Col, Steps,
+  Layout, Row, Col, Tabs,
   Button, message
 } from 'antd';
 
@@ -20,53 +20,55 @@ import './index.css'
 
 
 const { Content } = Layout;
-const { Step } = Steps;
+const TabPane = Tabs.TabPane;
 
 class SystemRunningTimeAnalyticsApp extends Component{
   constructor(props) {
     super(props);
-    this.state = {
-      current_index: 0
-    };
   }
 
-  next() {
-    const current_index = this.state.current_index + 1;
-    this.setState({ current_index });
-  }
-
-  prev() {
-    const current_index = this.state.current_index - 1;
-    this.setState({ current_index });
+  handleTabChange(tab_key) {
+    console.log("[SystemRunningTimeAnalyticsApp.handleTabChange] tab_key:", tab_key);
   }
 
   render() {
-    const { current_index } = this.state;
     const { system_running_time } = this.props;
     const { environment } = system_running_time;
-    const steps = [{
+    const tabs = [{
       title: '创建环境',
+      key: 'setup-env',
       content: (
-        <SetupEnvPage />
-      ),
+        <SetupEnvPage/>
+      )
     }, {
       title: '载入日志',
+      key: 'load-log',
       content: (
-        <LoadLogPage />
-      ),
+        <LoadLogPage/>
+      )
     }, {
       title: '处理数据',
-      content: 'Process Data',
+      key: 'process-data',
+      content: 'process-data'
     }, {
       title: '生成结果',
-      content: 'Generate Results',
+      key: 'generate-result',
+      content: 'Generate result'
     }, {
       title: '绘制图形',
-      content: 'Plot Draws',
+      key: 'draw-chart',
+      content: 'Draw Charts'
     }, {
       title: '清理环境',
-      content: 'Cleanup Environment',
+      key: 'clear-env',
+      content: 'clear environment'
     }];
+
+    const tab_panel_nodes = tabs.map(tab=>{
+      return (
+        <TabPane tab={tab.title} key={tab.key}>{tab.content}</TabPane>
+      )
+    });
 
     return (
       <Layout className="layout" style={{
@@ -75,29 +77,9 @@ class SystemRunningTimeAnalyticsApp extends Component{
         <NOSTHeader default_selected_keys={['2']} />
         <Content style={{ padding: '25px 25px 0px 25px', background: '#fff' }}>
           <div>
-            <Steps current={current_index}>
-              {steps.map(item => <Step key={item.title} title={item.title} />)}
-            </Steps>
-            <div className="steps-content" style={{ padding: '25px'}}>{steps[this.state.current_index].content}</div>
-            <div className="steps-action">
-              {
-                current_index < steps.length - 1
-                &&
-                <Button type="primary" onClick={() => this.next()}>前进</Button>
-              }
-              {
-                current_index === steps.length - 1
-                &&
-                <Button type="primary" onClick={() => message.success('成功!')}>完成</Button>
-              }
-              {
-                current_index > 0
-                &&
-                <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                  后退
-                </Button>
-              }
-            </div>
+            <Tabs defaultActiveKey={tabs[0].key} onChange={this.handleTabChange.bind(this)}>
+              {tab_panel_nodes}
+            </Tabs>
           </div>
         </Content>
         <NOSTFooter/>
