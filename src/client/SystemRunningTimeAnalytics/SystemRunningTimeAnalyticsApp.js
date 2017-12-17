@@ -18,13 +18,18 @@ import {NOSTHeader} from '../Core/components/NOSTHeader';
 import SetupEnvPage from './containers/SetupEnvPage';
 import LoadLogPage from './containers/LoadLogPage';
 import ProcessDataPage from './containers/ProcessDataPage';
+import GenerateResultPage from './containers/GenerateResultPage';
 
 import './index.css'
-import {append_process_data_repo_command_output} from "./reducers";
+import {
+  append_process_data_repo_command_output,
+  append_generate_data_command_output,
+} from "./reducers";
 
 
 const { Content } = Layout;
 const TabPane = Tabs.TabPane;
+
 
 class SystemRunningTimeAnalyticsApp extends Component{
   constructor(props) {
@@ -40,6 +45,12 @@ class SystemRunningTimeAnalyticsApp extends Component{
         data: data
       }))
     });
+
+    ipc_render.on('system-time-line.response.generate-result.stdout', (event, data)=>{
+      dispatch(append_generate_data_command_output({
+        data: data
+      }))
+    });
   }
 
   handleTabChange(tab_key) {
@@ -51,6 +62,14 @@ class SystemRunningTimeAnalyticsApp extends Component{
     ipc_render.send(
       'system-time-line.request.process-data',
       config_file_path, owner, repo, begin_date, end_date
+    );
+  }
+
+  generateResult(params){
+    const {config_file_path, begin_date, end_date, output_dir} = params;
+    ipc_render.send(
+      'system-time-line.request.generate-result',
+      config_file_path, begin_date, end_date, output_dir
     );
   }
 
@@ -80,7 +99,11 @@ class SystemRunningTimeAnalyticsApp extends Component{
     }, {
       title: '生成结果',
       key: 'generate-result',
-      content: 'Generate result'
+      content: <GenerateResultPage
+        handler={{
+          generate_result_handler: this.generateResult.bind(this)
+        }}
+        />
     }, {
       title: '绘制图形',
       key: 'draw-chart',

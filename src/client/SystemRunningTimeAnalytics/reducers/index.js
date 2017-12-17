@@ -11,6 +11,11 @@ export const set_process_data_repo = createAction('set process data repo');
 export const append_process_data_repo_command_output = createAction('append process data repo command output');
 export const clear_process_data_repo_command_output = createAction('clear process data repo command output');
 
+export const set_generate_data_config = createAction('set generate data config');
+export const append_generate_data_command_output = createAction('append generate data command output');
+export const clear_generate_data_command_output = createAction('clear generate data command output');
+
+
 
 const initial_state = {
   status: {
@@ -33,6 +38,9 @@ const initial_state = {
   },
   process_data: {
     repos: {}
+  },
+  generate_result: {
+    command_output: ''
   }
 };
 
@@ -100,6 +108,30 @@ export const system_running_time_reducer = createReducer({
     repo_object = repo_object.set(payload.key, repo);
     const new_state = state.updateIn(['process_data', 'repos'], repo_map => repo_map.mergeDeep(repo_object)).toJS();
     // console.log("[system_running_time_reducer.set_load_env_repo] new_state:", new_state);
+    return new_state;
+  },
+
+
+  [set_generate_data_config]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    const new_state = state.mergeDeep('generate_data', payload).toJS();
+    console.log("[system_running_time_reducer.set_generate_data_config] new_state:", new_state);
+    return new_state;
+  },
+  [append_generate_data_command_output]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    let generate_data = state.get('generate_data', {});
+    generate_data = generate_data.update('command_output', '', value=>value+payload.data);
+    const new_state = state.set('generate_data', generate_data).toJS();
+    console.log("[system_running_time_reducer.append_generate_data_command_output] new_state:", new_state);
+    return new_state;
+  },
+  [clear_process_data_repo_command_output]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    let generate_data = state.get('generate_data', {});
+    generate_data = generate_data.set('command_output', '');
+    const new_state = state.set('generate_data', generate_data).toJS();
+    console.log("[system_running_time_reducer.clear_process_data_repo_command_output] new_state:", new_state);
     return new_state;
   }
 }, initial_state);
