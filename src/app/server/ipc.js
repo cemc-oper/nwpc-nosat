@@ -276,3 +276,23 @@ ipc.on('system-time-line.request.process-data', function(
       }
   });
 });
+
+ipc.on('system-time-line.request.generate-result', function(
+  event, config_file_path, begin_date, end_date, output_dir
+){
+  console.log('[ipc.js][system-time-line] request generate result');
+
+  let params = [
+    `--begin-date=${begin_date}`,
+    `--end-date=${end_date}`,
+    `--output-dir=${output_dir}`
+  ];
+
+  run_system_time_line_command('generate', config_file_path, params, {
+    stdout: {
+      channel: 'system-time-line.response.generate-result.stdout',
+      params: [],
+      sender: event.sender
+    }
+  });
+});
