@@ -184,17 +184,17 @@ ipc.on('system-time-line.request.load-log', function(
   });
 });
 
-ipc.on('system-time-line.request.process-data', function(
-  event, config_file_path, owner, repo, begin_date, end_date
+function run_system_time_line_command(
+  sub_command, config_file_path, params, ipc_config
 ){
-  console.log('[ipc.js][system-time-line] request process data');
+  console.log('[ipc.js][run_system_time_line_command] begin');
   let system_running_time_analytics_config = null;
   try {
     config = yaml.safeLoad(fs.readFileSync(config_file_path, 'utf8'));
     system_running_time_analytics_config = config['system_running_time_analytics'];
     console.log(system_running_time_analytics_config);
   } catch (e) {
-    console.error('[ipc.js][system-time-line] loading config file failed. Error is:');
+    console.error('[ipc.js][run_system_time_line_command] loading config file failed. Error is:');
     console.log(e);
     return;
   }
@@ -213,48 +213,66 @@ ipc.on('system-time-line.request.process-data', function(
     './nwpc_system_time_line/system_time_line_tool.py'
   );
 
-
-  console.log("process data for " + owner + "/" + repo);
+  let param_array = [
+    system_time_line_script_path,
+    sub_command,
+    `--config=${system_time_line_config_path}`
+  ].concat(params);
 
   console.log(
-    python_exe_path, [
-      system_time_line_script_path,
-      'process',
-      `--config=${system_time_line_config_path}`,
-      `--owner=${owner}`,
-      `--repo=${repo}`,
-      `--begin-date=${begin_date}`,
-      `--end-date=${end_date}`
-    ]
+    python_exe_path, param_array
   );
 
   let env = process.env;
   env.PYTHONPATH = ".";
-  const system_time_line_tool = spawn(python_exe_path, [
-    system_time_line_script_path,
-    'process',
-    `--config=${system_time_line_config_path}`,
-    `--owner=${owner}`,
-    `--repo=${repo}`,
-    `--begin-date=${begin_date}`,
-    `--end-date=${end_date}`
-  ], {
+  const system_time_line_tool = spawn(python_exe_path, param_array, {
     env: {
       PYTHONPATH: system_time_line_project_base
     }
   });
 
   system_time_line_tool.stdout.on('data', (data) => {
-    event.sender.send('system-time-line.response.process-data.stdout', owner, repo, data);
     console.log(`stdout: ${data}`);
+    if('stdout' in ipc_config){
+      const config = ipc_config['stdout'];
+      const sender = config['sender'];
+      sender.send(config['channel'], ...config['params'], data);
+    }
   });
 
   system_time_line_tool.stderr.on('data', (data) => {
-    // event.sender.send('system-time-line.response.process-data.stderr', owner, repo, data);
     console.log(`stderr: ${data}`);
+    if('stderr' in ipc_config){
+      const config = ipc_config['stderr'];
+      const sender = config['sender'];
+      sender.send(config['channel'], ...config['params'], data);
+    }
   });
 
   system_time_line_tool.on('close', (code) => {
     console.log(code);
+  });
+}
+
+
+ipc.on('system-time-line.request.process-data', function(
+  event, config_file_path, owner, repo, begin_date, end_date
+){
+  console.log('[ipc.js][system-time-line] request process data');
+
+
+  let params = [
+    `--owner=${owner}`,
+    `--repo=${repo}`,
+    `--begin-date=${begin_date}`,
+    `--end-date=${end_date}`
+  ];
+
+  run_system_time_line_command('process', config_file_path, params, {
+      stdout: {
+        channel: 'system-time-line.response.process-data.stdout',
+        params: [owner, repo],
+        sender: event.sender
+      }
   });
 });
