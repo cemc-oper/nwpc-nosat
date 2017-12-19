@@ -31,7 +31,7 @@ ipc.on('analytics-tool.server.stop', function (event) {
 // system time line
 
 function run_system_time_line_command(
-  sub_command, config_file_path, params, ipc_config
+  sub_command, config_file_path, params, event_config
 ){
   console.log('[ipc.js][run_system_time_line_command] begin');
   let system_running_time_analytics_config = null;
@@ -79,8 +79,8 @@ function run_system_time_line_command(
 
   system_time_line_tool.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
-    if('stdout' in ipc_config){
-      const config = ipc_config['stdout'];
+    if('stdout' in event_config){
+      const config = event_config['stdout'];
       const sender = config['sender'];
       sender.send(config['channel'], ...config['params'], data);
     }
@@ -88,8 +88,8 @@ function run_system_time_line_command(
 
   system_time_line_tool.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`);
-    if('stderr' in ipc_config){
-      const config = ipc_config['stderr'];
+    if('stderr' in event_config){
+      const config = event_config['stderr'];
       const sender = config['sender'];
       sender.send(config['channel'], ...config['params'], data);
     }
@@ -97,6 +97,14 @@ function run_system_time_line_command(
 
   system_time_line_tool.on('close', (code) => {
     console.log(code);
+    if('close' in event_config){
+      const config = event_config['close'];
+      const action_type = config['action_type'];
+      if(action_type === "callback"){
+        const callback = config['callback'];
+        callback(code);
+      }
+    }
   });
 }
 
@@ -129,44 +137,23 @@ ipc.on('system-time-line.request.setup-env', function(event, config_file_path, r
   );
 
   async.eachSeries(repo_list, function(repo_object, callback){
-    console.log("setup env for " + repo_object.owner + "/" + repo_object.repo);
+    console.log(`setup env for ${repo_object.owner}/${repo_object.repo}`);
 
-    // console.log(
-    //   python_exe_path, [
-    //     system_time_line_script_path,
-    //     'setup',
-    //     '--config=' + system_time_line_config_path,
-    //     '--owner=' + repo_object.owner,
-    //     '--repo=' + repo_object.repo
-    //   ]
-    // );
+    let params = [
+      `--owner=${repo_object.owner}`,
+      `--repo=${repo_object.repo}`
+    ];
 
-    let env = process.env;
-    env.PYTHONPATH = ".";
-    const system_time_line_tool = spawn(python_exe_path, [
-      system_time_line_script_path,
-      'setup',
-      '--config=' + system_time_line_config_path,
-      '--owner=' + repo_object.owner,
-      '--repo=' + repo_object.repo
-    ], {
-      env: {
-        PYTHONPATH: system_time_line_project_base
+    run_system_time_line_command('setup', config_file_path, params, {
+      close: {
+        action_type: 'callback',
+        callback: function(code){
+          callback(null, code);
+        }
       }
     });
 
-    system_time_line_tool.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
 
-    system_time_line_tool.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    system_time_line_tool.on('close', (code) => {
-      console.log(code);
-      callback(null, code)
-    });
   }, function(err, code){
     console.log("[system-time-line.request.setup-env'] results:", code);
     if( err ) {
