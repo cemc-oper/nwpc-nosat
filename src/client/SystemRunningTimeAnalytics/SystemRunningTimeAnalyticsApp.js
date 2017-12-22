@@ -19,11 +19,13 @@ import SetupEnvPage from './containers/SetupEnvPage';
 import LoadLogPage from './containers/LoadLogPage';
 import ProcessDataPage from './containers/ProcessDataPage';
 import GenerateResultPage from './containers/GenerateResultPage';
+import PlotChartPage from './containers/PlotChartPage';
 
 import './index.css'
 import {
   append_process_data_repo_command_output,
   append_generate_data_command_output,
+  append_plot_chart_command_output
 } from "./reducers";
 
 
@@ -51,6 +53,12 @@ class SystemRunningTimeAnalyticsApp extends Component{
         data: data
       }))
     });
+
+    ipc_render.on('system-time-line.response.plot_chart.stdout', (event, data)=>{
+      dispatch(append_plot_chart_command_output({
+        data: data
+      }))
+    });
   }
 
   handleTabChange(tab_key) {
@@ -70,6 +78,14 @@ class SystemRunningTimeAnalyticsApp extends Component{
     ipc_render.send(
       'system-time-line.request.generate-result',
       config_file_path, begin_date, end_date, output_dir
+    );
+  }
+
+  plotChart(params){
+    const {config_file_path, begin_date, end_date, data_dir, output_dir} = params;
+    ipc_render.send(
+      'system-time-line.request.plot_chart',
+      config_file_path, begin_date, end_date, data_dir, output_dir
     );
   }
 
@@ -107,7 +123,11 @@ class SystemRunningTimeAnalyticsApp extends Component{
     }, {
       title: '绘制图形',
       key: 'draw-chart',
-      content: 'Draw Charts'
+      content: <PlotChartPage
+        handler={{
+          plot_chart_handler: this.plotChart.bind(this)
+        }}
+        />
     }, {
       title: '清理环境',
       key: 'clear-env',

@@ -15,6 +15,9 @@ export const set_generate_data_config = createAction('set generate data config')
 export const append_generate_data_command_output = createAction('append generate data command output');
 export const clear_generate_data_command_output = createAction('clear generate data command output');
 
+export const set_plot_chart_config = createAction('set plot chart config');
+export const append_plot_chart_command_output = createAction('append plot chart command output');
+export const clear_plot_chart_command_output = createAction('clear plot chart command output');
 
 
 const initial_state = {
@@ -40,6 +43,9 @@ const initial_state = {
     repos: {}
   },
   generate_result: {
+    command_output: ''
+  },
+  plot_chart: {
     command_output: ''
   }
 };
@@ -135,5 +141,31 @@ export const system_running_time_reducer = createReducer({
     const new_state = state.set('generate_result', generate_result).toJS();
     console.log("[system_running_time_reducer.clear_process_data_repo_command_output] new_state:", new_state);
     return new_state;
+  },
+
+  [set_plot_chart_config]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    let g = state.get('plot_chart');
+    g = g.mergeDeep(payload);
+    const new_state = state.set('plot_chart', g).toJS();
+    console.log("[system_running_time_reducer.set_plot_chart_config] new_state:", new_state);
+    return new_state;
+  },
+  [append_plot_chart_command_output]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    let generate_result = state.get('plot_chart', {});
+    generate_result = generate_result.update('command_output', '', value=>value+payload.data);
+    const new_state = state.set('plot_chart', generate_result).toJS();
+    console.log("[system_running_time_reducer.append_plot_chart_command_output] new_state:", new_state);
+    return new_state;
+  },
+  [clear_plot_chart_command_output]: (state, payload) => {
+    state = Immutable.fromJS(state);
+    let generate_result = state.get('plot_chart', {});
+    generate_result = generate_result.set('command_output', '');
+    const new_state = state.set('plot_chart', generate_result).toJS();
+    console.log("[system_running_time_reducer.clear_plot_chart_command_output] new_state:", new_state);
+    return new_state;
   }
+
 }, initial_state);
