@@ -84,7 +84,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
   plotChart(params){
     const {config_file_path, begin_date, end_date, data_dir, output_dir} = params;
     ipc_render.send(
-      'system-time-line.request.plot_chart',
+      'system-time-line.request.plot-chart',
       config_file_path, begin_date, end_date, data_dir, output_dir
     );
   }

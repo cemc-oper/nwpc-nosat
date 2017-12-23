@@ -43,7 +43,7 @@ class PlotChartForm extends React.Component {
     const {form} = this.props;
     const dialog = remote.dialog;
     dialog.showOpenDialog({
-      properties: ['openDirectory ']
+      properties: ['openDirectory']
     }, function(dir_paths){
       if(dir_paths === undefined)
         return;
@@ -58,7 +58,7 @@ class PlotChartForm extends React.Component {
     const {form} = this.props;
     const dialog = remote.dialog;
     dialog.showOpenDialog({
-      properties: ['openDirectory ']
+      properties: ['openDirectory']
     }, function(dir_paths){
       if(dir_paths === undefined)
         return;
@@ -91,6 +91,7 @@ class PlotChartForm extends React.Component {
     e.preventDefault();
     const {form} = this.props;
     form.validateFields((err, values) => {
+      console.log(err);
       if (!err) {
         this.plotChart(values);
       }

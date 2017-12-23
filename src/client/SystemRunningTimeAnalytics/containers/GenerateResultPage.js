@@ -43,7 +43,7 @@ class GenerateResultForm extends React.Component {
     const {form} = this.props;
     const dialog = remote.dialog;
     dialog.showOpenDialog({
-      properties: ['openDirectory ']
+      properties: ['openDirectory']
     }, function(dir_paths){
       if(dir_paths === undefined)
         return;
