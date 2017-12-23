@@ -208,3 +208,25 @@ ipc.on('system-time-line.request.generate-result', function(
     }
   });
 });
+
+
+ipc.on('system-time-line.request.plot-chart', function(
+  event, config_file_path, begin_date, end_date, data_dir, output_dir
+){
+  console.log('[ipc.js][system-time-line] request plot chart');
+
+  let params = [
+    `--begin-date=${begin_date}`,
+    `--end-date=${end_date}`,
+    `--data-dir=${data_dir}`,
+    `--output-dir=${output_dir}`
+  ];
+
+  run_system_time_line_command('plot', config_file_path, params, {
+    stdout: {
+      channel: 'system-time-line.response.plot-chart.stdout',
+      params: [],
+      sender: event.sender
+    }
+  });
+});
