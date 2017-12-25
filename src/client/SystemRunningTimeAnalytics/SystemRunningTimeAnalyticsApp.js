@@ -20,6 +20,7 @@ import LoadLogPage from './containers/LoadLogPage';
 import ProcessDataPage from './containers/ProcessDataPage';
 import GenerateResultPage from './containers/GenerateResultPage';
 import PlotChartPage from './containers/PlotChartPage';
+import ClearEnvPage from './containers/ClearEnvPage';
 
 import './index.css'
 import {
@@ -89,6 +90,13 @@ class SystemRunningTimeAnalyticsApp extends Component{
     );
   }
 
+  clearEnv(params){
+    const {config_file_path, repo_list} = params;
+
+    ipc_render.send('system-time-line.request.clear-env',
+      config_file_path, repo_list);
+  }
+
   render() {
     const { system_running_time } = this.props;
     const { environment } = system_running_time;
@@ -131,7 +139,11 @@ class SystemRunningTimeAnalyticsApp extends Component{
     }, {
       title: '清理环境',
       key: 'clear-env',
-      content: 'clear environment'
+      content: (<ClearEnvPage
+        handler={{
+          clear_env_handler: this.clearEnv.bind(this)
+        }}
+      />)
     }];
 
     const tab_panel_nodes = tabs.map(tab=>{
