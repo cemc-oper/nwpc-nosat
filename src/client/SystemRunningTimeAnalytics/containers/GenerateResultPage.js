@@ -93,7 +93,7 @@ class GenerateResultForm extends React.Component {
   }
 
   render() {
-    const {form, load_log_repo} = this.props;
+    const {form, command_output} = this.props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -105,20 +105,15 @@ class GenerateResultForm extends React.Component {
         sm: {span: 20},
       },
     };
-    // getFieldDecorator('config_file_path');
+    let command_output_node = (
+      <CommandOutputPanel
+        command_output={command_output}
+        handler={{
+          clear_command_output_handler: this.handleClearCommandOutput.bind(this)
+        }}
+      />
+    );
 
-    let command_output_node = null;
-    if(load_log_repo){
-      const {command_output} = load_log_repo;
-      command_output_node = (
-        <CommandOutputPanel
-          command_output={command_output}
-          handler={{
-            clear_command_output_handler: this.handleClearCommandOutput.bind(this)
-          }}
-        />
-      )
-    }
 
     return (
       <div>
