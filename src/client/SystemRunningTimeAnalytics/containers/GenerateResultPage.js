@@ -7,8 +7,8 @@ import {connect} from "react-redux";
 
 
 const electron = require('electron');
-const ipc_render = electron.ipcRenderer;
 const remote = electron.remote;
+const shell = electron.shell;
 
 
 import {
@@ -51,6 +51,15 @@ class GenerateResultForm extends React.Component {
         output_dir: dir_paths[0]
       })
     });
+  }
+
+  handleOpenOutputDir(e){
+    e.preventDefault();
+    const {form} = this.props;
+    const output_dir = form.getFieldValue('output_dir');
+    if(output_dir){
+      shell.openItem(output_dir);
+    }
   }
 
   handleSaveClick(e){
@@ -170,7 +179,7 @@ class GenerateResultForm extends React.Component {
             label='输出目录'
           >
             <Row gutter={8}>
-              <Col span={18}>{
+              <Col span={12}>{
                 getFieldDecorator(`output_dir`, {
                   rules:[{
                     required: true, message: '请选择一个输出目录'
@@ -178,8 +187,9 @@ class GenerateResultForm extends React.Component {
                 })(<Input/>)
               }
               </Col>
-              <Col span={6}>
+              <Col span={12}>
                 <Button size='large' onClick={this.handleSelectOutputDir.bind(this)}>选择目录</Button>
+                <Button size='large' onClick={this.handleOpenOutputDir.bind(this)}>打开目录</Button>
               </Col>
             </Row>
           </Form.Item>
