@@ -123,7 +123,7 @@ export const system_running_time_reducer = createReducer({
     let g = state.get('generate_result');
     g = g.mergeDeep(payload);
     const new_state = state.set('generate_result', g).toJS();
-    console.log("[system_running_time_reducer.set_generate_data_config] new_state:", new_state);
+    // console.log("[system_running_time_reducer.set_generate_data_config] new_state:", new_state);
     return new_state;
   },
   [append_generate_data_command_output]: (state, payload) => {
@@ -131,7 +131,7 @@ export const system_running_time_reducer = createReducer({
     let generate_result = state.get('generate_result', {});
     generate_result = generate_result.update('command_output', '', value=>value+payload.data);
     const new_state = state.set('generate_result', generate_result).toJS();
-    console.log("[system_running_time_reducer.append_generate_data_command_output] new_state:", new_state);
+    // console.log("[system_running_time_reducer.append_generate_data_command_output] new_state:", new_state);
     return new_state;
   },
   [clear_process_data_repo_command_output]: (state, payload) => {
@@ -139,7 +139,7 @@ export const system_running_time_reducer = createReducer({
     let generate_result = state.get('generate_result', {});
     generate_result = generate_result.set('command_output', '');
     const new_state = state.set('generate_result', generate_result).toJS();
-    console.log("[system_running_time_reducer.clear_process_data_repo_command_output] new_state:", new_state);
+    // console.log("[system_running_time_reducer.clear_process_data_repo_command_output] new_state:", new_state);
     return new_state;
   },
 
@@ -148,7 +148,7 @@ export const system_running_time_reducer = createReducer({
     let g = state.get('plot_chart');
     g = g.mergeDeep(payload);
     const new_state = state.set('plot_chart', g).toJS();
-    console.log("[system_running_time_reducer.set_plot_chart_config] new_state:", new_state);
+    // console.log("[system_running_time_reducer.set_plot_chart_config] new_state:", new_state);
     return new_state;
   },
   [append_plot_chart_command_output]: (state, payload) => {
@@ -156,7 +156,7 @@ export const system_running_time_reducer = createReducer({
     let generate_result = state.get('plot_chart', {});
     generate_result = generate_result.update('command_output', '', value=>value+payload.data);
     const new_state = state.set('plot_chart', generate_result).toJS();
-    console.log("[system_running_time_reducer.append_plot_chart_command_output] new_state:", new_state);
+    // console.log("[system_running_time_reducer.append_plot_chart_command_output] new_state:", new_state);
     return new_state;
   },
   [clear_plot_chart_command_output]: (state, payload) => {
@@ -164,7 +164,7 @@ export const system_running_time_reducer = createReducer({
     let generate_result = state.get('plot_chart', {});
     generate_result = generate_result.set('command_output', '');
     const new_state = state.set('plot_chart', generate_result).toJS();
-    console.log("[system_running_time_reducer.clear_plot_chart_command_output] new_state:", new_state);
+    // console.log("[system_running_time_reducer.clear_plot_chart_command_output] new_state:", new_state);
     return new_state;
   }
 

@@ -230,3 +230,38 @@ ipc.on('system-time-line.request.plot-chart', function(
     }
   });
 });
+
+
+ipc.on('system-time-line.request.clear-env', function(
+  event, config_file_path, repo_list
+){
+  console.log('[ipc.js][system-time-line] request clear env');
+
+  async.eachSeries(repo_list, function(repo_object, callback){
+    console.log(`clear env for ${repo_object.owner}/${repo_object.repo}`);
+
+    let params = [
+      `--owner=${repo_object.owner}`,
+      `--repo=${repo_object.repo}`
+    ];
+
+    run_system_time_line_command('teardown', config_file_path, params, {
+      close: {
+        action_type: 'callback',
+        callback: function(code){
+          callback(null, code);
+        }
+      }
+    });
+
+
+  }, function(err, code){
+    console.log("[system-time-line.request.clear-env'] results:", code);
+    if( err ) {
+      console.error('[ipc.js][system-time-line]A repo is not clean.');
+      console.log(err);
+    } else {
+      console.log('[ipc.js][system-time-line]All repos have been clean.');
+    }
+  });
+});

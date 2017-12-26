@@ -7,8 +7,7 @@ const electron = require('electron');
 const ipc_render = electron.ipcRenderer;
 
 import {
-  Layout, Row, Col, Tabs,
-  Button, message
+  Layout, Tabs
 } from 'antd';
 
 

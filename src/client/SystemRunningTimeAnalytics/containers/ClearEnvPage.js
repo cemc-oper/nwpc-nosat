@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
-import { Row, Col, Button, Form, Input, Icon } from 'antd';
+import { Row, Col, Button, Form, Input, Icon, Modal } from 'antd';
 
 const electron = require('electron');
-
 const remote = electron.remote;
 
 let uuid = 0;
@@ -98,11 +97,22 @@ class ClearEnvForm extends React.Component{
 
   handleSubmit(e){
     e.preventDefault();
-    const {form, handler}  = this.props;
-    const repo_list_keys = form.getFieldValue('repo_list_keys');
+    const {form}  = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        this.doClearEnv(values);
+        Modal.confirm({
+          title: '是否要删除数据库中的所有数据？',
+          content: '请慎重考虑！',
+          okText: '清理',
+          okType: 'danger',
+          cancelText: '取消',
+          onOk() {
+            this.doClearEnv(values);
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
       }
     });
   }
@@ -226,7 +236,7 @@ class ClearEnvForm extends React.Component{
           </Button>
         </Form.Item>
         <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit" >清理环境</Button>
+          <Button type="danger" htmlType="submit" >清理环境</Button>
         </Form.Item>
       </Form>
     )
