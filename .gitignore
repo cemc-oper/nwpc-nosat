@@ -140,3 +140,5 @@ jspm_packages
 #pycharm
 
 .idea
+
+vendor/python/python_env

@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 
-let python_exe_path = path.join(__dirname, '../vendor/python/python.exe');
+let python_exe_path = path.join(__dirname, '../vendor/python/python_env/python.exe');
 let submit_log_analytics_tool_path =
   path.join(__dirname, '../vendor/submit-log-analytics-tool/submit_log_analytics_tool.py');
 
