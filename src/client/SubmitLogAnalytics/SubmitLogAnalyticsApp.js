@@ -9,8 +9,6 @@ import {
   Layout, Row, Col
 } from 'antd';
 
-import "../Core/containers/nost_box.scss"
-
 const { Content } = Layout;
 
 
@@ -20,8 +18,8 @@ import ErrorAnalyzerDataConfig from './components/llsubmit4/ErrorAnalyzerDataCon
 import AnalyzerResult from './components/llsubmit4/AnalyzerResult/index'
 import WaitingAnalyzerDialog from './components/llsubmit4/components/WaitingAnalyzerDialog'
 
-import {NOSTFooter} from '../Core/components/NOSTFooter';
-import {NOSTHeader} from '../Core/components/NOSTHeader';
+import {NOSATFooter} from '../Core/components/NOSATFooter';
+import {NOSATHeader} from '../Core/components/NOSATHeader';
 
 import {
   requestErrorLogAnalytics,
@@ -39,6 +37,7 @@ import {
 } from './actions/llsubmit4_error_log_action'
 
 import { saveSession, loadSession, requestTestSession, receiveTestSessionResponse} from './actions/session_action'
+
 
 class SubmitLogAnalyticsApp extends Component{
   constructor(props) {
@@ -160,7 +159,7 @@ class SubmitLogAnalyticsApp extends Component{
     const { dialog_content } = error_log_analyzer;
     return (
       <Layout className="layout" style={{ height: '100vh' }}>
-        <NOSTHeader default_selected_keys={['1']} />
+        <NOSATHeader default_selected_keys={['1']} />
         <Content style={{padding: '25px 25px 0px 25px'}}>
           <Row>
             <Col span={24}>
@@ -217,7 +216,7 @@ class SubmitLogAnalyticsApp extends Component{
             />
           </Row>
         </Content>
-        <NOSTFooter />
+        <NOSATFooter />
       </Layout>
     );
   }

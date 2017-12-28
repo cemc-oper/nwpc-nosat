@@ -3,7 +3,7 @@ import { Layout } from 'antd';
 
 const {Footer} = Layout;
 
-export class NOSTFooter extends Component{
+export class NOSATFooter extends Component{
   constructor(props) {
     super(props);
   }

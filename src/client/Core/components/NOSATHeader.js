@@ -5,7 +5,7 @@ import { Layout, Menu, Row, Col } from 'antd';
 
 const { Header } = Layout;
 
-export class NOSTHeader extends Component{
+export class NOSATHeader extends Component{
   constructor(props) {
     super(props);
   }
@@ -14,9 +14,9 @@ export class NOSTHeader extends Component{
     const {default_selected_keys} = this.props;
     return (
       <Header>
-        <Row className="nost-navi-bar">
+        <Row className="nosat-navi-bar">
           <Col span={4}>
-            <Link className="logo" to="/">NOST</Link>
+            <Link className="logo" to="/">NOSAT</Link>
           </Col>
           <Col span={20}>
             <Menu
@@ -35,6 +35,6 @@ export class NOSTHeader extends Component{
   }
 }
 
-NOSTHeader.propTypes = {
+NOSATHeader.propTypes = {
   default_selected_keys: PropTypes.array
 };

@@ -11,8 +11,8 @@ import {
 } from 'antd';
 
 
-import {NOSTFooter} from '../Core/components/NOSTFooter';
-import {NOSTHeader} from '../Core/components/NOSTHeader';
+import {NOSATFooter} from '../Core/components/NOSATFooter';
+import {NOSATHeader} from '../Core/components/NOSATHeader';
 
 import SetupEnvPage from './containers/SetupEnvPage';
 import LoadLogPage from './containers/LoadLogPage';
@@ -21,7 +21,7 @@ import GenerateResultPage from './containers/GenerateResultPage';
 import PlotChartPage from './containers/PlotChartPage';
 import ClearEnvPage from './containers/ClearEnvPage';
 
-import './index.css'
+import './index.scss'
 import {
   append_process_data_repo_command_output,
   append_generate_data_command_output,
@@ -155,7 +155,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
       <Layout className="layout" style={{
         minHeight: '100vh'
       }}>
-        <NOSTHeader default_selected_keys={['2']} />
+        <NOSATHeader default_selected_keys={['2']} />
         <Content style={{ padding: '25px 25px 0px 25px', background: '#fff' }}>
           <div>
             <Tabs defaultActiveKey={tabs[0].key} onChange={this.handleTabChange.bind(this)}>
@@ -163,7 +163,7 @@ class SystemRunningTimeAnalyticsApp extends Component{
             </Tabs>
           </div>
         </Content>
-        <NOSTFooter/>
+        <NOSATFooter/>
       </Layout>
     );
   }

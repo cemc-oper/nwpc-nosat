@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { dispatch } from 'redux'
-import { connect } from 'react-redux'
 import {Link} from 'react-router'
 
 import {
-  Layout, Row, Col,
-  Form, Input, Button, Menu, Alert, Icon
+  Layout, Row, Col, Button
 } from 'antd';
 
-import {NOSTFooter} from '../components/NOSTFooter';
-import "./nost_box.scss"
+import {NOSATFooter} from '../components/NOSATFooter';
+import "./nosat_box.scss"
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 
 
-class WelcomeApp extends Component{
+export default class WelcomeApp extends Component{
   constructor(props) {
     super(props);
   }
@@ -27,7 +23,7 @@ class WelcomeApp extends Component{
         <Header>
           <Row className="nost-navi-bar">
             <Col span={4}>
-              <Link className="logo" to="/">NOST</Link>
+              <Link className="logo" to="/">NOSAT</Link>
             </Col>
             <Col span={20}>
               <p className="logo">业务系统分析工具 NOSAT</p>
@@ -37,7 +33,7 @@ class WelcomeApp extends Component{
         <Content style={{padding: '25px 25px 0px 25px'}}>
           <Row gutter={16}>
             <Col span={12}>
-              <div className="nost-box">
+              <div className="nosat-box">
                 <h3>作业提交日志分析</h3>
                 <p>...</p>
                 <p>
@@ -46,7 +42,7 @@ class WelcomeApp extends Component{
               </div>
             </Col>
             <Col span={12}>
-              <div className="nost-box">
+              <div className="nosat-box">
                 <h3>系统运行时间分析</h3>
                 <p>...</p>
                 <p>
@@ -56,16 +52,8 @@ class WelcomeApp extends Component{
             </Col>
           </Row>
         </Content>
-        <NOSTFooter />
+        <NOSATFooter />
       </Layout>
     )
   }
 }
-
-function mapStateToProps(state){
-  return {
-
-  }
-}
-
-export default connect(mapStateToProps)(WelcomeApp)

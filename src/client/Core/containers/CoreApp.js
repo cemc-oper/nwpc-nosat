@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { dispatch } from 'redux'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 
-class CoreApp extends Component{
+export default class CoreApp extends Component{
   constructor(props) {
     super(props);
   }
@@ -18,11 +16,3 @@ class CoreApp extends Component{
     )
   }
 }
-
-function mapStateToProps(state){
-  return {
-
-  }
-}
-
-export default connect(mapStateToProps)(CoreApp)
