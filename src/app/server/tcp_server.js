@@ -41,8 +41,10 @@ function createTcpServer(event) {
 }
 
 function closeTcpServer(event) {
-  analytics_tool_server.close();
-  analytics_tool_server = null;
+  if(analytics_tool_server){
+    analytics_tool_server.close();
+    analytics_tool_server = null;
+  }
 }
 
 module.exports = {

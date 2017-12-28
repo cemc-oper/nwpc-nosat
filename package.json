@@ -13,10 +13,12 @@
     "url": "https://github.com/perillaroc"
   },
   "license": "GPL-3.0",
-  "dependencies": {},
+  "dependencies": {
+    "async": "^2.6.0",
+    "js-yaml": "^3.10.0"
+  },
   "devDependencies": {
     "antd": "^3.0.1",
-    "async": "^2.6.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-import": "^1.6.3",
@@ -36,7 +38,6 @@
     "generate-json-webpack-plugin": "^0.2.2",
     "immutable": "^3.8.2",
     "jquery": "^3.2.1",
-    "js-yaml": "^3.10.0",
     "json-loader": "^0.5.7",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",

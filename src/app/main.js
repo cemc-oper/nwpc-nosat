@@ -26,11 +26,10 @@ function createWindow () {
   // Open the DevTools.
   if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
+    const local_app_data_dir = process.env.LOCALAPPDATA;
+    BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0"));
+    BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"));
   }
-
-  const local_app_data_dir = process.env.LOCALAPPDATA;
-  BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0"));
-  BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"));
 
   mainWindow.webContents.on('did-finish-load', ()=>{
     if(!mainWindow) {
@@ -45,7 +44,7 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    mainWindow = null;
   })
 }
 
@@ -53,6 +52,16 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+  // On macOS it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    const tcp_server = require('./server/tcp_server');
+    tcp_server.closeTcpServer();
+    app.quit();
+  }
+});
 
 
 require('./server/ipc');
