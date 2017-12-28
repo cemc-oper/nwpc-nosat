@@ -3,7 +3,7 @@ import {
   LOAD_SESSION,
   REQUEST_TEST_SESSION,
   RECEIVE_TEST_SESSION_RESPONSE
-} from '../../SubmitLogAnalytics/actions/session_action'
+} from '../actions/session_action'
 
 
 // import Immutable  from 'immutable';

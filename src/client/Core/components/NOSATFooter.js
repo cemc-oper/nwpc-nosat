@@ -11,7 +11,7 @@ export class NOSATFooter extends Component{
   render(){
     return (
       <Footer style={{ textAlign: 'center' }}>
-        NOST &copy; 2017 NWPC
+        NOSAT &copy; 2017 NWPC
       </Footer>
     )
   }

@@ -21,7 +21,7 @@ export default class WelcomeApp extends Component{
 
       <Layout className="layout" style={{ height: '100vh' }}>
         <Header>
-          <Row className="nost-navi-bar">
+          <Row className="nosat-navi-bar">
             <Col span={4}>
               <Link className="logo" to="/">NOSAT</Link>
             </Col>
