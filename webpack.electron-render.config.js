@@ -1,8 +1,9 @@
 'use strict';
-let path = require('path');
-let webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const CopyWebPackPlugin = require('copy-webpack-plugin');
 
-let nodeModulesPath = path.resolve(__dirname, 'node_modules');
+const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 let entry= {
   index: './src/client/index.js',
@@ -99,7 +100,10 @@ let plugins = [
   new  webpack.optimize.CommonsChunkPlugin({
     name:"common",
     filename: "common.dist.js"
-  })
+  }),
+  new CopyWebPackPlugin([
+    {'from': './src/client/index.html', 'to': '../'}
+  ]),
 ];
 
 let externals= {
@@ -119,10 +123,10 @@ module.exports = {
   devtool: "source-map",
   entry: entry,
   output: {
-    path: path.join(__dirname, './dist/app/scripts'),
+    path: path.join(__dirname, './dist/app/client/scripts'),
     filename: "[name].entry.js",
     sourceMapFilename: '[file].map',
-    publicPath: './scripts/'
+    publicPath: './client/assets'
   },
   module: module_config,
   externals: externals,

@@ -17,18 +17,23 @@ function createWindow () {
   });
 
   let main_url = url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, 'client/index.html'),
     protocol: 'file:',
     slashes: true
   });
   mainWindow.loadURL(main_url);
 
-  // Open the DevTools.
+  // Set development tools.
   if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
     const local_app_data_dir = process.env.LOCALAPPDATA;
-    BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0"));
-    BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"));
+    const extension_list = [
+      "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0",
+      "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"
+    ];
+    extension_list.forEach(extension=>{
+      BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, extension));
+    });
   }
 
   mainWindow.webContents.on('did-finish-load', ()=>{
