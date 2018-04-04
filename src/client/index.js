@@ -14,14 +14,14 @@ import Root from './Core/Root'
 // plugin
 // load plugin
 function loadSubmitAnalytics(){
-  const routes = require('./SubmitLogAnalytics/routes');
-  routes.prepareRoute();
+  const plugin = require('./SubmitLogAnalytics');
+  plugin.prepareRoute();
 }
 loadSubmitAnalytics();
 
 function loadSystemRunningTimeAnalytics(){
-  const routes = require('./SystemRunningTimeAnalytics/routes');
-  routes.prepareRoute();
+  const plugin = require('./SystemRunningTimeAnalytics');
+  plugin.prepareRoute();
 }
 loadSystemRunningTimeAnalytics();
 
