@@ -11,29 +11,55 @@ import operationSystemAnalyticsAppReducer from './Core/reducers/index'
 
 import Root from './Core/Root'
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// plugin
+// load plugin
+function loadSubmitAnalytics(){
+  const routes = require('./SubmitLogAnalytics/routes');
+  routes.prepareRoute();
+}
+loadSubmitAnalytics();
 
-const history = createHistory({
-  hashType: "slash"
-});
+function loadSystemRunningTimeAnalytics(){
+  const routes = require('./SystemRunningTimeAnalytics/routes');
+  routes.prepareRoute();
+}
+loadSystemRunningTimeAnalytics();
+
+
+function createClientHistory(){
+  return createHistory({
+    hashType: "slash"
+  })
+}
+
+const history = createClientHistory();
 
 const router_middleware = routerMiddleware(history);
-
 const middle_wares = [
   thunkMiddleware,
   router_middleware,
 ];
 
-let store = createStore(
+function createClientStore(app_reducer, middle_wares){
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  return createStore(
+    app_reducer,
+    composeEnhancers(
+      applyMiddleware(
+        ...middle_wares
+      )
+    ),
+  );
+}
+
+const store = createClientStore(
   operationSystemAnalyticsAppReducer,
-  composeEnhancers(
-    applyMiddleware(
-      ...middle_wares
-    )
-  ),
+  middle_wares
 );
 
-const element = (<Root store={store} history={history}/>);
+const element = (
+  <Root store={store} history={history} />
+);
 
 ReactDOM.render(
   element,

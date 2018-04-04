@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'react-router-redux'
 
 import {ipcRenderer} from 'electron'
 
-import routes from './routes'
+import {createRoutes} from './routes'
 
 export default class Root extends Component {
   componentDidMount() {
@@ -18,10 +18,13 @@ export default class Root extends Component {
 
   render () {
     const { store, history } = this.props;
+    const routes = createRoutes();
     return (
       <Provider store={store}>
         <div>
-          <ConnectedRouter history={history}>{routes}</ConnectedRouter>
+          <ConnectedRouter history={history}>
+            {routes}
+            </ConnectedRouter>
         </div>
       </Provider>
     )

@@ -2,8 +2,15 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 
 import SystemRunningTimeAnalyticsApp from './SystemRunningTimeAnalyticsApp'
+import {addRoute} from "../Core/routes";
 
-
-export const RouteNode = (
-  <Route path="/system-running-time-analytics" component={SystemRunningTimeAnalyticsApp} />
+const RouteNode = (
+  <Route
+    key="/system-running-time-analytics"
+    path="/system-running-time-analytics"
+    component={SystemRunningTimeAnalyticsApp} />
 );
+
+export function prepareRoute(){
+  addRoute(RouteNode)
+}
