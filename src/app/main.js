@@ -28,8 +28,8 @@ function createWindow () {
     mainWindow.webContents.openDevTools();
     const local_app_data_dir = process.env.LOCALAPPDATA;
     const extension_list = [
-      "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0",
-      "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"
+      // "Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\2.5.2_0",
+      // "Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.15.1_0"
     ];
     extension_list.forEach(extension=>{
       BrowserWindow.addDevToolsExtension(path.join(local_app_data_dir, extension));

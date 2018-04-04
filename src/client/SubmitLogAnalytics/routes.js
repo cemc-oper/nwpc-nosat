@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, IndexRedirect, IndexRoute } from 'react-router'
+import { Route } from 'react-router-dom'
 
 import SubmitLogAnalyticsApp from './SubmitLogAnalyticsApp'
 

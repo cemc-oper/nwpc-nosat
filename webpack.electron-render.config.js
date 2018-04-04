@@ -7,23 +7,23 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 let entry= {
   index: './src/client/index.js',
-  common: [
-    'react',
-    'react-dom',
-    'react-modal',
-    'react-router',
-    'react-router-redux',
-    'react-redux',
-    'redux',
-    'redux-thunk',
-    'echarts',
-    'jquery',
-    'd3-array',
-    'd3-format',
-    'd3-time',
-    'd3-time-format',
-    'moment'
-  ]
+  // common: [
+  //   'react',
+  //   'react-dom',
+  //   'react-modal',
+  //   'react-router',
+  //   'react-router-redux',
+  //   'react-redux',
+  //   'redux',
+  //   'redux-thunk',
+  //   'echarts',
+  //   'jquery',
+  //   'd3-array',
+  //   'd3-format',
+  //   'd3-time',
+  //   'd3-time-format',
+  //   'moment'
+  // ]
 };
 
 let module_config= {
@@ -76,35 +76,48 @@ let module_config= {
   ]
 };
 
-let resolve = {
-  alias: {
-    'react': path.join(nodeModulesPath, '/react'),
-    'react-dom': path.join(nodeModulesPath, '/react-dom'),
-    'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
-    'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
-    'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
-    'react-router-redux': path.join(nodeModulesPath, '/react-router-redux/dist/ReactRouterRedux'),
-    'redux': path.join(nodeModulesPath, '/redux/dist/redux'),
-    'redux-thunk': path.join(nodeModulesPath, '/redux-thunk/dist/redux-thunk'),
-    'echarts': path.join(nodeModulesPath, '/echarts/dist/echarts'),
-    'd3-array': path.join(nodeModulesPath, '/d3-array/build/d3-array'),
-    'd3-format': path.join(nodeModulesPath, '/d3-format/build/d3-format'),
-    'd3-time': path.join(nodeModulesPath, '/d3-time/build/d3-time'),
-    'd3-time-format': path.join(nodeModulesPath, '/d3-time-format/build/d3-time-format'),
-    'jquery': path.join(nodeModulesPath, '/jquery/dist/jquery'),
-    'js-yaml': path.join(nodeModulesPath, '/js-yaml/dist/js-yaml')
-  }
-};
+// let resolve = {
+//   alias: {
+//     'react': path.join(nodeModulesPath, '/react'),
+//     'react-dom': path.join(nodeModulesPath, '/react-dom'),
+//     'react-modal': path.join(nodeModulesPath, '/react-modal/dist/react-modal'),
+//     'react-redux': path.join(nodeModulesPath, '/react-redux/dist/react-redux'),
+//     'react-router': path.join(nodeModulesPath, '/react-router/umd/ReactRouter'),
+//     'react-router-redux': path.join(nodeModulesPath, '/react-router-redux/dist/ReactRouterRedux'),
+//     'redux': path.join(nodeModulesPath, '/redux/dist/redux'),
+//     'redux-thunk': path.join(nodeModulesPath, '/redux-thunk/dist/redux-thunk'),
+//     'echarts': path.join(nodeModulesPath, '/echarts/dist/echarts'),
+//     'd3-array': path.join(nodeModulesPath, '/d3-array/build/d3-array'),
+//     'd3-format': path.join(nodeModulesPath, '/d3-format/build/d3-format'),
+//     'd3-time': path.join(nodeModulesPath, '/d3-time/build/d3-time'),
+//     'd3-time-format': path.join(nodeModulesPath, '/d3-time-format/build/d3-time-format'),
+//     'jquery': path.join(nodeModulesPath, '/jquery/dist/jquery'),
+//     'js-yaml': path.join(nodeModulesPath, '/js-yaml/dist/js-yaml')
+//   }
+// };
 
 let plugins = [
-  new  webpack.optimize.CommonsChunkPlugin({
-    name:"common",
-    filename: "common.dist.js"
-  }),
+  // new  webpack.optimize.CommonsChunkPlugin({
+  //   name:"common",
+  //   filename: "common.dist.js"
+  // }),
   new CopyWebPackPlugin([
     {'from': './src/client/index.html', 'to': '../'}
   ]),
 ];
+
+let optimization = {
+  runtimeChunk: false,
+  splitChunks: {
+    cacheGroups: {
+      commons: {
+        test: /[\\/]node_modules[\\/]/,
+        name: "vendor",
+        chunks: "all"
+      }
+    }
+  }
+};
 
 let externals= {
   // 'electron': 'electron',
@@ -129,8 +142,9 @@ module.exports = {
     publicPath: './client/assets'
   },
   module: module_config,
-  externals: externals,
+  // externals: externals,
   plugins: plugins,
-  resolve: resolve,
+  optimization:optimization,
+  // resolve: resolve,
   target: 'electron-renderer'
 };

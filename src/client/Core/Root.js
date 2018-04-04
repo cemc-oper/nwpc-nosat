@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
-import { Router } from 'react-router'
+import { ConnectedRouter } from 'react-router-redux'
 
 import {ipcRenderer} from 'electron'
 
@@ -21,7 +21,7 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <div>
-          <Router history={history} routes={routes}/>
+          <ConnectedRouter history={history}>{routes}</ConnectedRouter>
         </div>
       </Provider>
     )
