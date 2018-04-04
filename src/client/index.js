@@ -7,33 +7,50 @@ import thunkMiddleware from 'redux-thunk'
 import createHistory from 'history/createHashHistory'
 import { routerMiddleware } from 'react-router-redux';
 
-import operationSystemAnalyticsAppReducer from './Core/reducers/index'
+import {createReducer} from './Core/reducers/index'
 
 import Root from './Core/Root'
 
 // plugin
+let plugin_list = [
+  {
+    name: 'SubmitLogAnalytics',
+    plugin: require('./SubmitLogAnalytics')
+  },
+  {
+    name: 'SystemRunningTimeAnalytics',
+    plugin: require('./SystemRunningTimeAnalytics')
+  }
+];
+
 // load plugin
-function loadSubmitAnalytics(){
-  const plugin = require('./SubmitLogAnalytics');
-  plugin.prepareRoute();
+function loadPlugin(plugin){
+  if(plugin.prepareRoute) {
+    plugin.prepareRoute();
+  }
+  if(plugin.prepareReducer){
+    plugin.prepareReducer();
+  }
 }
-loadSubmitAnalytics();
 
-function loadSystemRunningTimeAnalytics(){
-  const plugin = require('./SystemRunningTimeAnalytics');
-  plugin.prepareRoute();
-}
-loadSystemRunningTimeAnalytics();
+plugin_list.forEach(item => {
+  loadPlugin(item.plugin);
+});
 
 
+// history
 function createClientHistory(){
   return createHistory({
     hashType: "slash"
   })
 }
-
 const history = createClientHistory();
 
+
+// reducer
+const app_reducer = createReducer();
+
+// store
 const router_middleware = routerMiddleware(history);
 const middle_wares = [
   thunkMiddleware,
@@ -53,7 +70,7 @@ function createClientStore(app_reducer, middle_wares){
 }
 
 const store = createClientStore(
-  operationSystemAnalyticsAppReducer,
+  app_reducer,
   middle_wares
 );
 
