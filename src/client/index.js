@@ -15,10 +15,12 @@ import Root from './Core/Root'
 let plugin_list = [
   {
     name: 'SubmitLogAnalytics',
+    // path: './scripts/submit_log_analytics.entry.js'
     plugin: require('./SubmitLogAnalytics')
   },
   {
     name: 'SystemRunningTimeAnalytics',
+    // path: './scripts/system_running_time_analytics.entry.js'
     plugin: require('./SystemRunningTimeAnalytics')
   }
 ];
@@ -34,6 +36,7 @@ function loadPlugin(plugin){
 }
 
 plugin_list.forEach(item => {
+  // let plugin = require([item.path]);
   loadPlugin(item.plugin);
 });
 

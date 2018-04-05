@@ -6,12 +6,12 @@ let reducers = {
 };
 
 export function addReducer(name, reducer){
-  console.log("[addReducer] before:", reducers);
+  // console.log("[addReducer] before:", reducers);
   reducers[name] = reducer;
-  console.log("[addReducer] after:", reducers);
+  // console.log("[addReducer] after:", reducers);
 }
 
 export function createReducer(){
-  console.log(reducers);
+  // console.log(reducers);
   return combineReducers(reducers);
 }
